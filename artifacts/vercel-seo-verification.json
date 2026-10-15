@@ -1,0 +1,29 @@
+{
+  "verifiedAt": "2026-10-14T20:00:00.400Z",
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "ogImage": "https://teech-nu.vercel.app/opengraph-image?98391348665012a5"
+    },
+    {
+      "path": "/sample",
+      "status": 200,
+      "ogImage": "https://teech-nu.vercel.app/opengraph-image"
+    },
+    {
+      "path": "/signin",
+      "status": 200,
+      "ogImage": "https://teech-nu.vercel.app/opengraph-image?98391348665012a5",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200
+    }
+  ]
+}

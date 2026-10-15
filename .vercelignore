@@ -1,0 +1,10 @@
+artifacts/
+tests/
+docs/
+supabase/
+.github/
+.env*
+!.env.example
+playwright-report/
+test-results/
+*.tsbuildinfo
