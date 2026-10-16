@@ -1,15 +1,17 @@
 export function Student({
   state = "listening",
   small = false,
+  roleName = "student",
 }: {
   state?: "listening" | "thinking" | "curious" | "happy";
   small?: boolean;
+  roleName?: "student" | "teacher";
 }) {
   return (
     <div
       className={`student student-${state} ${small ? "student-small" : ""}`}
       role="img"
-      aria-label={`Pip, your AI student, is ${state}`}
+      aria-label={`Pip, your AI ${roleName}, is ${state}`}
     >
       <svg viewBox="0 0 220 220" fill="none" aria-hidden="true">
         <ellipse cx="112" cy="199" rx="61" ry="8" fill="#d7d7cb" opacity=".5" />

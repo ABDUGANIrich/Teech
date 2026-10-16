@@ -1,4 +1,272 @@
 @import "tailwindcss";
+/* Teacher mode uses the same quiet paper, type and focus language. */
+.learning-page {
+  max-width: 1180px;
+}
+.learning-setup,
+.learning-plan {
+  max-width: 760px;
+}
+.learning-topbar,
+.learning-actions,
+.mode-choices {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.learning-topbar {
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.mode-choices {
+  align-items: stretch;
+  margin: 22px 0;
+}
+.mode-choices > p {
+  flex: 1 1 200px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.learning-layout {
+  display: grid;
+  grid-template-columns: 235px minmax(0, 1fr);
+  gap: 42px;
+  margin-top: 34px;
+  align-items: start;
+}
+.learning-main,
+.learning-outline,
+.learning-card,
+.learning-fields {
+  min-width: 0;
+}
+.learning-outline {
+  position: sticky;
+  top: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+  font-size: 13px;
+}
+.learning-outline summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+.learning-outline ol {
+  padding-left: 18px;
+}
+.learning-outline li {
+  margin: 18px 0;
+}
+.learning-outline li[aria-current] {
+  color: var(--accent);
+  font-weight: 700;
+}
+.learning-outline .button {
+  margin-top: 7px;
+  white-space: normal;
+  text-align: left;
+}
+.learning-card {
+  margin: 20px 0;
+  padding: 25px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+.learning-fields {
+  border: 0;
+  margin: 0 0 22px;
+  padding: 0;
+}
+.learning-fields label,
+.practice-item label:not(.learning-choice),
+.learning-card > label,
+.learning-dispute label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.learning-fields input,
+.learning-fields textarea,
+.learning-fields select,
+.practice-item textarea,
+.learning-card > textarea,
+.learning-card > select,
+.learning-dispute textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--foreground);
+}
+.learning-fields select,
+.learning-card > select {
+  white-space: normal;
+  margin-bottom: 14px;
+}
+.learning-fields .micro {
+  margin-top: 10px;
+}
+.learning-pip {
+  width: 100px;
+  text-align: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.learning-pip .student-wrap {
+  width: 90px;
+}
+.learning-outcome {
+  color: var(--accent);
+  background: #edf1e4;
+  padding: 16px;
+  border-radius: 8px;
+}
+.lesson-blocks {
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.lesson-blocks p {
+  color: var(--foreground);
+  white-space: pre-wrap;
+}
+.lesson-blocks figure {
+  margin: 22px 0;
+}
+.lesson-blocks figcaption {
+  font-size: 12px;
+  color: var(--muted);
+}
+.lesson-blocks pre,
+.saved-answer,
+.lesson-equation {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  border-radius: 8px;
+  background: #f0f1e9;
+  padding: 16px;
+  font:
+    14px/1.7 ui-monospace,
+    Consolas,
+    monospace;
+  max-width: 100%;
+}
+.learning-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  margin: 10px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.learning-choice input {
+  width: 18px;
+  height: 18px;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.practice-item fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.learning-status {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.learning-hint {
+  background: #f5efdf;
+  padding: 16px;
+  border-radius: 8px;
+  color: var(--foreground);
+}
+.learning-feedback,
+.learning-solution {
+  padding: 18px;
+  border-left: 3px solid var(--accent);
+  background: #f0f3e9;
+  margin: 18px 0;
+}
+.learning-dispute {
+  margin-top: 20px;
+  font-size: 13px;
+}
+.learning-dispute summary {
+  cursor: pointer;
+}
+.summary-result {
+  border-top: 1px solid var(--line);
+  margin-top: 18px;
+  padding-top: 10px;
+}
+.summary-result h4 {
+  font-weight: 500;
+}
+.learning-shelf,
+.learning-delete {
+  margin: 36px 0;
+}
+.learning-handoff {
+  margin-top: 24px;
+}
+.learning-page blockquote {
+  border-left: 2px solid var(--line);
+  margin: 16px 0;
+  padding-left: 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.learning-page .button,
+.learning-setup .button {
+  white-space: normal;
+  height: auto;
+  min-height: 40px;
+}
+@media (max-width: 760px) {
+  .learning-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .learning-outline {
+    position: static;
+  }
+  .learning-outline ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+  }
+  .learning-outline li {
+    margin: 0;
+    flex: 1 1 160px;
+  }
+  .learning-card {
+    padding: 18px;
+  }
+  .learning-pip {
+    display: none;
+  }
+  .learning-actions {
+    align-items: stretch;
+  }
+  .learning-actions > .button {
+    flex: 1 1 auto;
+  }
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

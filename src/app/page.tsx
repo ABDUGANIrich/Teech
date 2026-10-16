@@ -33,29 +33,47 @@ export default async function Home() {
             <span className="tiny-dot" />A DIFFERENT WAY TO STUDY
           </p>
           <h1>
-            Think you
+            Learn it.
             <br />
-            understand it?
+            Practice it.
             <br />
             <em>Teach it.</em>
           </h1>
           <p className="hero-description">
-            Meet the student who helps you learn.
-            <br />
-            Explain an idea in your own words. Follow your curiosity. Find the
-            pieces that haven’t clicked yet.
+            Start with a topic and learn in short steps. Practice applying it,
+            then explain what you know to Pip, your curious AI student.
           </p>
           <div className="hero-actions">
             <Button asChild>
-              <Link href="/sample">
-                Try a sample <ArrowRight size={17} />
+              <Link href="/learn/new">
+                Learn with a teacher <ArrowRight size={17} />
               </Link>
             </Button>
-            <Link className="text-link" href={u ? "/library" : "/signin"}>
-              Bring your own notes <ArrowUp />
+            <Link className="text-link" href="/new">
+              Teach Pip <ArrowUp />
             </Link>
           </div>
-          <p className="micro">No account needed to explore.</p>
+          <div className="mode-choices">
+            <p>
+              <strong>Learn with a teacher</strong>
+              <br />
+              Start with a topic. Learn it step by step.
+              <br />
+              <Link className="text-link" href="/teacher-sample">
+                Try the fixed Teacher sample →
+              </Link>
+            </p>
+            <p>
+              <strong>Teach Pip</strong>
+              <br />
+              Explain what you know. Find the gaps.
+              <br />
+              <Link className="text-link" href="/sample">
+                Try a sample →
+              </Link>
+            </p>
+          </div>
+          <p className="micro">No account needed for either fixed sample.</p>
         </div>
         <div className="hero-scene">
           <div className="scene-label">
@@ -90,8 +108,8 @@ export default async function Home() {
             <span className="step-number">01</span>
             <h3>Bring an idea</h3>
             <p>
-              Paste your notes and shape a short checklist of the concepts you
-              want to explain.
+              Learn from a topic or your notes with a short, scoped plan. Or
+              bring notes straight to Teach Pip.
             </p>
           </div>
           <div>
@@ -99,10 +117,10 @@ export default async function Home() {
               <MessageCircle size={21} />
             </span>
             <span className="step-number">02</span>
-            <h3>Teach a curious student</h3>
+            <h3>Learn, then practice</h3>
             <p>
-              Put the notes away. Explain it your way, then work through a few
-              thoughtful questions.
+              Read short explanations and worked examples. Apply the ideas and
+              review feedback, hints and unresolved questions.
             </p>
           </div>
           <div>
@@ -110,18 +128,18 @@ export default async function Home() {
               <Sprout size={21} />
             </span>
             <span className="step-number">03</span>
-            <h3>Find your next step</h3>
+            <h3>Teach it back</h3>
             <p>
-              See what came through clearly and what to revisit, with evidence
-              from your notes.
+              Put the notes away and explain it to Pip. See what came through
+              and what to revisit, relative to your study source.
             </p>
           </div>
         </div>
         <div className="honest-note">
           <Check size={16} />
           <p>
-            A practice partner, not a final verdict. AI feedback is relative to
-            the material you provide.
+            AI instruction and grading can be wrong. Topic-only lessons are not
+            independently source-verified. A session does not establish mastery.
           </p>
         </div>
       </section>

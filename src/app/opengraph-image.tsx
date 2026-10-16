@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "Teech — Think you understand it? Teach it. Meet Pip, your curious AI student.";
+  "Teech — Learn it. Practice it. Teach it. Learn with a teacher, then teach Pip.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -51,8 +51,8 @@ export default function Image() {
               fontWeight: 700,
             }}
           >
-            <span>Think you</span>
-            <span>understand it?</span>
+            <span>Learn it.</span>
+            <span>Practice it.</span>
             <span style={{ color: "#405b43" }}>Teach it.</span>
           </div>
           <div
@@ -63,7 +63,7 @@ export default function Image() {
               color: "#667064",
             }}
           >
-            Explain an idea. Follow your curiosity.
+            Learn with a teacher. Teach it back to Pip.
           </div>
         </div>
         <div
@@ -137,7 +137,7 @@ export default function Image() {
           color: "#667064",
         }}
       >
-        You teach. You notice. You grow.
+        Short lessons. Thoughtful practice. A curious student.
       </div>
     </div>,
     size,

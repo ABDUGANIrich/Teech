@@ -81,7 +81,11 @@ async function getTopic(id: string, userId: string | null): Promise<Topic> {
   dbError(ce);
   return { ...data, concepts: check!.concepts };
 }
-export async function readData(id?: string) {
+export async function readData(
+  id?: string,
+  before?: string,
+  historyOnly = false,
+) {
   const who = await actor(!id);
   const db = admin();
   if (id) {
@@ -99,6 +103,31 @@ export async function readData(id?: string) {
     assertOwner(data.owner, who.id);
     return { session: data.data };
   }
+  let history = db
+    .from("sessions")
+    .select("data,id,created_at")
+    .eq("owner", who.id)
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false });
+  if (before) {
+    const cursor = z
+      .object({ created_at: z.iso.datetime({ offset: true }), id: uuid })
+      .parse(JSON.parse(before));
+    history = history.or(
+      `created_at.lt.${cursor.created_at},and(created_at.eq.${cursor.created_at},id.lt.${cursor.id})`,
+    );
+  }
+  const { data: sessions, error: se } = await history.limit(50);
+  dbError(se);
+  const last = sessions?.at(-1);
+  const page = {
+    sessions: (sessions || []).map((s) => s.data),
+    nextCursor:
+      sessions?.length === 50 && last
+        ? JSON.stringify({ created_at: last.created_at, id: last.id })
+        : null,
+  };
+  if (historyOnly) return page;
   const { data: topics, error } = await db
     .from("topics")
     .select("*")
@@ -113,13 +142,6 @@ export async function readData(id?: string) {
       (topics || []).map((t) => t.id),
     );
   dbError(ce);
-  const { data: sessions, error: se } = await db
-    .from("sessions")
-    .select("data")
-    .eq("owner", who.id)
-    .order("created_at", { ascending: false })
-    .limit(100);
-  dbError(se);
   return {
     topics: (topics || []).map((t) => ({
       ...t,
@@ -127,7 +149,7 @@ export async function readData(id?: string) {
         checks?.find((c) => c.topic_id === t.id && c.version === t.version)
           ?.concepts || [],
     })),
-    sessions: (sessions || []).map((s) => s.data),
+    ...page,
   };
 }
 export async function runAction(input: unknown) {
@@ -166,9 +188,7 @@ export async function runAction(input: unknown) {
         concepts: await extractConcepts(a.notes, {
           deadline,
           quota: who.quota,
-          slot: `extract:${who.id}:${createHash("sha256")
-            .update(a.title + "\n" + a.notes)
-            .digest("hex")}`,
+          slot: `extract:${who.id}:${a.key}`,
         }),
       });
     if (a.action === "save") {
@@ -188,7 +208,7 @@ export async function runAction(input: unknown) {
       return await commit({ deleted: true }, { delete: a.id });
     }
     if (a.action === "start") {
-      let topic = a.topicId
+      let topic: Topic = a.topicId
         ? await getTopic(a.topicId, who.userId)
         : sampleTopic;
       if (a.retry) {
@@ -212,6 +232,7 @@ export async function runAction(input: unknown) {
           notes: snapshot.notes,
           concepts: snapshot.concepts,
           version: snapshot.checklist_version,
+          provenance: snapshot.provenance,
         };
       }
       // Starting attempts is also bounded to avoid database spam, but uses no provider call.
@@ -238,6 +259,7 @@ export async function runAction(input: unknown) {
         short_retry: a.retry,
         evaluation: null,
         created_at: new Date().toISOString(),
+        provenance: topic.provenance,
       };
       return await commit({ session }, { session });
     }
@@ -254,6 +276,9 @@ export async function runAction(input: unknown) {
       s = { ...s, notes_revealed: s.notes_revealed || s.phase !== "review" };
       return await commit({ session: s }, { session: s });
     }
+    // Finishing is safe to repeat even if the browser lost the first response.
+    if (s.phase === "review" && a.action === "finish")
+      return await commit({ session: s });
     if (s.phase === "review")
       throw new AppError(
         "This attempt is already reviewed. Start a retry for a new explanation.",
@@ -285,7 +310,10 @@ export async function runAction(input: unknown) {
     const evaluation = await evaluate(s, {
       deadline,
       quota: who.quota,
-      slot: `session:${s.id}:evaluation`,
+      // A definite failure can be retried explicitly without discarding the
+      // transcript. Replays keep the same operation key; concurrent actions
+      // remain serialized by begin_operation and every call consumes quota.
+      slot: `session:${s.id}:evaluation:${a.key}`,
     });
     s = { ...s, phase: "review", evaluation };
     return await commit({ session: s }, { session: s });

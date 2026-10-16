@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-16",
+  "method": "Read-only Supabase REST GET, explicit column selection with limit=0, using existing server credentials; no user data returned and no mutations performed.",
+  "checks": [
+    { "table": "learning_sessions", "status": 404, "code": "PGRST205", "available": false },
+    { "table": "learning_assessments", "status": 404, "code": "PGRST205", "available": false },
+    { "table": "topics", "columns": "id,lesson_id,provenance", "status": 400, "code": "42703", "available": false }
+  ],
+  "conclusion": "Migration 004 has not been applied to this configured hosted database. Teacher-mode live inference, persistence and two-account isolation smoke tests were not run. Initial HEAD-only checks returned misleading 204 responses and were superseded by these explicit GET checks."
+}

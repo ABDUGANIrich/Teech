@@ -17,18 +17,22 @@ import {
   type Concept,
   type Topic,
 } from "@/lib/domain";
-export function TopicEditor({
-  edit,
-  userId,
-}: {
-  edit?: string;
-  userId: string;
-}) {
+type EditorProps = { edit?: string; userId: string };
+
+export function TopicEditor(props: EditorProps) {
+  return (
+    <TopicDraft key={`${props.userId}:${props.edit || "new"}`} {...props} />
+  );
+}
+
+function TopicDraft({ edit, userId }: EditorProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [concepts, setConcepts] = useState<Concept[]>([]);
   const [busy, setBusy] = useState(false);
+  const [extracting, setExtracting] = useState(false);
+  const [replaceChecklist, setReplaceChecklist] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [ready, setReady] = useState(false);
@@ -81,6 +85,7 @@ export function TopicEditor({
     saveDraft(title, notes, c);
   }
   async function extract() {
+    if (busy) return;
     setError("");
     const result = topicInputSchema.safeParse({ title, notes });
     if (!result.success) {
@@ -90,6 +95,8 @@ export function TopicEditor({
       return;
     }
     setBusy(true);
+    setExtracting(true);
+    setReplaceChecklist(false);
     try {
       const d = await api({ action: "extract", title, notes });
       if (d.error) throw new Error(d.error);
@@ -103,9 +110,11 @@ export function TopicEditor({
       );
     } finally {
       setBusy(false);
+      setExtracting(false);
     }
   }
   async function save() {
+    if (busy) return;
     setError("");
     try {
       topicInputSchema.parse({ title, notes });
@@ -167,6 +176,7 @@ export function TopicEditor({
             </label>
             <input
               id="topic-title"
+              disabled={busy}
               value={title}
               maxLength={100}
               placeholder="e.g. How the water cycle works"
@@ -180,6 +190,7 @@ export function TopicEditor({
             </label>
             <textarea
               id="topic-notes"
+              disabled={busy}
               value={notes}
               maxLength={18000}
               rows={12}
@@ -196,20 +207,43 @@ export function TopicEditor({
               Your notes and explanations are sent to OpenRouter and its AI
               provider. Avoid including private or sensitive information.
             </p>
-            {concepts.length === 0 && (
-              <Button onClick={() => void extract()} disabled={busy}>
-                {busy ? (
-                  <>
-                    <LoaderCircle className="spin" size={16} />
-                    Finding the key ideas…
-                  </>
-                ) : (
-                  <>
-                    Find key concepts
-                    <ArrowRight size={16} />
-                  </>
-                )}
-              </Button>
+            <Button
+              onClick={() =>
+                concepts.length ? setReplaceChecklist(true) : void extract()
+              }
+              disabled={busy}
+            >
+              {extracting ? (
+                <>
+                  <LoaderCircle className="spin" size={16} />
+                  Finding the key ideas…
+                </>
+              ) : (
+                <>
+                  {concepts.length
+                    ? "Regenerate checklist"
+                    : "Find key concepts"}
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </Button>
+            {replaceChecklist && (
+              <div className="notice">
+                <p>
+                  Replace your current checklist with newly extracted concepts?
+                  Your existing checklist stays if generation fails.
+                </p>
+                <Button disabled={busy} onClick={() => void extract()}>
+                  Replace checklist
+                </Button>
+                <Button
+                  variant="ghost"
+                  disabled={busy}
+                  onClick={() => setReplaceChecklist(false)}
+                >
+                  Keep checklist
+                </Button>
+              </div>
             )}
           </div>
           {concepts.length > 0 && (
@@ -228,7 +262,7 @@ export function TopicEditor({
                 check each supporting passage.
               </p>
               {concepts.map((c, i) => (
-                <fieldset key={c.id} className="concept-edit">
+                <fieldset key={c.id} className="concept-edit" disabled={busy}>
                   <legend>Concept {i + 1}</legend>
                   <div className="section-row">
                     <label htmlFor={`c-${i}`}>Concept title</label>

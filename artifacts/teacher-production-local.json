@@ -1,0 +1,18 @@
+{
+  "environment": "local production build; public fixed sample only; no live AI/Auth/database mutations",
+  "checks": {
+    "/": 200,
+    "/teacher-sample": 200,
+    "/sample": 200,
+    "/signin": 200,
+    "/robots.txt": 200,
+    "/sitemap.xml": 200,
+    "/opengraph-image": 200,
+    "/twitter-image": 200,
+    "unauthenticatedLearning": 401,
+    "canonical": "http://127.0.0.1:3000",
+    "desktop": "fixed sample instruction/practice/feedback/refresh, focus, wrapping, reduced motion, private-route redirect and noindex passed",
+    "mobile": "fixed sample instruction/practice/feedback/refresh, focus, wrapping, reduced motion, private-route redirect and noindex passed"
+  },
+  "browserErrors": []
+}

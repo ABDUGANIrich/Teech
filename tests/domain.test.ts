@@ -113,6 +113,37 @@ describe("review validation", () => {
       }).success,
     ).toBe(false);
   });
+  it("enforces every status and claim-type combination", () => {
+    for (const claimType of [
+      "supported",
+      "unsupported",
+      "omitted",
+      "contradiction",
+    ] as const) {
+      for (const status of [
+        "Explained clearly",
+        "Partially explained",
+        "Not demonstrated",
+        "Needs correction",
+      ] as const) {
+        const e = raw();
+        e.results[0] = {
+          ...e.results[0],
+          claimType,
+          status,
+          userExcerpt: null,
+        };
+        const valid =
+          (claimType === "supported" &&
+            ["Explained clearly", "Partially explained"].includes(status)) ||
+          (claimType === "unsupported" && status === "Partially explained") ||
+          (claimType === "omitted" && status === "Not demonstrated") ||
+          (claimType === "contradiction" && status === "Needs correction");
+        if (valid) expect(() => verifyEvaluation(e, s)).not.toThrow();
+        else expect(() => verifyEvaluation(e, s)).toThrow();
+      }
+    }
+  });
 });
 describe("server lifecycle", () => {
   it("cannot answer without a question or submit a second explanation", () => {

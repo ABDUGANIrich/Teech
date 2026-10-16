@@ -18,7 +18,7 @@ import { Button } from "./ui/button";
 import { Student } from "./student";
 import { acceptAnswer, acceptExplanation, type Session } from "@/lib/domain";
 import { fixtureReview, newPreview, previewQuestions } from "@/lib/sample";
-import { api, readLocal, writeLocal } from "@/lib/client";
+import { api, olderAttempts, readLocal, writeLocal } from "@/lib/client";
 
 export function TeachingRoom({
   live,
@@ -33,10 +33,12 @@ export function TeachingRoom({
   const [session, setSession] = useState<Session | null>(null);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
+  const [finishing, setFinishing] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [showNotes, setShowNotes] = useState(false);
   const [history, setHistory] = useState<Session[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [compareId, setCompareId] = useState("");
   const initialized = useRef(false);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -75,6 +77,7 @@ export function TeachingRoom({
           if (userId) {
             const library = await fetch("/api/teech").then((r) => r.json());
             setHistory(library.sessions || []);
+            setNextCursor(library.nextCursor || null);
           }
         }
         setSession(s);
@@ -113,8 +116,28 @@ export function TeachingRoom({
   ) {
     if (!session || busy) return;
     setBusy(true);
+    setFinishing(action === "finish");
     setError("");
     setNotice("");
+    function restoreSaved(next: Session) {
+      persist(next);
+      if (
+        next.messages.length !== session!.messages.length ||
+        next.phase === "review"
+      ) {
+        try {
+          localStorage.removeItem(
+            `teech:draft:${scope}:${session!.id}:${session!.messages.length}`,
+          );
+        } catch {}
+        setDraft(
+          readLocal<string>(
+            `teech:draft:${scope}:${next.id}:${next.messages.length}`,
+            "",
+          ),
+        );
+      }
+    }
     try {
       let next: Session;
       if (session.preview) {
@@ -155,12 +178,14 @@ export function TeachingRoom({
         const data = await api({
           action,
           id: session.id,
-          ...(action === "explain" || action === "answer" || action === "finish"
+          ...(action === "explain" ||
+          action === "answer" ||
+          (action === "finish" && session.messages.at(-1)?.role === "student")
             ? { text: draft }
             : {}),
           ...(action === "answer" ? { unsure } : {}),
         });
-        if (data.session) persist(data.session);
+        if (data.session) restoreSaved(data.session);
         if (data.error) throw new Error(data.error);
         next = data.session!;
       }
@@ -171,10 +196,55 @@ export function TeachingRoom({
         heading.current?.focus();
       }
     } catch (e) {
+      // The server may have saved writing or a question before the POST was lost.
+      if (!session.preview && action !== "reveal") {
+        try {
+          const response = await fetch(`/api/teech?session=${session.id}`, {
+            cache: "no-store",
+          });
+          const saved = await response.json();
+          if (response.ok && saved.session) {
+            const recovered = saved.session as Session;
+            restoreSaved(recovered);
+            if (
+              recovered.phase === "review" ||
+              (recovered.messages.length > session.messages.length &&
+                recovered.messages.at(-1)?.role === "student")
+            ) {
+              heading.current?.focus();
+              return;
+            }
+          }
+        } catch {
+          // Keep the original error and the local draft if recovery fails.
+        }
+      }
       setError(
         e instanceof Error
           ? e.message
           : "Connection interrupted. Your draft is safe. Try the same action again.",
+      );
+    } finally {
+      setBusy(false);
+      setFinishing(false);
+    }
+  }
+  async function loadOlder() {
+    if (!nextCursor || busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const data = await olderAttempts(nextCursor);
+      setHistory((current) => [
+        ...current,
+        ...(data.sessions || []).filter(
+          (s) => !current.some((old) => old.id === s.id),
+        ),
+      ]);
+      setNextCursor(data.nextCursor || null);
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Could not load older attempts.",
       );
     } finally {
       setBusy(false);
@@ -222,7 +292,8 @@ export function TeachingRoom({
               try {
                 localStorage.removeItem(currentKey);
               } catch {}
-              window.location.reload();
+              if (id) router.push("/sample");
+              else window.location.reload();
             }}
           >
             Open a fresh sample
@@ -253,7 +324,7 @@ export function TeachingRoom({
           {userId ? "My library" : "Back to home"}
         </Link>
         <span className="quiet-badge">
-          {session.preview ? "SAMPLE PREVIEW" : "TEACHING SESSION"}
+          {session.preview ? "SAMPLE PREVIEW" : "PIP · STUDENT"}
         </span>
       </div>
       {session.preview && (
@@ -292,6 +363,21 @@ export function TeachingRoom({
           {showNotes ? "Hide notes" : "View notes"}
         </Button>
       </div>
+      {session.provenance && (
+        <p className="notice">
+          {session.provenance.label}. This lesson source is a study reference,
+          not independent proof of correctness. Your review is relative to this
+          source.{" "}
+          {session.provenance.lessonId && (
+            <Link
+              className="text-link"
+              href={`/learn/${session.provenance.lessonId}`}
+            >
+              Return to learning session →
+            </Link>
+          )}
+        </p>
+      )}
       <ol className="steps" aria-label="Session progress">
         {["Explain", "Questions", "Review"].map((s, i) => (
           <li
@@ -440,6 +526,15 @@ export function TeachingRoom({
               </label>
             )}
           </div>
+          {nextCursor && (
+            <Button
+              variant="outline"
+              disabled={busy}
+              onClick={() => void loadOlder()}
+            >
+              Load older attempts for comparison
+            </Button>
+          )}
           <div className="concept-results">
             {session.evaluation.results.map((r) => (
               <article key={r.conceptId} className="result">
@@ -644,8 +739,18 @@ export function TeachingRoom({
                   size="sm"
                   disabled={busy}
                   onClick={() => void act("finish")}
+                  aria-busy={finishing}
                 >
-                  Finish and review <ArrowRight size={14} />
+                  {finishing ? (
+                    <>
+                      <LoaderCircle className="spin" size={14} />
+                      Preparing review…
+                    </>
+                  ) : (
+                    <>
+                      Finish and review <ArrowRight size={14} />
+                    </>
+                  )}
                 </Button>
               </div>
             )}

@@ -21,7 +21,11 @@ function failure(e: unknown) {
 export async function GET(req: NextRequest) {
   try {
     return NextResponse.json(
-      await readData(req.nextUrl.searchParams.get("session") || undefined),
+      await readData(
+        req.nextUrl.searchParams.get("session") || undefined,
+        req.nextUrl.searchParams.get("before") || undefined,
+        req.nextUrl.searchParams.get("history") === "1",
+      ),
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (e) {

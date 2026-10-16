@@ -12,6 +12,7 @@ const m = vi.hoisted(() => ({
   rpc: vi.fn(),
   question: vi.fn(),
   evaluation: vi.fn(),
+  extraction: vi.fn(),
 }));
 vi.mock("../src/lib/server/db", () => ({
   actor: async () => m.actor,
@@ -45,12 +46,13 @@ vi.mock("../src/lib/server/db", () => ({
 vi.mock("../src/lib/server/ai", () => ({
   nextQuestion: m.question,
   evaluate: m.evaluation,
-  extractConcepts: vi.fn(),
+  extractConcepts: m.extraction,
 }));
 import { runAction } from "../src/lib/server/service";
 beforeEach(() => {
   m.rows.clear();
   m.question.mockReset();
+  m.extraction.mockReset().mockResolvedValue(sampleConcepts);
   m.evaluation
     .mockReset()
     .mockResolvedValue({ results: [], strengths: [], revisit: [] });
@@ -83,6 +85,34 @@ const action = (a: Record<string, unknown>) =>
     error?: string;
   }>;
 describe("server orchestration with deterministic AI and persistence doubles", () => {
+  it("allows an explicit extraction retry with a new slot after failure", async () => {
+    m.extraction.mockRejectedValueOnce(new Error("provider timeout"));
+    const input = {
+      action: "extract",
+      title: "Water cycle",
+      notes: sampleNotes,
+    };
+    expect((await action(input)).error).toBeTruthy();
+    expect((await action(input)).error).toBeUndefined();
+    const slots = m.extraction.mock.calls.map(([, ctx]) => ctx.slot);
+    expect(slots[0]).not.toBe(slots[1]);
+  });
+  it("replays a completed extraction without calling the provider again", async () => {
+    const key = randomUUID();
+    const input = {
+      action: "extract",
+      title: "Water cycle",
+      notes: sampleNotes,
+      key,
+    };
+    const result = await runAction(input);
+    m.rpc.mockImplementationOnce(async () => ({
+      data: { cached: true, result },
+      error: null,
+    }));
+    expect(await runAction(input)).toEqual(result);
+    expect(m.extraction).toHaveBeenCalledOnce();
+  });
   it("evaluates immediately when the student ends early", async () => {
     const s = seed();
     m.question.mockResolvedValue({ question: null, conceptId: null });
@@ -135,6 +165,43 @@ describe("server orchestration with deterministic AI and persistence doubles", (
     expect(r.error).toMatch(/not found/);
     expect(m.question).not.toHaveBeenCalled();
     expect(m.evaluation).not.toHaveBeenCalled();
+  });
+  it("retries a failed review on the same transcript with a new quota slot", async () => {
+    const s = seed({
+      phase: "questions",
+      messages: [
+        { role: "user", text: "Initial explanation" },
+        { role: "student", text: "Where does the water go?" },
+      ],
+    });
+    m.evaluation.mockRejectedValueOnce(new Error("provider timeout"));
+    const failed = await action({
+      action: "finish",
+      id: s.id,
+      text: "Some water infiltrates the soil.",
+    });
+    expect(failed.error).toBeTruthy();
+    expect(failed.session?.messages).toHaveLength(3);
+    const reviewed = await action({ action: "finish", id: s.id });
+    expect(reviewed.error).toBeUndefined();
+    expect(reviewed.session?.phase).toBe("review");
+    expect(reviewed.session?.messages).toEqual(failed.session?.messages);
+    const slots = m.evaluation.mock.calls.map(([, ctx]) => ctx.slot);
+    expect(slots[0]).not.toBe(slots[1]);
+    expect(
+      slots.every((slot) => slot.startsWith(`session:${s.id}:evaluation:`)),
+    ).toBe(true);
+  });
+  it("returns the saved review when finish is repeated with a new key", async () => {
+    const s = seed({
+      phase: "review",
+      evaluation: { results: [], strengths: [], revisit: [] },
+    });
+    const r = await action({ action: "finish", id: s.id });
+    expect(r.error).toBeUndefined();
+    expect(r.session).toEqual(s);
+    expect(m.evaluation).not.toHaveBeenCalled();
+    expect(m.question).not.toHaveBeenCalled();
   });
   it("revealing source after review does not alter practice conditions", async () => {
     const s = seed({ phase: "review", notes_revealed: false });

@@ -83,6 +83,8 @@ export type Message = {
   unsure?: boolean;
 };
 export type Topic = {
+  provenance?: { label: string; lessonId: string | null };
+  lesson_id?: string | null;
   id: string;
   title: string;
   notes: string;
@@ -91,6 +93,7 @@ export type Topic = {
   created_at: string;
 };
 export type Session = {
+  provenance?: { label: string; lessonId: string | null };
   id: string;
   topic_id: string | null;
   owner: string;
@@ -163,6 +166,18 @@ export function verifyEvaluation(
       if (r.status === "Not demonstrated" && r.userExcerpt !== null)
         throw new AppError(
           "The AI attached a quotation to an omitted concept.",
+          502,
+        );
+      const validPair =
+        (r.claimType === "supported" &&
+          (r.status === "Explained clearly" ||
+            r.status === "Partially explained")) ||
+        (r.claimType === "unsupported" && r.status === "Partially explained") ||
+        (r.claimType === "omitted" && r.status === "Not demonstrated") ||
+        (r.claimType === "contradiction" && r.status === "Needs correction");
+      if (!validPair)
+        throw new AppError(
+          "The AI returned conflicting review classifications. Your writing is safe.",
           502,
         );
       return {

@@ -20,6 +20,7 @@ export function Shell({
           teech<span className="logo-dot">.</span>
         </Link>
         <nav aria-label="Main navigation">
+          <Link href="/teacher-sample">Teacher sample</Link>
           <Link href="/sample">Try a sample</Link>
           <Link
             href={signedIn ? "/library" : "/signin"}

@@ -12,12 +12,14 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Student } from "./student";
-import { api } from "@/lib/client";
+import { LearningShelf } from "./learning-shelf";
+import { api, olderAttempts } from "@/lib/client";
 import type { Session, Topic } from "@/lib/domain";
 export function Library() {
   const router = useRouter();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState<Topic | null>(null);
@@ -32,6 +34,7 @@ export function Library() {
         else {
           setTopics(d.topics);
           setSessions(d.sessions);
+          setNextCursor(d.nextCursor || null);
         }
       })
       .catch(() =>
@@ -44,6 +47,27 @@ export function Library() {
       active = false;
     };
   }, []);
+  async function loadOlder() {
+    if (!nextCursor || busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const d = await olderAttempts(nextCursor);
+      setSessions((current) => [
+        ...current,
+        ...(d.sessions || []).filter(
+          (s) => !current.some((old) => old.id === s.id),
+        ),
+      ]);
+      setNextCursor(d.nextCursor || null);
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Could not load older attempts.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
   async function start(t: Topic) {
     setBusy(true);
     setError("");
@@ -118,14 +142,19 @@ export function Library() {
         <div>
           <p className="eyebrow">A PLACE FOR YOUR IDEAS</p>
           <h1>Your study shelf.</h1>
-          <p>Pick up a thought. See where teaching takes it.</p>
+          <p>Learn something new, or explain what you know.</p>
         </div>
-        <Button asChild>
-          <Link href="/new">
-            <Plus size={17} />
-            New topic
-          </Link>
-        </Button>
+        <div className="learning-actions">
+          <Button asChild variant="outline">
+            <Link href="/learn/new">Learn with a teacher</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/new">
+              <Plus size={17} />
+              Teach Pip
+            </Link>
+          </Button>
+        </div>
       </div>
       {error && (
         <div className="error-box" role="alert">
@@ -139,6 +168,20 @@ export function Library() {
           </Button>
         </div>
       )}
+      <div className="mode-choices">
+        <p>
+          <strong>Learn with a teacher</strong>
+          <br />
+          Start with a topic. Learn it step by step.
+        </p>
+        <p>
+          <strong>Teach Pip</strong>
+          <br />
+          Explain what you know. Find the gaps.
+        </p>
+      </div>
+      <LearningShelf />
+      <h2>Teach Pip · your topics & attempts</h2>
       {loading ? (
         <p className="loading-line" role="status">
           <LoaderCircle className="spin" size={20} />
@@ -170,10 +213,13 @@ export function Library() {
                 </p>
                 {sessions.filter((s) => s.topic_id === t.id).length > 0 && (
                   <details>
-                    <summary>Recent attempts</summary>
+                    <summary>
+                      Attempts (
+                      {sessions.filter((s) => s.topic_id === t.id).length}{" "}
+                      loaded)
+                    </summary>
                     {sessions
                       .filter((s) => s.topic_id === t.id)
-                      .slice(0, 5)
                       .map((s) => (
                         <Link
                           key={s.id}
@@ -203,6 +249,9 @@ export function Library() {
                 <Link href={`/new?edit=${t.id}`} className="text-link">
                   Edit checklist
                 </Link>
+                <Link href={`/learn/new?topic=${t.id}`} className="text-link">
+                  Learn from these notes
+                </Link>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -215,6 +264,15 @@ export function Library() {
             </article>
           ))}
         </div>
+      )}
+      {nextCursor && (
+        <Button
+          variant="outline"
+          disabled={busy}
+          onClick={() => void loadOlder()}
+        >
+          Load older attempts
+        </Button>
       )}
       {deleting && (
         <div className="confirm-box" role="alert">

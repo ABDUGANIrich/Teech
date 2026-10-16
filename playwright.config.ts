@@ -15,7 +15,15 @@ export default defineConfig({
     {
       command: "npm run dev",
       url: "http://127.0.0.1:3000",
-      reuseExistingServer: !process.env.CI,
+      // The suite exercises the fixture sample and intercepts personal APIs.
+      // Never reuse a configured app or consume real account/provider quota.
+      reuseExistingServer: false,
+      env: {
+        NEXT_PUBLIC_SUPABASE_URL: "",
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
+        SUPABASE_SERVICE_ROLE_KEY: "",
+        OPENROUTER_API_KEY: "",
+      },
     },
     {
       command:

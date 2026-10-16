@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-16",
+  "browserErrors": [],
+  "requests": [
+    {
+      "action": "start",
+      "status": 200,
+      "phase": "explain"
+    },
+    {
+      "action": "explain",
+      "status": 200,
+      "phase": "questions"
+    },
+    {
+      "action": "finish",
+      "status": 200,
+      "phase": "review"
+    },
+    {
+      "action": "finish",
+      "status": 200,
+      "phase": "review"
+    }
+  ],
+  "loadingVisible": true,
+  "reviewVisible": true,
+  "repeatedFinish": {
+    "phase": "review",
+    "concepts": 6
+  },
+  "recoveredAfterReload": true
+}

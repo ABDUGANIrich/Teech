@@ -83,6 +83,10 @@ export async function actor(requireUser = false) {
 }
 export function dbError(error: { message: string } | null) {
   if (!error) return;
+  if (error.message.includes("TEACHER_BUDGET_EXCEEDED"))
+    throw new AppError("This lesson has used its 22 AI attempts. Saved lessons, feedback, hints and solutions remain available. Start a new lesson for more AI work.", 429);
+  if (error.message.includes("VERSION_CONFLICT"))
+    throw new AppError("This lesson changed in another tab. Reload its saved state before continuing.", 409);
   if (error.message.includes("ANONYMOUS_POOL_EXCEEDED"))
     throw new AppError(
       "Today's shared allowance for anonymous visitors is used up. Sign in to use your account allowance, or return after midnight UTC. Your writing is saved locally.",

@@ -6,7 +6,20 @@ export type ApiResult = {
   concepts?: Concept[];
   topics?: Topic[];
   sessions?: Session[];
+  nextCursor?: string | null;
 };
+export async function olderAttempts(before: string): Promise<ApiResult> {
+  const response = await fetch(
+    `/api/teech?${new URLSearchParams({ history: "1", before })}`,
+    { cache: "no-store" },
+  );
+  const data: ApiResult = await response.json();
+  if (!response.ok || data.error)
+    throw new Error(
+      data.error || "Could not load older attempts. Please try again.",
+    );
+  return data;
+}
 export function readLocal<T>(key: string, fallback: T): T {
   try {
     const v = localStorage.getItem(key);
