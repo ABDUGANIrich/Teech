@@ -75,7 +75,9 @@ export function TeachingRoom({
           s = data.session;
           if (!id) writeLocal(currentKey, s.id);
           if (userId) {
-            const library = await fetch("/api/teech").then((r) => r.json());
+            const library = await fetch("/api/teech?history=1").then((r) =>
+              r.json(),
+            );
             setHistory(library.sessions || []);
             setNextCursor(library.nextCursor || null);
           }

@@ -758,6 +758,39 @@ main {
 .preview-banner a {
   text-decoration: underline;
 }
+.teacher-preview {
+  align-items: center;
+  justify-content: space-between;
+}
+.teacher-preview-copy {
+  flex: 1;
+  min-width: 0;
+}
+.teacher-preview-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.teacher-preview-actions a {
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .teacher-preview {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .teacher-preview-actions {
+    justify-content: space-between;
+  }
+  .learning-fields input,
+  .learning-fields textarea,
+  .learning-fields select,
+  .practice-item textarea,
+  .learning-card > textarea {
+    font-size: 16px;
+  }
+}
 .preview-dot {
   width: 6px;
   height: 6px;
@@ -2088,5 +2121,19 @@ input {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+}
+@media (max-width: 380px) {
+  .header {
+    height: auto;
+    min-height: 78px;
+    padding: 16px 0;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .header nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
   }
 }

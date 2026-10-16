@@ -30,6 +30,8 @@ function TopicDraft({ edit, userId }: EditorProps) {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [concepts, setConcepts] = useState<Concept[]>([]);
+  const [version, setVersion] = useState<number | null>(null);
+  const [conflict, setConflict] = useState<Topic | null>(null);
   const [busy, setBusy] = useState(false);
   const [extracting, setExtracting] = useState(false);
   const [replaceChecklist, setReplaceChecklist] = useState(false);
@@ -46,21 +48,43 @@ function TopicDraft({ edit, userId }: EditorProps) {
         title: string;
         notes: string;
         concepts: Concept[];
+        version?: number;
       } | null>(key, null);
       if (local) {
         setTitle(local.title);
         setNotes(local.notes);
         setConcepts(local.concepts);
+        setVersion(local.version || null);
         setNotice("Your topic draft has been restored.");
+        if (edit && !local.version) {
+          try {
+            const d = await fetch(`/api/teech?topic=${edit}`).then((r) =>
+              r.json(),
+            );
+            if (d.topic) setConflict(d.topic);
+            else
+              setError(
+                d.error ||
+                  "Could not load the latest topic. Reload to try again; your draft is retained.",
+              );
+          } catch {
+            setError(
+              "Could not load the latest topic. Reload to try again; your draft is retained.",
+            );
+          }
+        }
       } else if (edit) {
         try {
-          const d = await fetch("/api/teech").then((r) => r.json());
+          const d = await fetch(`/api/teech?topic=${edit}`).then((r) =>
+            r.json(),
+          );
           if (d.error) throw new Error(d.error);
-          const t = d.topics.find((x: Topic) => x.id === edit);
+          const t = d.topic || d.topics?.find((x: Topic) => x.id === edit);
           if (!t) throw new Error("Topic not found in your library.");
           setTitle(t.title);
           setNotes(t.notes);
           setConcepts(t.concepts);
+          setVersion(t.version);
         } catch (e) {
           setError(
             e instanceof Error ? e.message : "Could not load this topic.",
@@ -72,7 +96,7 @@ function TopicDraft({ edit, userId }: EditorProps) {
     void load();
   }, [edit, key]);
   function saveDraft(t: string, n: string, c: Concept[]) {
-    if (!writeLocal(key, { title: t, notes: n, concepts: c }))
+    if (!writeLocal(key, { title: t, notes: n, concepts: c, version }))
       setNotice(
         "Browser storage is unavailable. Copy your notes before leaving.",
       );
@@ -116,6 +140,12 @@ function TopicDraft({ edit, userId }: EditorProps) {
   async function save() {
     if (busy) return;
     setError("");
+    if (edit && !version) {
+      setError(
+        "Review the latest saved topic below before saving this restored draft.",
+      );
+      return;
+    }
     try {
       topicInputSchema.parse({ title, notes });
       validateConcepts(notes, concepts);
@@ -129,11 +159,12 @@ function TopicDraft({ edit, userId }: EditorProps) {
     try {
       const d = await api({
         action: "save",
-        ...(edit ? { id: edit } : {}),
+        ...(edit ? { id: edit, expectedVersion: version } : {}),
         title,
         notes,
         concepts,
       });
+      if (d.conflict && d.topic) setConflict(d.topic);
       if (d.error) throw new Error(d.error);
       try {
         localStorage.removeItem(key);
@@ -166,6 +197,69 @@ function TopicDraft({ edit, userId }: EditorProps) {
           </p>
         </div>
       </div>
+      {conflict && (
+        <section className="notice" aria-label="Topic edit conflict">
+          <h2>Compare with the latest saved topic</h2>
+          <p>
+            Your edits are retained in the editor. Review version{" "}
+            {conflict.version} before choosing what to save.
+          </p>
+          <details>
+            <summary>{conflict.title} · saved notes and checklist</summary>
+            <p className="prewrap">{conflict.notes}</p>
+            <ul>
+              {conflict.concepts.map((c) => (
+                <li key={c.id}>
+                  <strong>{c.title}</strong> — {c.description}
+                  <blockquote>{c.excerpt}</blockquote>
+                </li>
+              ))}
+            </ul>
+          </details>
+          <div className="learning-actions">
+            <Button
+              variant="outline"
+              disabled={busy}
+              onClick={() => {
+                setTitle(conflict.title);
+                setNotes(conflict.notes);
+                setConcepts(conflict.concepts);
+                setVersion(conflict.version);
+                writeLocal(key, {
+                  title: conflict.title,
+                  notes: conflict.notes,
+                  concepts: conflict.concepts,
+                  version: conflict.version,
+                });
+                setConflict(null);
+                setError("");
+              }}
+            >
+              Use latest saved topic
+            </Button>
+            <Button
+              variant="outline"
+              disabled={busy}
+              onClick={() => {
+                setVersion(conflict.version);
+                writeLocal(key, {
+                  title,
+                  notes,
+                  concepts,
+                  version: conflict.version,
+                });
+                setConflict(null);
+                setError("");
+                setNotice(
+                  "Your edits are ready to save against the version you reviewed.",
+                );
+              }}
+            >
+              Keep my edits against this version
+            </Button>
+          </div>
+        </section>
+      )}
       {!ready ? (
         <p role="status">Opening your draft…</p>
       ) : (

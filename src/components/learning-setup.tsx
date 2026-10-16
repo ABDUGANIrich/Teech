@@ -6,7 +6,11 @@ import { Button } from "./ui/button";
 import { writeLocal } from "@/lib/client";
 import { useLocalSnapshot, useBrowserReady } from "@/lib/browser-storage";
 import { learningApi } from "@/lib/learning-client";
-import { learningInputSchema, type LearningInput } from "@/lib/learning";
+import {
+  learningDraftSchema,
+  learningInputSchema,
+  type LearningInput,
+} from "@/lib/learning";
 
 export function LearningFields({
   input,
@@ -72,21 +76,23 @@ export function LearningFields({
 export function LearningSetup({
   userId,
   prefill,
+  sourceId = "new",
 }: {
   userId: string;
   prefill?: LearningInput;
+  sourceId?: string;
 }) {
   const router = useRouter();
-  const key = `teech:${userId}:learning-setup`;
+  const key = `teech:${userId}:learning-setup${sourceId === "new" ? "" : `:${sourceId}`}`;
   const [editedInput, setInput] = useState<LearningInput | null>(null);
   const local = useLocalSnapshot(key);
   let saved: LearningInput | undefined;
   try {
-    saved = learningInputSchema.parse(JSON.parse(local));
+    saved = learningDraftSchema.parse(JSON.parse(local));
   } catch {}
   const input = editedInput ||
-    prefill ||
-    saved || { topic: "", level: "new" as const, goal: "", notes: "" };
+    saved ||
+    prefill || { topic: "", level: "new" as const, goal: "", notes: "" };
   const ready = useBrowserReady();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");

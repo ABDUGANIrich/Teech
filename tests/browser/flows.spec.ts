@@ -86,7 +86,7 @@ test("extraction locks inputs, preserves checklist on failed regeneration, and r
   const waiting = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route("**/api/teech", async (route) => {
+  await page.route("**/api/teech**", async (route) => {
     calls++;
     if (calls === 1) await waiting;
     if (calls === 2)
@@ -155,7 +155,7 @@ test("changing editor topic restores the correct draft and save target", async (
     title: "Second topic",
   };
   let saved: Record<string, unknown> | undefined;
-  await page.route("**/api/teech", async (route) => {
+  await page.route("**/api/teech**", async (route) => {
     if (route.request().method() === "GET")
       return route.fulfill({ json: { topics: [first, second], sessions: [] } });
     saved = route.request().postDataJSON();
@@ -263,7 +263,7 @@ test("older reviews remain available for comparison", async ({ page }) => {
     return route.fulfill({
       json: url.searchParams.has("session")
         ? { session }
-        : url.searchParams.has("history")
+        : url.searchParams.has("before")
           ? { sessions: [older], nextCursor: null }
           : { sessions: [session], nextCursor: "older" },
     });
@@ -504,7 +504,7 @@ test("mocked editor: extraction failure preserves input; edit, add, remove and v
 }) => {
   let calls = 0;
   let saved: Record<string, unknown> | undefined;
-  await page.route("**/api/teech", async (route) => {
+  await page.route("**/api/teech**", async (route) => {
     const data = route.request().postDataJSON();
     if (data.action === "extract") {
       calls++;
@@ -606,7 +606,7 @@ test("mocked library: confirm deletion and retain topic when cancelled", async (
   page,
 }) => {
   let deleted = false;
-  await page.route("**/api/teech", async (r) => {
+  await page.route("**/api/teech**", async (r) => {
     if (r.request().method() === "GET")
       return r.fulfill({ json: { topics: [sampleTopic], sessions: [] } });
     deleted = true;

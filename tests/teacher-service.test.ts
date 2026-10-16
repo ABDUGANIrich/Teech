@@ -228,6 +228,74 @@ async function active() {
   return s;
 }
 describe("teacher service with actual embedded PostgreSQL and deterministic model fixtures", () => {
+  for (const assistance of ["solution", "dispute"] as const) {
+    it(`continues an interrupted pending assessment after ${assistance}, including refresh`, async () => {
+      let s = await active();
+      s.units[0].attempts[1].state = "pending";
+      s.units[0].attempts[1].answer = "Saved before a host interruption";
+      const state = Object.fromEntries(
+        Object.entries(s).filter(
+          ([k]) =>
+            !["version", "providerAttempts", "topicId", "teachingId"].includes(
+              k,
+            ),
+        ),
+      );
+      await db.query("update learning_sessions set state=$1 where id=$2", [
+        JSON.stringify(state),
+        s.id,
+      ]);
+      s = (
+        await act(s, assistance, {
+          itemId: "halves_apply",
+          ...(assistance === "dispute" ? { reason: "Ambiguous wording" } : {}),
+        })
+      ).learning!;
+      s = (await readLearning(s.id)).learning!;
+      expect(s.units[0].attempts[1].answer).toBe(
+        "Saved before a host interruption",
+      );
+      expect(s.units[0].attempts[1].state).toBe("finished");
+      const result = await act(s, "next");
+      expect(result.error).toBeUndefined();
+      expect(result.learning!.phase).toBe("summary");
+      expect(m.grade).not.toHaveBeenCalled();
+    });
+  }
+  it("keeps extra practice distinct from a normal unit named targeted", async () => {
+    let s = await created();
+    m.plan.mockImplementationOnce(async (_s, ctx) => {
+      await reserve(ctx);
+      return {
+        status: "ready",
+        plan: {
+          ...samplePlan,
+          units: [{ ...samplePlan.units[0], id: "targeted" }],
+        },
+      };
+    });
+    for (const action of ["plan", "accept", "generate", "practice", "next"])
+      s = (await act(s, action)).learning!;
+    const result = await act(s, "targeted", { objectiveId: "middle" });
+    expect(result.error).toBeUndefined();
+    s = result.learning!;
+    expect(s.targeted!.content.id).toBe("targeted_1");
+    expect(
+      (
+        await db.query(
+          "select unit_id from learning_assessments where session_id=$1",
+          [s.id],
+        )
+      ).rows,
+    ).toHaveLength(2);
+    s = (
+      await act(s, "submit", {
+        itemId: s.targeted!.content.questions[1].id,
+        answer: "A valid trace",
+      })
+    ).learning!;
+    expect(s.targeted!.attempts[1].feedback!.status).toBe("Correct");
+  });
   it("completes notes-free binary search, persists grading, resumes without generation and hands off once", async () => {
     let s = await active();
     expect(s.policy).toBe("general");

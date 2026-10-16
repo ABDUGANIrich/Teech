@@ -85,6 +85,41 @@ const action = (a: Record<string, unknown>) =>
     error?: string;
   }>;
 describe("server orchestration with deterministic AI and persistence doubles", () => {
+  it("rejects stale topic drafts and keeps the newest source unchanged", async () => {
+    const id = randomUUID();
+    m.rows.set("topics", [
+      {
+        id,
+        user_id: m.actor.userId,
+        title: "Newer saved topic",
+        notes: sampleNotes,
+        version: 2,
+      },
+    ]);
+    m.rows.set("checklists", [
+      { topic_id: id, version: 2, concepts: sampleConcepts },
+    ]);
+    const input = {
+      action: "save",
+      id,
+      title: "Stale tab",
+      notes: sampleNotes,
+      concepts: sampleConcepts,
+    };
+    const stale = (await runAction({
+      ...input,
+      expectedVersion: 1,
+      key: randomUUID(),
+    })) as { error?: string; topic: { version: number } };
+    expect(stale.error).toContain("changed");
+    expect(stale.topic.version).toBe(2);
+    expect(m.rows.get("topics")![0].title).toBe("Newer saved topic");
+    const missing = await action(input);
+    expect(missing.error).toContain("changed");
+    expect(
+      (await action({ ...input, expectedVersion: 2 })).error,
+    ).toBeUndefined();
+  });
   it("allows an explicit extraction retry with a new slot after failure", async () => {
     m.extraction.mockRejectedValueOnce(new Error("provider timeout"));
     const input = {

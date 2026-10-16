@@ -14,11 +14,11 @@ import { Button } from "./ui/button";
 import { Student } from "./student";
 import { LearningShelf } from "./learning-shelf";
 import { api, olderAttempts } from "@/lib/client";
-import type { Session, Topic } from "@/lib/domain";
+import type { AttemptListItem, Topic } from "@/lib/domain";
 export function Library() {
   const router = useRouter();
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [sessions, setSessions] = useState<Session[]>([]);
+  const [sessions, setSessions] = useState<AttemptListItem[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -26,14 +26,14 @@ export function Library() {
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     let active = true;
-    fetch("/api/teech")
+    fetch("/api/teech?summary=1")
       .then((r) => r.json())
       .then((d) => {
         if (!active) return;
         if (d.error) setError(d.error);
         else {
           setTopics(d.topics);
-          setSessions(d.sessions);
+          setSessions(d.attempts || d.sessions || []);
           setNextCursor(d.nextCursor || null);
         }
       })
@@ -52,10 +52,10 @@ export function Library() {
     setBusy(true);
     setError("");
     try {
-      const d = await olderAttempts(nextCursor);
+      const d = await olderAttempts(nextCursor, true);
       setSessions((current) => [
         ...current,
-        ...(d.sessions || []).filter(
+        ...(d.attempts || d.sessions || []).filter(
           (s) => !current.some((old) => old.id === s.id),
         ),
       ]);

@@ -7,6 +7,7 @@ const m = vi.hoisted(() => ({
   eq: vi.fn(),
   order: vi.fn(),
   or: vi.fn(),
+  select: vi.fn(),
 }));
 vi.mock("../src/lib/server/db", () => ({
   actor: m.actor,
@@ -16,7 +17,10 @@ vi.mock("../src/lib/server/db", () => ({
   admin: () => ({
     from: () => {
       const chain = {
-        select: () => chain,
+        select: (fields: string) => {
+          m.select(fields);
+          return chain;
+        },
         eq: (field: string, value: unknown) => {
           m.eq(field, value);
           return chain;
@@ -45,6 +49,22 @@ beforeEach(() => {
 });
 
 describe("attempt history pagination", () => {
+  it("projects compact library history without notes, transcripts or review bodies", async () => {
+    const row = {
+      id: randomUUID(),
+      title: "History",
+      created_at: new Date().toISOString(),
+      topic_id: randomUUID(),
+      phase: "review",
+      checklist_version: 1,
+    };
+    m.page.mockResolvedValueOnce({ data: [row], error: null });
+    const result = await readData(undefined, undefined, true, true);
+    expect(result).toMatchObject({ sessions: [], attempts: [row] });
+    expect(m.select.mock.calls[0][0]).not.toContain("notes");
+    expect(m.select.mock.calls[0][0]).not.toContain("messages");
+    expect(m.select.mock.calls[0][0]).toContain("title:data->>title");
+  });
   it("keeps every page scoped to the authenticated owner and preserves a precise cursor", async () => {
     const rows = Array.from({ length: 50 }, () => ({
       id: randomUUID(),

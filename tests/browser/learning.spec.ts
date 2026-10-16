@@ -205,6 +205,10 @@ test("lost Teacher submission response recovers feedback without resubmission or
     check.getByRole("button", { name: "Submit answer" }),
   ).toHaveCount(0);
   expect(calls).toBe(1);
+  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(
+    page.getByText("Connection restored.", { exact: false }),
+  ).toBeVisible();
 });
 
 test("Teacher plan shows editable scope and only regenerates on explicit request", async ({

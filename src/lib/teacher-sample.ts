@@ -225,7 +225,10 @@ export function sampleTeacherAction(
       }
       break;
     case "dispute":
-      if (at) at.dispute = String(a.reason || "");
+      if (at) {
+        at.dispute = String(a.reason || "");
+        at.state = "finished";
+      }
       break;
     case "submit":
       if (!at || !key || at.state !== "open" || at.solution)

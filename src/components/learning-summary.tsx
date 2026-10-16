@@ -11,6 +11,8 @@ import {
   type LearningSession,
 } from "@/lib/learning";
 import { validateConcepts, type Concept } from "@/lib/domain";
+import { useDraft } from "@/lib/draft";
+import { z } from "zod";
 import type { LearningAction } from "./learning-practice";
 
 export function LearningSummary({
@@ -18,11 +20,13 @@ export function LearningSummary({
   busy,
   act,
   sample,
+  userId,
 }: {
   session: LearningSession;
   busy: boolean;
   act: LearningAction;
   sample: boolean;
+  userId: string;
 }) {
   const units = allUnits(s);
   const attempts = units.flatMap((u) => u.attempts);
@@ -185,6 +189,7 @@ export function LearningSummary({
           </Button>
           {s.handoff && (
             <Handoff
+              userId={userId}
               key={`${s.id}:${s.handoff.concepts ? "checklist" : "source"}`}
               session={s}
               busy={busy}
@@ -207,25 +212,44 @@ function Handoff({
   busy,
   act,
   sample,
+  userId,
 }: {
   session: LearningSession;
   busy: boolean;
   act: LearningAction;
   sample: boolean;
+  userId: string;
 }) {
   const h = s.handoff!;
-  const [concepts, setConcepts] = useState<Concept[]>(h.concepts || []);
+  const draft = useDraft(
+    `teech:${userId}:learn:${s.id}:handoff-draft`,
+    z
+      .array(
+        z.object({
+          id: z.string().max(60),
+          title: z.string().max(100),
+          description: z.string().max(500),
+          excerpt: z.string().max(1200),
+        }),
+      )
+      .max(8),
+    h.concepts || [],
+  );
+  const concepts = draft.value;
+  function setConcepts(update: (cs: Concept[]) => Concept[]) {
+    draft.change(update(concepts));
+  }
   const [error, setError] = useState("");
   function change(index: number, field: keyof Concept, value: string) {
     setConcepts((cs) =>
       cs.map((c, i) => (i === index ? { ...c, [field]: value } : c)),
     );
   }
-  function handoff() {
+  async function handoff() {
     try {
       validateConcepts(h.source, concepts);
       setError("");
-      void act("handoff", { concepts });
+      if (await act("handoff", { concepts })) draft.clear(concepts);
     } catch {
       setError(
         "Keep 4–8 distinct concepts, with exact supporting passages copied from this source. Expand a narrow lesson instead of manufacturing concepts.",
@@ -234,6 +258,7 @@ function Handoff({
   }
   return (
     <div className="learning-handoff">
+      {draft.notice && <p role="status">{draft.notice}</p>}
       <p>
         <strong>{provenance(s)}</strong>. This study reference is not
         independent proof of its own correctness. That provenance carries into

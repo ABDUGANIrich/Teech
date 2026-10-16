@@ -81,12 +81,23 @@ export async function actor(requireUser = false) {
     quota: visitor,
   };
 }
-export function dbError(error: { message: string } | null) {
+export function dbError(error: { message: string; code?: string } | null) {
   if (!error) return;
+  if (error.code === "PGRST205" || error.code === "42703")
+    throw new AppError(
+      "This feature is temporarily unavailable. Please try later; keep this tab open to retain local drafts.",
+      503,
+    );
   if (error.message.includes("TEACHER_BUDGET_EXCEEDED"))
-    throw new AppError("This lesson has used its 22 AI attempts. Saved lessons, feedback, hints and solutions remain available. Start a new lesson for more AI work.", 429);
+    throw new AppError(
+      "This lesson has used its 22 AI attempts. Saved lessons, feedback, hints and solutions remain available. Start a new lesson for more AI work.",
+      429,
+    );
   if (error.message.includes("VERSION_CONFLICT"))
-    throw new AppError("This lesson changed in another tab. Reload its saved state before continuing.", 409);
+    throw new AppError(
+      "This lesson changed in another tab. Reload its saved state before continuing.",
+      409,
+    );
   if (error.message.includes("ANONYMOUS_POOL_EXCEEDED"))
     throw new AppError(
       "Today's shared allowance for anonymous visitors is used up. Sign in to use your account allowance, or return after midnight UTC. Your writing is saved locally.",
@@ -94,7 +105,7 @@ export function dbError(error: { message: string } | null) {
     );
   if (error.message.includes("QUOTA_EXCEEDED"))
     throw new AppError(
-      "The request budget is resting. Try again in a minute; daily budgets reset at midnight UTC. Your writing is saved locally.",
+      "An allowance limit was reached. Daily limits reset at 00:00 UTC; rolling-minute limits expire within a minute. Saved work remains available.",
       429,
     );
   if (error.message.includes("CALL_ALREADY_RESERVED"))

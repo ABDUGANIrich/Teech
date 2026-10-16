@@ -10,8 +10,9 @@ import {
   verifyEvaluation,
   type Session,
 } from "../domain";
-import { admin, dbError } from "./db";
+import { admin } from "./db";
 import { limit } from "./config";
+import { explainUsageError } from "./quota";
 
 export type Context = {
   quota: string;
@@ -94,25 +95,26 @@ export async function structuredCall<T>(
   }
   for (let attempt = 0; attempt < 2; attempt++) {
     remaining(deadline);
+    const reservation = {
+      ...(ctx.teacherId
+        ? { p_id: ctx.teacherId, p_key: ctx.operationKey }
+        : {}),
+      p_actor: ctx.quota,
+      p_slot: `${ctx.slot}:${attempt}`,
+      p_actor_limit: limit(
+        ctx.quota.startsWith("user:")
+          ? "USER_DAILY_LIMIT"
+          : "ANONYMOUS_DAILY_LIMIT",
+        ctx.quota.startsWith("user:") ? 100 : 10,
+      ),
+      p_app_limit: limit("APP_DAILY_LIMIT", 40, 950),
+      p_minute_limit: limit("PERSONAL_MINUTE_LIMIT", 10, 100),
+    };
     const { error } = await admin().rpc(
       ctx.teacherId ? "reserve_teacher_usage" : "reserve_usage",
-      {
-        ...(ctx.teacherId
-          ? { p_id: ctx.teacherId, p_key: ctx.operationKey }
-          : {}),
-        p_actor: ctx.quota,
-        p_slot: `${ctx.slot}:${attempt}`,
-        p_actor_limit: limit(
-          ctx.quota.startsWith("user:")
-            ? "USER_DAILY_LIMIT"
-            : "ANONYMOUS_DAILY_LIMIT",
-          ctx.quota.startsWith("user:") ? 100 : 10,
-        ),
-        p_app_limit: limit("APP_DAILY_LIMIT", 40, 950),
-        p_minute_limit: limit("PERSONAL_MINUTE_LIMIT", 10, 100),
-      },
+      reservation,
     );
-    dbError(error);
+    await explainUsageError(error, reservation);
     let response: Response;
     let rawBody = "";
     try {
@@ -167,7 +169,7 @@ export async function structuredCall<T>(
     if (!response.ok)
       throw new AppError(
         response.status === 429
-          ? "The AI provider is at capacity. Your writing is saved; try again in a minute."
+          ? "The AI provider is at capacity. Saved work remains available. Try again later; this is separate from your Teech allowance."
           : "The selected free AI model could not respond. Your writing is saved; try again later.",
         response.status === 429 ? 429 : 502,
       );

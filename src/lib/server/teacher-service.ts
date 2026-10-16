@@ -379,7 +379,11 @@ export async function runTeacherAction(input: unknown) {
     if (a.action === "next") {
       requirePhase("practice");
       const u = activeUnit();
-      if (u.attempts.some((at) => at.state === "pending"))
+      if (
+        u.attempts.some(
+          (at) => at.state === "pending" && !at.solution && at.dispute === null,
+        )
+      )
         throw new AppError(
           "The saved answer is awaiting feedback. Retry assessment or end here to review.",
           409,
@@ -438,11 +442,18 @@ export async function runTeacherAction(input: unknown) {
       s.targetedObjective = a.objectiveId;
       event(s, "targeted-requested", a.objectiveId);
       await save(false);
-      const pkg = await teacherUnit(s, "targeted", ctx, a.objectiveId);
+      // Older lessons may already contain a normal unit called "targeted".
+      const unitId = [
+        "targeted",
+        "targeted_1",
+        "targeted_2",
+        "targeted_3",
+      ].find((candidate) => !s.plan!.units.some((u) => u.id === candidate))!;
+      const pkg = await teacherUnit(s, unitId, ctx, a.objectiveId);
       s.targeted = studied(pkg.unit);
       s.active = 3;
       s.phase = "practice";
-      return await save(true, {}, { unitId: "targeted", keys: pkg.keys });
+      return await save(true, {}, { unitId, keys: pkg.keys });
     }
     if (a.action === "handoff_prepare") {
       if (!s.handoff)
@@ -519,6 +530,7 @@ export async function runTeacherAction(input: unknown) {
     if (a.action === "dispute") {
       if (at.dispute !== null) return await save();
       at.dispute = a.reason;
+      at.state = "finished";
       event(s, "disputed", q.id);
       return await save();
     }
@@ -552,9 +564,10 @@ export async function runTeacherAction(input: unknown) {
     if (a.action === "solution") {
       if (!at.solution) {
         at.solution = key.solution;
-        if (at.state === "open") at.state = "finished";
+        at.state = "finished";
         event(s, "solution", q.id);
       }
+      at.state = "finished";
       return await save();
     }
     if (a.action === "submit") {

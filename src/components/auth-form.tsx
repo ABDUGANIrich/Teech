@@ -13,7 +13,11 @@ export function AuthForm({
   failed: boolean;
 }) {
   const router = useRouter();
-  const [signup, setSignup] = useState(false);
+  const [mode, setMode] = useState<"signin" | "signup" | "recover" | "resend">(
+    "signin",
+  );
+  const signup = mode === "signup";
+  const emailOnly = mode === "recover" || mode === "resend";
   const [error, setError] = useState(
     failed
       ? "That verification link is invalid or expired. Request a new account email or sign in if you already verified."
@@ -32,14 +36,15 @@ export function AuthForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mode: signup ? "signup" : "signin",
+          mode,
           email: form.get("email"),
-          password: form.get("password"),
+          ...(!emailOnly ? { password: form.get("password") } : {}),
         }),
       });
       const d = await r.json();
       if (d.error) throw new Error(d.error);
-      if (d.verify)
+      if (d.message) setMessage(d.message);
+      else if (d.verify)
         setMessage(
           "Check your email for a confirmation link, then return here to sign in. If no email arrives, check spam and the project’s email delivery configuration.",
         );
@@ -61,11 +66,21 @@ export function AuthForm({
     <div className="auth-page">
       <Student small />
       <p className="eyebrow">YOUR IDEAS DESERVE A HOME</p>
-      <h1>{signup ? "Make a little space." : "Good to see you."}</h1>
+      <h1>
+        {mode === "recover"
+          ? "Reset your password."
+          : mode === "resend"
+            ? "Confirm your email."
+            : signup
+              ? "Make a little space."
+              : "Good to see you."}
+      </h1>
       <p>
-        {signup
-          ? "Save your topics and come back to your progress."
-          : "Sign in to pick up where you left off."}
+        {emailOnly
+          ? "Enter your email address to request a fresh link."
+          : signup
+            ? "Save your topics and come back to your progress."
+            : "Sign in to pick up where you left off."}
       </p>
       {!configured && (
         <div className="preview-banner">
@@ -88,21 +103,31 @@ export function AuthForm({
           required
           disabled={!configured || busy}
         />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          minLength={8}
-          maxLength={128}
-          autoComplete={signup ? "new-password" : "current-password"}
-          placeholder="At least 8 characters"
-          required
-          disabled={!configured || busy}
-        />
+        {!emailOnly && (
+          <>
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              minLength={8}
+              maxLength={128}
+              autoComplete={signup ? "new-password" : "current-password"}
+              placeholder="At least 8 characters"
+              required
+              disabled={!configured || busy}
+            />
+          </>
+        )}
         <Button disabled={!configured || busy} type="submit">
           {busy ? <LoaderCircle className="spin" size={16} /> : null}
-          {signup ? "Create account" : "Sign in"}
+          {mode === "recover"
+            ? "Send password-reset link"
+            : mode === "resend"
+              ? "Resend confirmation email"
+              : signup
+                ? "Create account"
+                : "Sign in"}
           <ArrowRight size={16} />
         </Button>
       </form>
@@ -118,8 +143,9 @@ export function AuthForm({
       )}
       <Button
         variant="ghost"
+        disabled={busy}
         onClick={() => {
-          setSignup(!signup);
+          setMode(signup ? "signin" : "signup");
           setError("");
           setMessage("");
         }}
@@ -128,6 +154,30 @@ export function AuthForm({
           ? "Already have an account? Sign in"
           : "New here? Create an account"}
       </Button>
+      <div className="learning-actions">
+        <Button
+          variant="ghost"
+          disabled={busy}
+          onClick={() => {
+            setMode(mode === "recover" ? "signin" : "recover");
+            setError("");
+            setMessage("");
+          }}
+        >
+          {mode === "recover" ? "Back to sign in" : "Forgot password?"}
+        </Button>
+        <Button
+          variant="ghost"
+          disabled={busy}
+          onClick={() => {
+            setMode(mode === "resend" ? "signin" : "resend");
+            setError("");
+            setMessage("");
+          }}
+        >
+          {mode === "resend" ? "Back to sign in" : "Resend confirmation"}
+        </Button>
+      </div>
       <p className="micro">
         Email verification may be required before your first sign-in.
       </p>

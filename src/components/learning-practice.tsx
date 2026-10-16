@@ -8,7 +8,7 @@ import { classification, type StudiedUnit } from "@/lib/learning";
 export type LearningAction = (
   action: string,
   values?: Record<string, unknown>,
-) => Promise<void>;
+) => Promise<boolean>;
 export function LearningPractice({
   unit,
   userId,
@@ -187,23 +187,25 @@ function PracticeItem({
           </p>
         </div>
       )}
-      {(a.state === "pending" || a.state === "failed") && (
-        <div className="notice" role="status">
-          <p>
-            Your original answer is saved.{" "}
-            {a.state === "pending"
-              ? "Assessment is pending or was interrupted."
-              : "Assessment could not finish."}{" "}
-            Retrying is an explicit AI request.
-          </p>
-          <Button
-            disabled={busy || !!a.solution || a.dispute !== null}
-            onClick={() => void act("retry_grade", { itemId: q.id })}
-          >
-            Retry assessment of saved answer
-          </Button>
-        </div>
-      )}
+      {(a.state === "pending" || a.state === "failed") &&
+        !a.solution &&
+        a.dispute === null && (
+          <div className="notice" role="status">
+            <p>
+              Your original answer is saved.{" "}
+              {a.state === "pending"
+                ? "Assessment is pending or was interrupted."
+                : "Assessment could not finish."}{" "}
+              Retrying is an explicit AI request.
+            </p>
+            <Button
+              disabled={busy || !!a.solution || a.dispute !== null}
+              onClick={() => void act("retry_grade", { itemId: q.id })}
+            >
+              Retry assessment of saved answer
+            </Button>
+          </div>
+        )}
       {a.solution && (
         <div className="learning-solution">
           <h3>Worked review</h3>

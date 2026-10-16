@@ -13,6 +13,7 @@ import {
   validateConcepts,
   type Session,
   type Topic,
+  type AttemptListItem,
 } from "../domain";
 import { sampleTopic } from "../sample";
 import { actor, admin, dbError } from "./db";
@@ -29,6 +30,7 @@ export const actionSchema = z.discriminatedUnion("action", [
     action: z.literal("save"),
     key: uuid,
     id: uuid.optional(),
+    expectedVersion: z.number().int().min(1).optional(),
     ...topicInputSchema.shape,
     concepts: conceptsSchema,
   }),
@@ -81,10 +83,15 @@ async function getTopic(id: string, userId: string | null): Promise<Topic> {
   dbError(ce);
   return { ...data, concepts: check!.concepts };
 }
+export async function readTopic(id: string) {
+  const who = await actor(true);
+  return { topic: await getTopic(uuid.parse(id), who.userId) };
+}
 export async function readData(
   id?: string,
   before?: string,
   historyOnly = false,
+  compact = false,
 ) {
   const who = await actor(!id);
   const db = admin();
@@ -105,7 +112,11 @@ export async function readData(
   }
   let history = db
     .from("sessions")
-    .select("data,id,created_at")
+    .select(
+      (compact
+        ? "id,created_at,title:data->>title,topic_id:data->>topic_id,phase:data->>phase,checklist_version:data->checklist_version"
+        : "data,id,created_at") as string,
+    )
     .eq("owner", who.id)
     .order("created_at", { ascending: false })
     .order("id", { ascending: false });
@@ -117,31 +128,43 @@ export async function readData(
       `created_at.lt.${cursor.created_at},and(created_at.eq.${cursor.created_at},id.lt.${cursor.id})`,
     );
   }
-  const { data: sessions, error: se } = await history.limit(50);
+  const { data: sessionRows, error: se } = await history.limit(50);
   dbError(se);
+  const sessions = sessionRows as unknown as
+    (AttemptListItem & { data: Session })[] | null;
   const last = sessions?.at(-1);
   const page = {
-    sessions: (sessions || []).map((s) => s.data),
+    sessions: compact ? [] : (sessions || []).map((s) => s.data),
+    ...(compact ? { attempts: sessions || [] } : {}),
     nextCursor:
       sessions?.length === 50 && last
         ? JSON.stringify({ created_at: last.created_at, id: last.id })
         : null,
   };
   if (historyOnly) return page;
-  const { data: topics, error } = await db
+  const { data: topicRows, error } = await db
     .from("topics")
-    .select("*")
+    .select(
+      (compact ? "id,title,version,created_at,provenance" : "*") as string,
+    )
     .eq("user_id", who.userId!)
     .order("created_at", { ascending: false });
   dbError(error);
-  const { data: checks, error: ce } = await db
-    .from("checklists")
-    .select("*")
-    .in(
-      "topic_id",
-      (topics || []).map((t) => t.id),
-    );
-  dbError(ce);
+  const topics = topicRows as unknown as Omit<Topic, "concepts">[] | null;
+  const checks: { topic_id: string; version: number; concepts: unknown }[] = [];
+  for (let i = 0; i < (topics || []).length; i += 30) {
+    const batch = topics!.slice(i, i + 30);
+    const { data, error: ce } = await db
+      .from("checklists")
+      .select("topic_id,version,concepts")
+      .or(
+        batch
+          .map((t) => `and(topic_id.eq.${t.id},version.eq.${t.version})`)
+          .join(","),
+      );
+    dbError(ce);
+    checks.push(...(data || []));
+  }
   return {
     topics: (topics || []).map((t) => ({
       ...t,
@@ -193,6 +216,15 @@ export async function runAction(input: unknown) {
       });
     if (a.action === "save") {
       const prev = a.id ? await getTopic(a.id, who.userId) : null;
+      // begin_operation holds the topic resource until commit, so checking
+      // inside this lease also protects against concurrent app saves.
+      if (prev && a.expectedVersion !== prev.version)
+        return await commit({
+          error:
+            "This topic changed since you opened it. Your draft is retained. Compare it with the latest saved topic before saving again.",
+          topic: prev,
+          conflict: true,
+        });
       const topic: Topic = {
         id: a.id || a.key,
         title: a.title,

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { AppError } from "@/lib/domain";
-import { readData, runAction } from "@/lib/server/service";
+import { readData, readTopic, runAction } from "@/lib/server/service";
 export const runtime = "nodejs";
 export const maxDuration = 120;
 export const dynamic = "force-dynamic";
@@ -20,11 +20,17 @@ function failure(e: unknown) {
 }
 export async function GET(req: NextRequest) {
   try {
+    const topic = req.nextUrl.searchParams.get("topic");
+    if (topic)
+      return NextResponse.json(await readTopic(topic), {
+        headers: { "Cache-Control": "no-store" },
+      });
     return NextResponse.json(
       await readData(
         req.nextUrl.searchParams.get("session") || undefined,
         req.nextUrl.searchParams.get("before") || undefined,
         req.nextUrl.searchParams.get("history") === "1",
+        req.nextUrl.searchParams.get("summary") === "1",
       ),
       { headers: { "Cache-Control": "no-store" } },
     );

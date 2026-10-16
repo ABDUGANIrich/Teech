@@ -110,6 +110,10 @@ export type Session = {
   created_at: string;
   preview?: boolean;
 };
+export type AttemptListItem = Pick<
+  Session,
+  "id" | "title" | "topic_id" | "phase" | "checklist_version" | "created_at"
+>;
 
 export class AppError extends Error {
   constructor(

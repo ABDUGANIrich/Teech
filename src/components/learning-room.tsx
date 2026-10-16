@@ -7,17 +7,23 @@ import { Student } from "./student";
 import { LearningFields } from "./learning-setup";
 import { LearningPractice, type LearningAction } from "./learning-practice";
 import { LearningSummary } from "./learning-summary";
-import { fetchLearning, learningApi } from "@/lib/learning-client";
+import {
+  actionRecovered,
+  fetchLearning,
+  learningApi,
+} from "@/lib/learning-client";
 import {
   learningStateSchema,
   provenance,
   type LearningSession,
-  type LearningInput,
   type Unit,
 } from "@/lib/learning";
 import { newTeacherSample, sampleTeacherAction } from "@/lib/teacher-sample";
-import { writeLocal } from "@/lib/client";
+import { removeLocal, writeLocal } from "@/lib/client";
 import { useLocalSnapshot, useBrowserReady } from "@/lib/browser-storage";
+import { useDraft } from "@/lib/draft";
+import { learningDraftSchema } from "@/lib/learning";
+import { z } from "zod";
 
 export function LessonBlocks({ blocks }: { blocks: Unit["explanation"] }) {
   return (
@@ -94,7 +100,12 @@ export function LearningRoom({
   const [pendingLabel, setPendingLabel] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const [question, setQuestion] = useState("");
+  const questionDraft = useDraft(
+    `teech:${userId}:learn:${id || "sample"}:help-draft`,
+    z.string().max(500),
+    "",
+  );
+  const question = questionDraft.value;
   const [deleting, setDeleting] = useState(false);
   const locked = useRef(false);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -140,10 +151,11 @@ export function LearningRoom({
       );
   }
   const act: LearningAction = async (action, values = {}) => {
-    if (!session || locked.current) return;
+    if (!session || locked.current) return false;
     locked.current = true;
     setBusy(true);
     setError("");
+    setNotice("");
     setPendingLabel(
       action === "submit" || action === "retry_grade"
         ? "Saving your answer and preparing feedback…"
@@ -153,6 +165,7 @@ export function LearningRoom({
           ? "Preparing this step…"
           : "Saving this step…",
     );
+    let definiteFailure = false;
     try {
       const d = sample
         ? {
@@ -167,7 +180,10 @@ export function LearningRoom({
             ...values,
           });
       if (d.learning) adopt(d.learning);
-      if (d.error) throw new Error(d.error);
+      if (d.error) {
+        definiteFailure = true;
+        throw new Error(d.error);
+      }
       if (d.deleted) {
         try {
           for (const key of Object.keys(localStorage))
@@ -175,21 +191,39 @@ export function LearningRoom({
               localStorage.removeItem(key);
         } catch {}
         router.push("/library");
-        return;
+        return true;
       }
       if (action === "handoff" && d.learning?.teachingId)
         router.push(`/teach/${d.learning.teachingId}`);
-      if (action === "help") setQuestion("");
+      if (action === "help") questionDraft.clear(question);
+      return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : "This step could not finish.");
+      let recovered = false;
+      let recoveredSession: LearningSession | undefined;
       if (!sample && id) {
         try {
           const d = await fetchLearning(id);
-          if (d.learning) adopt(d.learning);
+          if (d.learning) {
+            recoveredSession = d.learning;
+            adopt(d.learning);
+            // A GET alone does not prove the intended action committed.
+            recovered =
+              !definiteFailure &&
+              actionRecovered(session, d.learning, action, values);
+          }
         } catch {
           /* Keep local draft; never claim an unpersisted result is saved. */
         }
       }
+      if (recovered) {
+        setNotice("Connection restored. Your saved result is ready.");
+        if (action === "help") questionDraft.clear(question);
+        if (action === "handoff" && recoveredSession?.teachingId)
+          router.push(`/teach/${recoveredSession.teachingId}`);
+        return true;
+      }
+      setError(e instanceof Error ? e.message : "This step could not finish.");
+      return false;
     } finally {
       locked.current = false;
       setBusy(false);
@@ -198,6 +232,12 @@ export function LearningRoom({
   async function reload() {
     if (sample) {
       const fresh = newTeacherSample();
+      try {
+        for (const key of Object.keys(localStorage))
+          if (key.startsWith(`teech:${userId}:learn:${fresh.id}:`))
+            removeLocal(key);
+      } catch {}
+      questionDraft.clear();
       setSession(fresh);
       writeLocal(sampleKey, fresh);
       setError("");
@@ -241,18 +281,22 @@ export function LearningRoom({
         <span className="eyebrow">PIP · TEACHER</span>
       </div>
       {sample && (
-        <div className="preview-banner">
-          <strong>Teacher sample · fixed content</strong>
-          <span>
-            No credentials or AI calls. Open-text feedback is illustrative, not
-            an assessment.
-          </span>
-          <Button variant="ghost" size="sm" onClick={() => void reload()}>
-            Reset sample
-          </Button>
-          <Link className="text-link" href="/sample">
-            Try the Student sample →
-          </Link>
+        <div className="preview-banner teacher-preview">
+          <div className="teacher-preview-copy">
+            <strong>Teacher sample · fixed content</strong>
+            <p>
+              No credentials or AI calls. Open-text feedback is illustrative,
+              not an assessment.
+            </p>
+          </div>
+          <div className="teacher-preview-actions">
+            <Button variant="ghost" size="sm" onClick={() => void reload()}>
+              Reset sample
+            </Button>
+            <Link className="text-link" href="/sample">
+              Try the Student sample →
+            </Link>
+          </div>
         </div>
       )}
       <div className="page-heading">
@@ -299,10 +343,13 @@ export function LearningRoom({
           </Button>
         </div>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {(notice || questionDraft.notice) && (
+        <p role="status">{notice || questionDraft.notice}</p>
+      )}
       {s.phase === "setup" || s.phase === "plan" ? (
         <PlanSetup
           key={`${s.id}:${s.version}`}
+          userId={userId}
           session={s}
           busy={busy}
           act={act}
@@ -356,6 +403,7 @@ export function LearningRoom({
           <div className="learning-main">
             {s.phase === "summary" ? (
               <LearningSummary
+                userId={userId}
                 session={s}
                 busy={busy}
                 act={act}
@@ -466,7 +514,7 @@ export function LearningRoom({
                         maxLength={500}
                         value={question}
                         disabled={busy || s.helpUsed >= 2}
-                        onChange={(e) => setQuestion(e.target.value)}
+                        onChange={(e) => questionDraft.change(e.target.value)}
                       />
                       <Button
                         variant="outline"
@@ -536,13 +584,20 @@ function PlanSetup({
   busy,
   act,
   sample,
+  userId,
 }: {
   session: LearningSession;
   busy: boolean;
   act: LearningAction;
   sample: boolean;
+  userId: string;
 }) {
-  const [input, setInput] = useState<LearningInput>(s.input);
+  const draft = useDraft(
+    `teech:${userId}:learn:${s.id}:plan-draft`,
+    learningDraftSchema,
+    s.input,
+  );
+  const input = draft.value;
   return (
     <div className="learning-plan">
       {s.issue && (
@@ -608,10 +663,17 @@ function PlanSetup({
               ? "Correct the interpretation or scope"
               : "Shape a short lesson"}
           </h2>
-          <LearningFields input={input} onChange={setInput} disabled={busy} />
+          <LearningFields
+            input={input}
+            onChange={draft.change}
+            disabled={busy}
+          />
+          {draft.notice && <p role="status">{draft.notice}</p>}
           <Button
             disabled={busy || !input.topic.trim() || s.providerAttempts >= 22}
-            onClick={() => void act("plan", { input })}
+            onClick={async () => {
+              if (await act("plan", { input })) draft.clear(input);
+            }}
           >
             {s.plan
               ? "Generate revised plan · uses AI allowance"

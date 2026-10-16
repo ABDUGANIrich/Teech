@@ -15,6 +15,9 @@ export const learningInputSchema = z
     notes: z.string().trim().max(LIMITS.notes).default(""),
   })
   .strict();
+export const learningDraftSchema = learningInputSchema.extend({
+  topic: z.string().max(100),
+});
 export const planSchema = z
   .object({
     title: text(100),
@@ -233,6 +236,7 @@ function excerpts(
 }
 export function validatePlan(plan: Plan, input: LearningInput) {
   if (
+    plan.units.some((u) => u.id.length > 40) ||
     !unique(plan.objectives.map((o) => o.id)) ||
     !unique(plan.units.map((u) => u.id)) ||
     plan.units.some(

@@ -1,4 +1,4 @@
-import type { Session, Topic, Concept } from "./domain";
+import type { Session, Topic, Concept, AttemptListItem } from "./domain";
 export type ApiResult = {
   error?: string;
   session?: Session;
@@ -6,11 +6,16 @@ export type ApiResult = {
   concepts?: Concept[];
   topics?: Topic[];
   sessions?: Session[];
+  attempts?: AttemptListItem[];
   nextCursor?: string | null;
+  conflict?: boolean;
 };
-export async function olderAttempts(before: string): Promise<ApiResult> {
+export async function olderAttempts(
+  before: string,
+  compact = false,
+): Promise<ApiResult> {
   const response = await fetch(
-    `/api/teech?${new URLSearchParams({ history: "1", before })}`,
+    `/api/teech?${new URLSearchParams({ history: "1", before, ...(compact ? { summary: "1" } : {}) })}`,
     { cache: "no-store" },
   );
   const data: ApiResult = await response.json();
@@ -31,10 +36,17 @@ export function readLocal<T>(key: string, fallback: T): T {
 export function writeLocal(key: string, value: unknown): boolean {
   try {
     localStorage.setItem(key, JSON.stringify(value));
+    window.dispatchEvent(new Event("teech-storage"));
     return true;
   } catch {
     return false;
   }
+}
+export function removeLocal(key: string) {
+  try {
+    localStorage.removeItem(key);
+    window.dispatchEvent(new Event("teech-storage"));
+  } catch {}
 }
 const pendingKeys = new Map<string, string>();
 export async function api(body: Record<string, unknown>): Promise<ApiResult> {

@@ -1,5 +1,27 @@
 # Teech
 
+## Review fixes — 17 October 2026
+
+Interrupted Teacher assessments can be ended as a worked review or dispute without blocking continuation. Plan edits, clarification questions and handoff checklist edits recover from local drafts, including incomplete edits. Setup drafts are scoped to their source topic. A recovered completed action replaces the connection error with a recovery notice; a saved pending checkpoint does not count as completion.
+
+Topic edits send the version originally loaded by the editor. The check runs under the existing topic operation lock; a stale save returns the latest topic for comparison without overwriting notes. The editor retains the draft until the learner explicitly chooses the saved version or prepares their own edits against the reviewed version. No migration after 004 is required for these fixes.
+
+The library requests compact attempt records, loads only current checklist versions, and opens individual topic sources through the authenticated topic endpoint. Full snapshots remain available for teaching and exact checklist comparison. Teacher extra-practice identifiers avoid ordinary unit IDs, including IDs already stored in older lessons.
+
+The auth form supports password-reset requests and confirmation-email resends. The reset page requires a verified session and checks password confirmation. With Supabase SSR, configure the **Reset password** email template to use the token-hash callback:
+
+```html
+<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery">Reset password</a>
+```
+
+Allow the production callback URL and `APP_URL/auth/confirm?next=/reset-password` in Supabase Redirect URLs, with explicit development equivalents when needed. The callback also supports PKCE codes and accepts only the fixed reset-page destination. Email delivery still needs working Supabase SMTP; a successful request does not establish that an email was delivered. These flows follow [Supabase's password recovery guidance](https://supabase.com/docs/guides/auth/passwords).
+
+Quota admission and caps are unchanged. After a denied AI reservation, the server distinguishes personal daily, shared daily and rolling-minute exhaustion where diagnostics are available. Provider capacity errors are labeled separately. Diagnostic failures do not bypass admission.
+
+`npm run test:e2e` now builds and starts an isolated production app with all account/provider credentials disabled, four local workers and two CI workers. A second Vite server remains the fixture-only personal component harness. Release browser checks therefore avoid development-router timing and metadata-loader issues.
+
+For an explicitly authorized live smoke, run a production build, then load the existing environment privately and run `node --env-file=.env.local scripts/verify-review-fixes-live.mjs --local http://127.0.0.1:3107`. A deployed URL can be passed without `--local`. The script creates two temporary confirmed users, consumes a small bounded number of real AI calls, exercises ownership, grading, handoff, stale edits, recovery and deletion, then removes its own accounts and operation caches. Usage stays counted. It generates a recovery token without sending an email, so it does not test delivery.
+
 ## Teacher mode — Learn it. Practice it. Teach it.
 
 Two entry points share the existing account and AI allowance:
@@ -142,10 +164,10 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Run browser tests with the Supabase/OpenRouter variables unset: they deliberately test the missing-configuration path. Playwright starts/reuses Next on port 3000 and a separate test-only Vite component harness on port 4174. Both desktop and mobile Chromium projects cover sample flow, refresh recovery, notes, three questions, unsure answers, review, retry comparison, keyboard focus, reduced motion, wrapping, unconfigured auth, concept editing, deletion confirmation, and interrupted-request recovery. Personal UI checks intercept API calls with deterministic fixtures; they do **not** establish successful Supabase authentication or persistence.
+Browser tests automatically disable Supabase/OpenRouter configuration and deliberately exercise the missing-configuration path. Playwright builds and starts an isolated production app on port 3000 and a separate test-only Vite component harness on port 4174. Both desktop and mobile Chromium projects cover sample flow, refresh recovery, notes, three questions, unsure answers, review, retry comparison, keyboard focus, reduced motion, wrapping, unconfigured auth, concept editing, deletion confirmation, and interrupted-request recovery. Personal UI checks intercept API calls with deterministic fixtures; they do **not** establish successful Supabase authentication or persistence.
 
 Vitest executes the actual migration in PGlite (embedded PostgreSQL) with test Auth roles. It checks RLS isolation, forbidden browser writes/RPCs, ownership checks, transaction rollback, concurrent quotas, duplicate reservations, and operation crash recovery. This verifies SQL behavior locally; it does not verify a deployed Supabase project or remote connection concurrency. AI tests mock catalog/provider responses and check free-only routing, runtime validation, bounded repair, and quota reservation.
 
-After configuring a real deployment, perform a separate small smoke test: sign up/verify/sign in, create a topic, edit its passages, teach with one question then finish, refresh and reopen, retry, compare, and confirm deletion. Test a second user cannot read the first user's topic through the Data API. Check the provider dashboard against local usage events. **No live inference, email delivery, hosted Auth, or deployed RLS checks were possible without credentials.**
+After configuring a real deployment, perform a separate small smoke test: sign up/verify/sign in, create a topic, edit its passages, teach with one question then finish, refresh and reopen, retry, compare, and confirm deletion. Test a second user cannot read the first user's topic through the Data API. Check the provider dashboard against local usage events. See docs/verification.md for the current live inference, hosted Auth, and deployed isolation checks. Inbox delivery remains a separate provider-dependent check.
 
 The production dependency audit is clean at implementation time. `npm audit` reports a development-only `braces` advisory propagated through Next's ESLint plugin (`fast-glob`/`micromatch`); the registry has no patched compatible `braces` release. The affected glob input is repository-controlled. Do not downgrade Next just to suppress the report; update the lint dependency chain when a fix is available.

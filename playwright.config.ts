@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/browser",
   fullyParallel: true,
+  workers: process.env.CI ? 2 : 4,
   timeout: 30000,
   use: { baseURL: "http://127.0.0.1:3000", trace: "retain-on-failure" },
   projects: [
@@ -13,12 +14,14 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: "npm run dev",
+      command: "npm run build && npm run start -- --hostname 127.0.0.1",
+      timeout: 120000,
       url: "http://127.0.0.1:3000",
       // The suite exercises the fixture sample and intercepts personal APIs.
       // Never reuse a configured app or consume real account/provider quota.
       reuseExistingServer: false,
       env: {
+        APP_URL: "http://127.0.0.1:3000",
         NEXT_PUBLIC_SUPABASE_URL: "",
         NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
         SUPABASE_SERVICE_ROLE_KEY: "",

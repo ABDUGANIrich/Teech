@@ -15,6 +15,17 @@ import {
 } from "../src/lib/teacher-sample";
 const state = () => learningStateSchema.strip().parse(newTeacherSample());
 describe("learning content and evidence boundaries", () => {
+  it("leaves room in question IDs for generated unit prefixes", () => {
+    expect(() =>
+      validatePlan(
+        {
+          ...samplePlan,
+          units: [{ ...samplePlan.units[0], id: "x".repeat(60) }],
+        },
+        state().input,
+      ),
+    ).toThrow(/inconsistent/);
+  });
   it("supports notes-free setup, scoped plans and strict public state", () => {
     const s = state();
     expect(validatePlan(samplePlan, s.input).interpretation).toContain(

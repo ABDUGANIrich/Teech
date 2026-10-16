@@ -1,4 +1,4 @@
-import type { LearningSession } from "./learning";
+import { allUnits, type LearningSession } from "./learning";
 import { readLocal, writeLocal } from "./client";
 export type LessonListItem = {
   id: string;
@@ -18,6 +18,88 @@ export type LearningResponse = {
   deleted?: boolean;
 };
 const pending = new Map<string, string>();
+export function actionRecovered(
+  before: LearningSession,
+  after: LearningSession,
+  action: string,
+  values: Record<string, unknown>,
+) {
+  if (after.id !== before.id || after.version <= before.version) return false;
+  const previousUnit =
+    before.active === 3 ? before.targeted : before.units[before.active];
+  const previousItem = previousUnit?.attempts.find(
+    (a) => a.itemId === values.itemId,
+  );
+  const item = allUnits(after)
+    .flatMap((u) => u.attempts)
+    .find((a) => a.itemId === values.itemId);
+  switch (action) {
+    case "submit":
+      return (
+        !!item &&
+        item.state === "finished" &&
+        (values.unsure
+          ? item.unsure
+          : item.answer === values.answer && !!item.feedback)
+      );
+    case "retry_grade":
+      return !!item?.feedback && item.state === "finished";
+    case "hint":
+      return !!item && item.hints.length > (previousItem?.hints.length || 0);
+    case "solution":
+      return !!item?.solution;
+    case "dispute":
+      return item?.dispute === values.reason;
+    case "plan":
+      return (
+        !!(after.plan || after.issue) &&
+        after.events.at(-1)?.type === "plan" &&
+        JSON.stringify(after.input) ===
+          JSON.stringify(values.input || before.input)
+      );
+    case "accept":
+      return after.accepted;
+    case "generate":
+      return after.units.length > before.units.length;
+    case "help":
+      return allUnits(after).some(
+        (u) =>
+          u.content.id === previousUnit?.content.id &&
+          u.clarifications.length >
+            (previousUnit?.clarifications.length || 0) &&
+          u.clarifications.at(-1)?.question === values.question,
+      );
+    case "targeted":
+      return !!after.targeted && after.targetedObjective === values.objectiveId;
+    case "practice":
+      return after.phase === "practice";
+    case "next":
+      return (
+        after.phase !== "practice" &&
+        !!previousUnit &&
+        (before.active === 3 ||
+          after.completed.includes(previousUnit.content.id))
+      );
+    case "summary":
+      return after.phase === "summary";
+    case "resume":
+      return after.phase === "learning";
+    case "revisit":
+      return (
+        after.phase === "learning" &&
+        (after.active === 3 ? after.targeted : after.units[after.active])
+          ?.content.id === values.unitId
+      );
+    case "handoff_prepare":
+      return !!after.handoff;
+    case "handoff_extract":
+      return !!after.handoff?.concepts;
+    case "handoff":
+      return !!after.handoff?.done && !!after.teachingId;
+    default:
+      return false;
+  }
+}
 export async function learningApi(
   userId: string,
   body: Record<string, unknown>,

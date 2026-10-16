@@ -73,7 +73,10 @@ export default async function Home() {
               </Link>
             </p>
           </div>
-          <p className="micro">No account needed for either fixed sample.</p>
+          <p className="micro">
+            No account needed to try a sample. The Teacher sample is fixed; the
+            Student sample uses live AI when available.
+          </p>
         </div>
         <div className="hero-scene">
           <div className="scene-label">

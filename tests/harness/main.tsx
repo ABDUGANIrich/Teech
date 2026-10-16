@@ -5,6 +5,8 @@ import { Library } from "../../src/components/library";
 import { TeachingRoom } from "../../src/components/teaching-room";
 import { LearningRoom } from "../../src/components/learning-room";
 import { LearningSetup } from "../../src/components/learning-setup";
+import { AuthForm } from "../../src/components/auth-form";
+import { PasswordForm } from "../../src/components/password-form";
 import "../../src/app/globals.css";
 const view = new URLSearchParams(location.search).get("view");
 function EditorNavigation() {
@@ -27,7 +29,22 @@ createRoot(document.getElementById("root")!).render(
     <p style={{ padding: 12, background: "#f5e8d8" }}>
       TEST HARNESS · mocked API responses · no real account or database
     </p>
-    {view === "learning-room" ? (
+    {view === "auth" ? (
+      <AuthForm configured failed={false} />
+    ) : view === "password" ? (
+      <PasswordForm />
+    ) : view === "prefilled-setup" ? (
+      <LearningSetup
+        userId="test-user"
+        sourceId={new URLSearchParams(location.search).get("source") || "a"}
+        prefill={{
+          topic: "Original topic",
+          notes: "Original notes",
+          level: "new",
+          goal: "",
+        }}
+      />
+    ) : view === "learning-room" ? (
       <LearningRoom
         id="99999999-9999-4999-8999-999999999999"
         userId="test-user"
