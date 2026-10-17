@@ -1,0 +1,24 @@
+{
+  "origin": "https://teech-nu.vercel.app",
+  "checks": {
+    "/": 200,
+    "/teacher-sample": 200,
+    "/sample": 200,
+    "/signin": 200,
+    "/robots.txt": 200,
+    "/sitemap.xml": 200,
+    "/opengraph-image": 200,
+    "/twitter-image": 200,
+    "desktop": {
+      "fixedTeacher": true,
+      "authRecoveryControls": true,
+      "overflow": false
+    },
+    "mobile": {
+      "fixedTeacher": true,
+      "authRecoveryControls": true,
+      "overflow": false
+    }
+  },
+  "browserErrors": []
+}

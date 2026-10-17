@@ -1,0 +1,25 @@
+{
+  "origin": "https://teech-nu.vercel.app",
+  "checks": {
+    "/": 200,
+    "/teacher-sample": 200,
+    "/sample": 200,
+    "/signin": 200,
+    "/robots.txt": 200,
+    "/sitemap.xml": 200,
+    "/opengraph-image": 200,
+    "/twitter-image": 200,
+    "unauthenticatedApis": true,
+    "topicOnlyPlan": {
+      "title": "Introduction to SEO in Next.js",
+      "excludes": "Version-specific Next.js APIs (e.g., app router vs pages router differences beyond fundamentals), advanced topics like dynamic rendering, ISR, or third-party SEO tools, current algorithm updates from Google or Bing, and custom server configurations.",
+      "objectives": 3,
+      "units": 3,
+      "sourceExcerpts": 0
+    },
+    "savedReopen": true,
+    "lessonDeleted": true
+  },
+  "providerAttempts": 1,
+  "cleanup": true
+}

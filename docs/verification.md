@@ -1,5 +1,11 @@
 # Verification record
 
+## Topic-only plan refusal fix — 2026-10-17
+
+- Deployed commit `325c0dc` to Vercel production. Deployment `dpl_DNSvV5mb3i3EPMm6sFvdQpoDjmUc` is Ready and assigned to https://teech-nu.vercel.app; the production alias was independently inspected after deployment. No database migration was required. Before deployment, all 87 Vitest tests, ESLint, TypeScript and the production build passed.
+- A temporary confirmed account requested **SEO in Next.js**, starting level **new**, with an empty goal and empty notes. Production generated **Introduction to SEO in Next.js** on the first real provider attempt, with three objectives, three units, no source quotations and explicit exclusions for current/version-specific details. Reloading returned the same saved plan. The lesson, temporary account and its operation caches were removed; usage remains counted. Evidence: `artifacts/topic-only-deployment-live.json`. This verifies the reported planning failure; it is not a lesson accuracy evaluation or full unit/practice smoke.
+- Public homepage, both samples, signin, robots, sitemap and both 1200×630 social images returned 200. Canonical/OG origin, private noindex and unauthenticated API rejection passed. Desktop/mobile public browser checks found no page errors or horizontal overflow. Evidence: `artifacts/topic-only-deployment-public.json`, `artifacts/topic-only-deployment-production-desktop.png`, and `artifacts/topic-only-deployment-production-mobile.png`.
+
 ## Review fixes — 2026-10-17
 
 - Confirmed the user-applied migration 004 through fresh explicit-column, read-only Supabase queries: Teacher tables and topic provenance columns are available. No further database migration was introduced.
