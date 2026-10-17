@@ -11,7 +11,6 @@ test("resetting the Teacher sample clears practice and handoff drafts", async ({
   await page.goto("/teacher-sample");
   async function practice() {
     await page.getByRole("button", { name: "Accept plan & begin" }).click();
-    await page.getByRole("button", { name: "Prepare this unit" }).click();
     await page.getByRole("button", { name: "Continue to practice" }).click();
   }
   await practice();
@@ -64,11 +63,15 @@ test("a lost handoff response redirects from the recovered result with a single 
     return route.abort("failed");
   });
   await page.goto(`${harness}/?view=learning-room`);
+  await expect(
+    page.getByRole("button", { name: "Save topic & teach it to Pip" }),
+  ).toBeVisible();
+  const initialReads = reads;
   await page
     .getByRole("button", { name: "Save topic & teach it to Pip" })
     .click();
   await expect(page).toHaveURL(new RegExp(`/teach/${teachingId}`));
-  expect(reads).toBe(2);
+  expect(reads).toBe(initialReads + 1);
 });
 
 test("plan edits survive reload and a failed revision; successful generation clears the draft", async ({

@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { useState } from "react";
+import { StrictMode, useState } from "react";
 import { TopicEditor } from "../../src/components/topic-editor";
 import { Library } from "../../src/components/library";
 import { TeachingRoom } from "../../src/components/teaching-room";
@@ -44,11 +44,17 @@ createRoot(document.getElementById("root")!).render(
           goal: "",
         }}
       />
-    ) : view === "learning-room" ? (
-      <LearningRoom
-        id="99999999-9999-4999-8999-999999999999"
-        userId="test-user"
-      />
+    ) : view === "learning-room" || location.pathname.startsWith("/learn/") ? (
+      <StrictMode>
+        <LearningRoom
+          id={
+            location.pathname.startsWith("/learn/")
+              ? location.pathname.split("/")[2]
+              : "99999999-9999-4999-8999-999999999999"
+          }
+          userId="test-user"
+        />
+      </StrictMode>
     ) : view === "learning-setup" ? (
       <LearningSetup userId="test-user" />
     ) : view === "editor-navigation" ? (

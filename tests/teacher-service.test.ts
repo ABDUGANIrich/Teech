@@ -592,6 +592,42 @@ describe("teacher service with actual embedded PostgreSQL and deterministic mode
       (await act(s, "targeted", { objectiveId: "middle" })).error,
     ).toContain("already");
   });
+  it("checkpoints retrieval evidence on failure and clears old sources on a changed plan input", async () => {
+    let s = await created();
+    m.plan.mockImplementationOnce(async (state, ctx) => {
+      await reserve(ctx);
+      state.research = {
+        calls: 1,
+        sources: [
+          {
+            url: "https://example.com/docs",
+            title: "Saved documentation",
+            text: "A retrieved source snapshot",
+            retrievedAt: new Date().toISOString(),
+          },
+        ],
+      };
+      await ctx.checkpoint();
+      throw new AppError("Supporting material could not be loaded", 503);
+    });
+    const failed = await act(s, "plan");
+    expect(failed.error).toContain("Supporting material");
+    s = (await readLearning(s.id)).learning!;
+    expect(s.research?.calls).toBe(1);
+    expect(s.research?.sources).toHaveLength(1);
+    expect(s.plan).toBeNull();
+    m.plan.mockImplementationOnce(async (state, ctx) => {
+      expect(state.research).toEqual({ calls: 1, sources: [] });
+      await reserve(ctx);
+      return { status: "ready", plan: structuredClone(samplePlan) };
+    });
+    s = (
+      await act(s, "plan", { input: { ...s.input, goal: "A revised scope" } })
+    ).learning!;
+    expect(s.phase).toBe("plan");
+    expect(s.research?.calls).toBe(1);
+    expect(s.research?.sources).toEqual([]);
+  });
   it("keeps insufficient notes recoverable and permits explicit plan revisions before freezing", async () => {
     let s = await created();
     m.plan.mockResolvedValueOnce({

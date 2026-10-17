@@ -168,6 +168,25 @@ export const learningStateSchema = z
     id: z.string().uuid(),
     input: learningInputSchema,
     policy: z.enum(["notes", "general"]),
+    research: z
+      .object({
+        calls: z.number().int().min(0).max(8),
+        sources: z
+          .array(
+            z
+              .object({
+                url: z.url().max(2000),
+                title: z.string().max(300),
+                text: z.string().min(1).max(5000),
+                retrievedAt: z.iso.datetime(),
+                publishedAt: z.string().max(80).optional(),
+              })
+              .strict(),
+          )
+          .max(12),
+      })
+      .strict()
+      .optional(),
     phase: z.enum(["setup", "plan", "learning", "practice", "summary"]),
     plan: planSchema.nullable(),
     planHistory: z.array(planSchema).max(22),

@@ -31,7 +31,7 @@ import {
   teacherClarify,
   teacherGrade,
 } from "./teacher-ai";
-import { extractLessonConcepts } from "./ai";
+import { extractLessonConcepts, type Context } from "./ai";
 
 const uuid = z.string().uuid();
 const base = { key: uuid, id: uuid, version: z.number().int().min(0) };
@@ -211,12 +211,15 @@ export async function runTeacherAction(input: unknown) {
   let s: LearningState;
   let version = -1;
   let grading: { unit: StudiedUnit; itemId: string } | undefined;
-  const ctx = {
+  const ctx: Context = {
     quota: who.quota,
     slot: `teacher:${id}:${a.key}`,
     deadline: Date.now() + 105000,
     teacherId: id,
     operationKey: a.key,
+    checkpoint: async () => {
+      await save(false);
+    },
   };
   async function save(
     finish = true,
@@ -315,6 +318,8 @@ export async function runTeacherAction(input: unknown) {
           409,
         );
       if (a.input) {
+        if (JSON.stringify(s.input) !== JSON.stringify(a.input) && s.research)
+          s.research.sources = [];
         s.input = a.input;
         s.policy = a.input.notes ? "notes" : "general";
       }

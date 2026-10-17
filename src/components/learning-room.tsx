@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
@@ -56,6 +56,46 @@ export function LessonBlocks({ blocks }: { blocks: Unit["explanation"] }) {
         ) : (
           <p key={i}>{b.text}</p>
         ),
+      )}
+    </div>
+  );
+}
+function UnitPreparation({
+  act,
+  busy,
+  exhausted,
+}: {
+  act: LearningAction;
+  busy: boolean;
+  exhausted: boolean;
+}) {
+  const started = useRef(false);
+  const [failed, setFailed] = useState(false);
+  async function prepare() {
+    setFailed(false);
+    setFailed(!(await act("generate")));
+  }
+  const start = useEffectEvent(prepare);
+  useEffect(() => {
+    if (started.current || busy || exhausted) return;
+    // One automatic attempt per unit, including React's effect replay.
+    // Failures require an explicit retry so they cannot burn the allowance.
+    started.current = true;
+    void start();
+  }, [busy, exhausted]);
+  return (
+    <div className="learning-card">
+      <p role="status">
+        {exhausted
+          ? "Your saved course is available, but this unit needs more AI allowance to prepare."
+          : failed
+            ? "Your course is saved. Retry when you’re ready to prepare this unit."
+            : "Preparing your unit…"}
+      </p>
+      {failed && (
+        <Button disabled={busy || exhausted} onClick={() => void prepare()}>
+          Retry preparing unit
+        </Button>
       )}
     </div>
   );
@@ -424,18 +464,12 @@ export function LearningRoom({
                 <p className="eyebrow">UNIT {s.active + 1} · INSTRUCTION</p>
                 <h2>{unitTitle}</h2>
                 {!u ? (
-                  <div className="learning-card">
-                    <p>
-                      Generate this unit when you are ready. Reopening saved
-                      units uses no AI allowance.
-                    </p>
-                    <Button
-                      disabled={busy || s.providerAttempts >= 22}
-                      onClick={() => void act("generate")}
-                    >
-                      Prepare this unit
-                    </Button>
-                  </div>
+                  <UnitPreparation
+                    key={`${s.id}:${s.plan!.units[s.active]?.id}`}
+                    act={act}
+                    busy={busy}
+                    exhausted={s.providerAttempts >= 22}
+                  />
                 ) : (
                   <>
                     <p className="learning-outcome">
@@ -649,7 +683,9 @@ function PlanSetup({
           ))}
           <p className="micro">
             Accepting freezes this plan. A different scope later needs a new
-            lesson.
+            course. Your first unit prepares automatically using AI allowance;
+            later units prepare as you reach them. Reopening saved units uses no
+            AI allowance.
           </p>
           <Button disabled={busy} onClick={() => void act("accept")}>
             Accept plan & begin
@@ -677,7 +713,7 @@ function PlanSetup({
           >
             {s.plan
               ? "Generate revised plan · uses AI allowance"
-              : "Generate lesson plan · uses AI allowance"}
+              : "Create course · uses AI allowance"}
           </Button>
           <p className="micro">
             Only this button regenerates a plan. Editing a field uses no AI

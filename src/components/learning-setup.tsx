@@ -1,15 +1,21 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { writeLocal } from "@/lib/client";
+import { removeLocal, writeLocal } from "@/lib/client";
 import { useLocalSnapshot, useBrowserReady } from "@/lib/browser-storage";
-import { learningApi } from "@/lib/learning-client";
+import {
+  actionRecovered,
+  fetchLearning,
+  learningApi,
+} from "@/lib/learning-client";
+import { z } from "zod";
 import {
   learningDraftSchema,
   learningInputSchema,
   type LearningInput,
+  type LearningSession,
 } from "@/lib/learning";
 
 export function LearningFields({
@@ -86,6 +92,13 @@ export function LearningSetup({
   const key = `teech:${userId}:learning-setup${sourceId === "new" ? "" : `:${sourceId}`}`;
   const [editedInput, setInput] = useState<LearningInput | null>(null);
   const local = useLocalSnapshot(key);
+  const lessonKey = `${key}:lesson`;
+  const checkpoint = useLocalSnapshot(lessonKey);
+  const [createdId, setCreatedId] = useState<string | null>(null);
+  let savedId = createdId;
+  try {
+    savedId ||= z.string().uuid().parse(JSON.parse(checkpoint));
+  } catch {}
   let saved: LearningInput | undefined;
   try {
     saved = learningDraftSchema.parse(JSON.parse(local));
@@ -94,7 +107,8 @@ export function LearningSetup({
     saved ||
     prefill || { topic: "", level: "new" as const, goal: "", notes: "" };
   const ready = useBrowserReady();
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState<"saving" | "planning" | null>(null);
+  const locked = useRef(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   function change(v: LearningInput) {
@@ -104,8 +118,13 @@ export function LearningSetup({
         "Browser storage is unavailable. Copy your setup before leaving.",
       );
   }
+  function openLesson(id: string) {
+    removeLocal(key);
+    removeLocal(lessonKey);
+    router.push(`/learn/${id}`);
+  }
   async function create() {
-    if (busy) return;
+    if (locked.current) return;
     const parsed = learningInputSchema.safeParse(input);
     if (!parsed.success) {
       setError(
@@ -113,24 +132,79 @@ export function LearningSetup({
       );
       return;
     }
-    setBusy(true);
+    locked.current = true;
+    setBusy("saving");
     setError("");
+    // Preserve prefills too, even when the learner submits without editing.
+    if (!writeLocal(key, parsed.data))
+      setNotice(
+        "Browser storage is unavailable. Copy your setup before leaving.",
+      );
+    let lesson: LearningSession | undefined;
+    let beforePlan: LearningSession | undefined;
+    let definiteFailure = false;
     try {
-      const d = await learningApi(userId, {
-        action: "create",
-        input: parsed.data,
-      });
+      const d = savedId
+        ? await fetchLearning(savedId)
+        : await learningApi(userId, {
+            action: "create",
+            input: parsed.data,
+          });
       if (d.error || !d.learning)
         throw new Error(d.error || "The lesson was not saved.");
-      try {
-        localStorage.removeItem(key);
-      } catch {}
-      router.push(`/learn/${d.learning.id}`);
+      lesson = d.learning;
+      setCreatedId(lesson.id);
+      if (!writeLocal(lessonKey, lesson.id))
+        setNotice(
+          "Browser storage is unavailable. Open the saved lesson before leaving.",
+        );
+      // A prior submission may have completed while its response was lost.
+      if (
+        lesson.accepted ||
+        (lesson.plan &&
+          JSON.stringify(lesson.input) === JSON.stringify(parsed.data))
+      ) {
+        openLesson(lesson.id);
+        return;
+      }
+      setBusy("planning");
+      beforePlan = lesson;
+      const planned = await learningApi(userId, {
+        action: "plan",
+        id: lesson.id,
+        version: lesson.version,
+        input: parsed.data,
+      });
+      if (planned.error) {
+        definiteFailure = true;
+        throw new Error(planned.error);
+      }
+      if (!planned.learning)
+        throw new Error("The lesson plan could not be loaded.");
+      openLesson(lesson.id);
     } catch (e) {
+      if (beforePlan && !definiteFailure) {
+        try {
+          const recovered = await fetchLearning(beforePlan.id);
+          if (
+            recovered.learning &&
+            actionRecovered(beforePlan, recovered.learning, "plan", {
+              input: parsed.data,
+            })
+          ) {
+            openLesson(beforePlan.id);
+            return;
+          }
+        } catch {
+          // Keep the setup and saved lesson link available for an explicit retry.
+        }
+      }
       setError(
         e instanceof Error ? e.message : "Could not create this lesson.",
       );
-      setBusy(false);
+    } finally {
+      locked.current = false;
+      setBusy(null);
     }
   }
   return (
@@ -141,8 +215,9 @@ export function LearningSetup({
       <p className="eyebrow">TEACHER MODE</p>
       <h1>Start with a little curiosity.</h1>
       <p>
-        Choose a topic, confirm a short plan, then learn and practice one step
-        at a time. About 15 minutes is an estimate.
+        Choose a topic, review your course outline, then learn and practice one
+        step at a time. Each unit prepares automatically as you reach it. About
+        15 minutes is an estimate.
       </p>
       <form
         onSubmit={(e) => {
@@ -153,15 +228,35 @@ export function LearningSetup({
         <LearningFields
           input={input}
           onChange={change}
-          disabled={busy || !ready}
+          disabled={!!busy || !ready}
         />
-        <Button disabled={busy || !ready} type="submit">
-          {busy ? "Saving lesson…" : "Create learning session"}
+        <Button disabled={!!busy || !ready} type="submit">
+          {busy === "saving"
+            ? "Saving your setup…"
+            : busy === "planning"
+              ? "Creating course…"
+              : savedId
+                ? "Continue creating course · uses AI allowance"
+                : "Create course · uses AI allowance"}
         </Button>
       </form>
+      {busy && (
+        <p role="status">
+          {busy === "planning"
+            ? "Your setup is saved. Creating your course outline…"
+            : "Saving your setup before creating the course…"}
+        </p>
+      )}
       {error && (
         <p className="error-box" role="alert">
           {error}
+        </p>
+      )}
+      {savedId && !busy && (
+        <p>
+          Your setup is saved. Continue to recover a finished plan or retry
+          generation, or{" "}
+          <Link href={`/learn/${savedId}`}>open the saved lesson</Link>.
         </p>
       )}
       {notice && <p role="status">{notice}</p>}

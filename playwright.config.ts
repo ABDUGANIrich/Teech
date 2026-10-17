@@ -26,6 +26,7 @@ export default defineConfig({
         NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
         SUPABASE_SERVICE_ROLE_KEY: "",
         OPENROUTER_API_KEY: "",
+        KEENABLE_API_KEY: "",
       },
     },
     {

@@ -60,6 +60,7 @@ function output(value: unknown) {
 beforeEach(() => {
   m.rpc.mockReset().mockResolvedValue({ error: null });
   vi.stubEnv("OPENROUTER_API_KEY", "fixture-key");
+  vi.stubEnv("KEENABLE_API_KEY", "");
 });
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -107,6 +108,10 @@ describe("teacher tasks on shared provider transport", () => {
     expect(f).toHaveBeenCalledTimes(3);
     expect(m.rpc).toHaveBeenCalledTimes(2);
     expect(m.rpc.mock.calls[1][1].p_slot).toBe(`${ctx.slot}:1`);
+    const repair = JSON.parse(f.mock.calls[2][1].body);
+    expect(
+      JSON.parse(repair.messages.at(-1).content).untrusted_validation_feedback,
+    ).toContain("invalid answer key");
   });
   it("rejects fabricated notes excerpts and repairs once without showing them", async () => {
     const s = newTeacherSample();
@@ -183,6 +188,8 @@ describe("teacher tasks on shared provider transport", () => {
     expect(JSON.parse(body.messages[1].content).untrusted_data).toEqual({
       input: s.input,
       policy: "general",
+      supportingSources: [],
+      currentDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
     });
     expect(m.rpc).toHaveBeenCalledOnce();
   });
