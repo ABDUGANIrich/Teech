@@ -39,7 +39,10 @@ function catalog() {
 function output(value: unknown) {
   // Fixture adapter follows the provider's named-field wire format.
   const wire = structuredClone(value) as Record<string, unknown>;
-  if (wire.status === "ready") wire.reason = null;
+  if (wire.status === "ready") {
+    wire.reason = null;
+    if (!("reasonCode" in wire)) wire.reasonCode = null;
+  }
   if (wire.status === "insufficient") wire.plan = null;
   if (wire.unit && typeof wire.unit === "object" && "questions" in wire.unit) {
     const u = wire.unit as typeof sampleUnit.unit;
@@ -123,21 +126,157 @@ describe("teacher tasks on shared provider transport", () => {
     expect(m.rpc).toHaveBeenCalledTimes(2);
   });
   it("reports insufficient notes as a valid bounded result without general-knowledge fallback", async () => {
+    const s = newTeacherSample();
+    s.input.notes = "Binary search";
+    s.policy = "notes";
     const f = vi
       .fn()
       .mockResolvedValueOnce(catalog())
       .mockResolvedValueOnce(
         output({
           status: "insufficient",
+          reasonCode: "insufficient_notes",
           reason:
             "Add material about the search interval before planning this notes-based lesson.",
         }),
       );
     vi.stubGlobal("fetch", f);
-    expect((await teacherPlan(newTeacherSample(), ctx)).status).toBe(
-      "insufficient",
-    );
+    expect((await teacherPlan(s, ctx)).status).toBe("insufficient");
     expect(m.rpc).toHaveBeenCalledTimes(1);
+  });
+  it("plans a topic-only software introduction without notes or source claims", async () => {
+    const s = newTeacherSample();
+    s.input = { topic: "SEO in Next.js", level: "new", goal: "", notes: "" };
+    const plan = {
+      title: "SEO in Next.js: the fundamentals",
+      interpretation: "Stable introductory concepts for a Next.js website.",
+      prerequisites: [],
+      objectives: [
+        { id: "metadata", text: "Describe the purpose of page metadata." },
+        { id: "discovery", text: "Explain how crawlers discover pages." },
+      ],
+      units: [
+        {
+          id: "seo",
+          title: "Discovery and metadata",
+          objectiveIds: ["metadata", "discovery"],
+        },
+      ],
+      covers: "Page titles, descriptions and discoverable links.",
+      excludes: "Current or version-specific APIs and ranking guarantees.",
+      estimatedMinutes: 15,
+      sourceExcerpts: [],
+    };
+    const f = vi
+      .fn()
+      .mockResolvedValueOnce(catalog())
+      .mockResolvedValueOnce(output({ status: "ready", plan }));
+    vi.stubGlobal("fetch", f);
+    expect(await teacherPlan(s, ctx)).toEqual({ status: "ready", plan });
+    const body = JSON.parse(f.mock.calls[1][1].body);
+    expect(body.messages[0].content).toContain(
+      "Notes are optional and absent by design",
+    );
+    expect(body.messages[0].content).not.toContain(
+      "If notes lack material for a useful lesson",
+    );
+    expect(JSON.parse(body.messages[1].content).untrusted_data).toEqual({
+      input: s.input,
+      policy: "general",
+    });
+    expect(m.rpc).toHaveBeenCalledOnce();
+  });
+  it("repairs a missing-notes refusal in general mode using one additional reservation", async () => {
+    const f = vi
+      .fn()
+      .mockResolvedValueOnce(catalog())
+      .mockResolvedValueOnce(
+        output({
+          status: "insufficient",
+          reasonCode: "insufficient_notes",
+          reason: "No notes provided.",
+        }),
+      )
+      .mockResolvedValueOnce(output({ status: "ready", plan: samplePlan }));
+    vi.stubGlobal("fetch", f);
+    expect(await teacherPlan(newTeacherSample(), ctx)).toEqual({
+      status: "ready",
+      plan: samplePlan,
+    });
+    expect(f).toHaveBeenCalledTimes(3);
+    expect(m.rpc).toHaveBeenCalledTimes(2);
+    expect(m.rpc.mock.calls.map(([, args]) => args.p_slot)).toEqual([
+      `${ctx.slot}:0`,
+      `${ctx.slot}:1`,
+    ]);
+  });
+  it.each(["insufficient_notes", null, "unknown_reason"])(
+    "does not display an invalid general-mode refusal (%s) after the bounded repair",
+    async (reasonCode) => {
+      const f = vi
+        .fn()
+        .mockResolvedValueOnce(catalog())
+        .mockImplementation(async () =>
+          output({
+            status: "insufficient",
+            reasonCode,
+            reason: "No notes provided.",
+          }),
+        );
+      vi.stubGlobal("fetch", f);
+      await expect(teacherPlan(newTeacherSample(), ctx)).rejects.toThrow(
+        /invalid response twice/,
+      );
+      expect(f).toHaveBeenCalledTimes(3);
+      expect(m.rpc).toHaveBeenCalledTimes(2);
+    },
+  );
+  it.each([
+    [
+      "requires_current_sources",
+      "The exact changes in the latest Next.js release",
+      "Provide current release notes for the requested changes.",
+    ],
+    [
+      "missing_document",
+      "Explain chapter three of my private course document",
+      "Provide the chapter so its content can be taught.",
+    ],
+  ])(
+    "preserves a legitimate %s refusal without retrying",
+    async (reasonCode, topic, reason) => {
+      const s = newTeacherSample();
+      s.input = { ...s.input, topic, goal: "" };
+      const f = vi
+        .fn()
+        .mockResolvedValueOnce(catalog())
+        .mockResolvedValueOnce(
+          output({ status: "insufficient", reasonCode, reason }),
+        );
+      vi.stubGlobal("fetch", f);
+      expect(await teacherPlan(s, ctx)).toEqual({
+        status: "insufficient",
+        reason,
+      });
+      expect(m.rpc).toHaveBeenCalledOnce();
+    },
+  );
+  it("rejects a ready plan carrying a refusal code", async () => {
+    const f = vi
+      .fn()
+      .mockResolvedValueOnce(catalog())
+      .mockImplementation(async () =>
+        output({
+          status: "ready",
+          plan: samplePlan,
+          reasonCode: "missing_document",
+        }),
+      );
+    vi.stubGlobal("fetch", f);
+    await expect(teacherPlan(newTeacherSample(), ctx)).rejects.toThrow(
+      /invalid response twice/,
+    );
+    expect(m.rpc).toHaveBeenCalledTimes(2);
   });
   it("allows uncertain grading and alternative reasoning, but rejects unknown item IDs", async () => {
     const grade = {

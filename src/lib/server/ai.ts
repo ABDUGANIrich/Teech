@@ -142,7 +142,7 @@ export async function structuredCall<T>(
           messages: [
             {
               role: "system",
-              content: `${options.system ?? safety}\nTASK: ${instruction}${attempt ? "\nYour prior output failed validation. Produce fresh, schema-valid output with exact quotations and complete required coverage." : ""}`,
+              content: `${options.system ?? safety}\nTASK: ${instruction}${attempt ? "\nYour prior output failed validation. Produce fresh, schema-valid output following the task's content policy, quotation requirements and complete required coverage." : ""}`,
             },
             { role: "user", content: JSON.stringify({ untrusted_data: data }) },
           ],

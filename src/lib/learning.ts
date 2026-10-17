@@ -51,6 +51,13 @@ export const planResponseSchema = z
     status: z.enum(["ready", "insufficient"]),
     plan: planSchema.nullable(),
     reason: text(700).nullable(),
+    reasonCode: z
+      .enum([
+        "insufficient_notes",
+        "requires_current_sources",
+        "missing_document",
+      ])
+      .nullable(),
   })
   .strict();
 export const blockSchema = z

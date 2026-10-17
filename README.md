@@ -24,6 +24,8 @@ For an explicitly authorized live smoke, run a production build, then load the e
 
 ## Teacher mode — Learn it. Practice it. Teach it.
 
+Topic-only lesson plans use model knowledge without requiring notes. For software introductions, they cover stable concepts and exclude current or version-specific details unless the learning goal depends on them. Notes-based plans remain bounded to the supplied source. Structured refusal reasons distinguish insufficient notes from unavailable current sources or a missing document; a missing-notes refusal in topic-only mode uses the existing single repair attempt, with each provider attempt counted against the same quotas. This change needs no database migration and applies when a plan is generated or revised; previously saved notices remain until the learner requests a new plan.
+
 Two entry points share the existing account and AI allowance:
 
 - **Learn with a teacher** (`/learn/new`): start with a topic or pasted notes, review the interpretation, prerequisites and exclusions, explicitly generate/revise a plan, then accept it. The accepted plan is frozen. Existing library topics can prefill notes.
