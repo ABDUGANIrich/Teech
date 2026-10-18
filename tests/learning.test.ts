@@ -15,6 +15,41 @@ import {
 } from "../src/lib/teacher-sample";
 const state = () => learningStateSchema.strip().parse(newTeacherSample());
 describe("learning content and evidence boundaries", () => {
+  it("keeps the initial gap separate from successful fresh practice for the same objective", () => {
+    const s = state();
+    const first = studied(structuredClone(sampleUnit.unit));
+    first.attempts[0].feedback = {
+      itemId: first.attempts[0].itemId,
+      status: "Needs another try",
+      well: "Recorded",
+      gap: "Choose the other half",
+      next: "Revisit",
+    };
+    s.units.push(first);
+    s.targeted = studied(structuredClone(sampleUnit.unit));
+    s.targetedObjective = "discard";
+    for (const q of s.targeted.content.questions) q.objectiveId = "discard";
+    for (const at of s.targeted.attempts)
+      at.feedback = {
+        itemId: at.itemId,
+        status: "Correct",
+        well: "Valid",
+        gap: "No gap",
+        next: "Continue",
+      };
+    const summary = objectiveSummary(s).find((o) => o.id === "discard")!;
+    expect(summary.initial.label).toBe("Needs another attempt");
+    expect(summary.initial.independent).toBe(0);
+    expect(summary.fresh?.label).toBe("Demonstrated in this session");
+    expect(summary.fresh?.independent).toBe(2);
+    s.targeted.attempts[0].hints.push("A hint");
+    s.targeted.attempts[1].dispute = "Ambiguous";
+    const changed = objectiveSummary(s).find((o) => o.id === "discard")!;
+    expect(changed.initial).toEqual(summary.initial);
+    expect(changed.fresh?.independent).toBe(0);
+    expect(changed.fresh?.assisted).toBe(1);
+    expect(changed.fresh?.excluded).toBe(1);
+  });
   it("leaves room in question IDs for generated unit prefixes", () => {
     expect(() =>
       validatePlan(

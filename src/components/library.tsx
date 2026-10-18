@@ -90,9 +90,9 @@ export function Library() {
       const d = await api({ action: "delete", id: deleting.id });
       if (d.error) throw new Error(d.error);
       try {
-        const ids = sessions
-          .filter((s) => s.topic_id === deleting.id)
-          .map((s) => s.id);
+        const ids =
+          d.deletedSessionIds ||
+          sessions.filter((s) => s.topic_id === deleting.id).map((s) => s.id);
         for (const key of Object.keys(localStorage)) {
           if (
             key.startsWith("teech:") &&
@@ -264,6 +264,28 @@ export function Library() {
             </article>
           ))}
         </div>
+      )}
+      {sessions.some((s) => s.topic_id === null) && (
+        <section
+          className="learning-shelf"
+          aria-labelledby="saved-samples-title"
+        >
+          <h2 id="saved-samples-title">Teach Pip · saved sample attempts</h2>
+          <p>Your live Student sample attempts are saved to your account.</p>
+          {sessions
+            .filter((s) => s.topic_id === null)
+            .map((s) => (
+              <Link key={s.id} href={`/teach/${s.id}`} className="attempt-link">
+                <span>
+                  {s.title} · {new Date(s.created_at).toLocaleString()}
+                </span>
+                <span>
+                  {s.phase === "review" ? "View review" : "Continue"}
+                  <ArrowRight size={12} />
+                </span>
+              </Link>
+            ))}
+        </section>
       )}
       {nextCursor && (
         <Button

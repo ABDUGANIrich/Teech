@@ -228,6 +228,27 @@ async function active() {
   return s;
 }
 describe("teacher service with actual embedded PostgreSQL and deterministic model fixtures", () => {
+  it("checkpoints unit preparation before inference and keeps a durable retry marker after failure", async () => {
+    let s = await created();
+    for (const action of ["plan", "accept"])
+      s = (await act(s, action)).learning!;
+    m.unit.mockImplementationOnce(async (state, _unitId, ctx) => {
+      const saved = (await readLearning(state.id)).learning!;
+      expect(saved.preparingUnit).toBe("halves");
+      expect(saved.units).toHaveLength(0);
+      await reserve(ctx);
+      throw new AppError("Provider interrupted", 504);
+    });
+    const failed = await act(s, "generate");
+    expect(failed.error).toContain("interrupted");
+    s = (await readLearning(s.id)).learning!;
+    expect(s.preparingUnit).toBe("halves");
+    expect(s.providerAttempts).toBe(2);
+    s = (await act(s, "generate")).learning!;
+    expect(s.preparingUnit).toBeUndefined();
+    expect(s.units).toHaveLength(1);
+    expect(s.providerAttempts).toBe(3);
+  });
   for (const assistance of ["solution", "dispute"] as const) {
     it(`continues an interrupted pending assessment after ${assistance}, including refresh`, async () => {
       let s = await active();

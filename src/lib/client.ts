@@ -9,6 +9,8 @@ export type ApiResult = {
   attempts?: AttemptListItem[];
   nextCursor?: string | null;
   conflict?: boolean;
+  deleted?: boolean;
+  deletedSessionIds?: string[];
 };
 export async function olderAttempts(
   before: string,

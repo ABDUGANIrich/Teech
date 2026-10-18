@@ -1,5 +1,29 @@
 import { allUnits, type LearningSession } from "./learning";
-import { readLocal, writeLocal } from "./client";
+import { readLocal, removeLocal, writeLocal } from "./client";
+export class LearningReadError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+  ) {
+    super(message);
+  }
+}
+export function clearLearningDrafts(userId: string, id: string) {
+  try {
+    const prefix = `teech:${userId}:`;
+    for (const key of Object.keys(localStorage)) {
+      if (
+        key.startsWith(`${prefix}learn:${id}:`) ||
+        (key.startsWith(`${prefix}learning-setup`) &&
+          key.endsWith(":lesson") &&
+          readLocal(key, null) === id)
+      )
+        removeLocal(key);
+    }
+  } catch {
+    // Storage may be disabled. Saved server state is still authoritative.
+  }
+}
 export type LessonListItem = {
   id: string;
   title: string;
@@ -151,6 +175,9 @@ export async function fetchLearning(
   const response = await fetch(`/api/learn?${params}`, { cache: "no-store" });
   const data = await response.json();
   if (!response.ok || data.error)
-    throw new Error(data.error || "Could not load saved lessons.");
+    throw new LearningReadError(
+      data.error || "Could not load saved lessons.",
+      response.status,
+    );
   return data;
 }

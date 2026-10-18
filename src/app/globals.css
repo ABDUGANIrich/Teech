@@ -2123,7 +2123,7 @@ input {
     scroll-behavior: auto !important;
   }
 }
-@media (max-width: 380px) {
+@media (max-width: 520px) {
   .header {
     height: auto;
     min-height: 78px;
@@ -2135,5 +2135,8 @@ input {
     width: 100%;
     justify-content: space-between;
     gap: 12px;
+  }
+  .header nav > a {
+    white-space: nowrap;
   }
 }

@@ -79,12 +79,23 @@ export function LearningSummary({
         <div className="learning-card" key={o.id}>
           <h3>{o.text}</h3>
           <p>
-            <strong>{o.label}</strong>
+            <strong>Initial practice: {o.initial.label}</strong>
           </p>
           <p>
-            {o.independent} independent correct · {o.assisted} assisted ·{" "}
-            {o.excluded} disputed/uncertain
+            {o.initial.independent} independent correct · {o.initial.assisted}{" "}
+            assisted · {o.initial.excluded} disputed/uncertain
           </p>
+          {o.fresh && (
+            <div className="summary-result">
+              <p>
+                <strong>Fresh practice: {o.fresh.label}</strong>
+              </p>
+              <p>
+                {o.fresh.independent} independent correct · {o.fresh.assisted}{" "}
+                assisted · {o.fresh.excluded} disputed/uncertain
+              </p>
+            </div>
+          )}
         </div>
       ))}
       {units.map((u, i) => (

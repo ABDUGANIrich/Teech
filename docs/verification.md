@@ -1,5 +1,15 @@
 # Verification record
 
+## Codebase review fixes — local verification — 2026-10-18
+
+- Fixed all eight findings from `docs/codebase-review-2026-10-18.md`. Student answers and typed finishes carry the expected transcript position, checked under the session operation lock. Stale writing is retained separately rather than submitted to a different question, including when the conflict response is lost.
+- Unit preparation checkpoints a durable retry marker before inference. Failed/interrupted generation requires explicit retry after refresh/reopening; successful generation clears it. This is an optional field in existing lesson JSON and requires no new database migration.
+- Lesson deletion clears matching setup checkpoints, retaining setup fields and unrelated lessons/accounts. A definitive not-found response offers an explicit new-course path; authentication and temporary service errors retain the checkpoint. The library exposes saved signed-in samples, and topic deletion returns all owned attempt IDs through paginated reads so cleanup includes unloaded drafts. Initial/fresh objective outcomes are distinct; canned help preserves unsent custom questions.
+- Mobile navigation stacks through 520px. Browser geometry checks cover 320, 360, 390, 414, 480 and 520 pixels; the 390px screenshot was visually inspected. Evidence: `artifacts/codebase-review-2026-10-18-fixed-header.png`.
+- **107 Vitest tests passed**, including the Student stale-position guard, a 650-attempt owner-scoped deletion result, separate fresh practice results and a real embedded-PostgreSQL Teacher preparation checkpoint/failure/retry. ESLint, TypeScript and production builds passed.
+- All **104 desktop/mobile Playwright checks passed** across the full run (102 passed) and a focused rerun of two new deletion checks. Their initial failure was in the test fixture, which reseeded browser storage after navigation; limiting seeding to the first page load fixed the checks without another application change. Added regressions exercise returned/lost Student conflicts, durable preparation, missing versus transient setup failures, setup-pointer cleanup, sample pagination, unloaded draft deletion, successful/recovered help and separated objective summaries.
+- These changes are **local and not deployed**. No hosted mutation, real model/search request or email was performed. Personal browser APIs use deterministic interception and provider credentials are disabled in the production test server. No hosted availability, delivery or generated-content accuracy claim is made.
+
 ## Courses prepare units automatically — 2026-10-18
 
 - Renamed the initial setup action to **Create course · uses AI allowance**, with matching loading and continuation labels. Plan review/acceptance remains explicit. The first unit prepares automatically after acceptance; subsequent units prepare when reached, including resumed unfinished courses. Saved units reopen without generation. Failed preparation offers an explicit retry and does not loop; the existing 22-attempt cap still applies.

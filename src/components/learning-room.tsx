@@ -9,6 +9,7 @@ import { LearningPractice, type LearningAction } from "./learning-practice";
 import { LearningSummary } from "./learning-summary";
 import {
   actionRecovered,
+  clearLearningDrafts,
   fetchLearning,
   learningApi,
 } from "@/lib/learning-client";
@@ -64,10 +65,12 @@ function UnitPreparation({
   act,
   busy,
   exhausted,
+  retryRequired,
 }: {
   act: LearningAction;
   busy: boolean;
   exhausted: boolean;
+  retryRequired: boolean;
 }) {
   const started = useRef(false);
   const [failed, setFailed] = useState(false);
@@ -77,22 +80,22 @@ function UnitPreparation({
   }
   const start = useEffectEvent(prepare);
   useEffect(() => {
-    if (started.current || busy || exhausted) return;
+    if (started.current || busy || exhausted || retryRequired) return;
     // One automatic attempt per unit, including React's effect replay.
     // Failures require an explicit retry so they cannot burn the allowance.
     started.current = true;
     void start();
-  }, [busy, exhausted]);
+  }, [busy, exhausted, retryRequired]);
   return (
     <div className="learning-card">
       <p role="status">
         {exhausted
           ? "Your saved course is available, but this unit needs more AI allowance to prepare."
-          : failed
+          : failed || retryRequired
             ? "Your course is saved. Retry when you’re ready to prepare this unit."
             : "Preparing your unit…"}
       </p>
-      {failed && (
+      {(failed || retryRequired) && (
         <Button disabled={busy || exhausted} onClick={() => void prepare()}>
           Retry preparing unit
         </Button>
@@ -225,17 +228,14 @@ export function LearningRoom({
         throw new Error(d.error);
       }
       if (d.deleted) {
-        try {
-          for (const key of Object.keys(localStorage))
-            if (key.startsWith(`teech:${userId}:learn:${session.id}:`))
-              localStorage.removeItem(key);
-        } catch {}
+        clearLearningDrafts(userId, session.id);
         router.push("/library");
         return true;
       }
       if (action === "handoff" && d.learning?.teachingId)
         router.push(`/teach/${d.learning.teachingId}`);
-      if (action === "help") questionDraft.clear(question);
+      if (action === "help" && values.question === question)
+        questionDraft.clear(question);
       return true;
     } catch (e) {
       let recovered = false;
@@ -257,7 +257,8 @@ export function LearningRoom({
       }
       if (recovered) {
         setNotice("Connection restored. Your saved result is ready.");
-        if (action === "help") questionDraft.clear(question);
+        if (action === "help" && values.question === question)
+          questionDraft.clear(question);
         if (action === "handoff" && recoveredSession?.teachingId)
           router.push(`/teach/${recoveredSession.teachingId}`);
         return true;
@@ -469,6 +470,9 @@ export function LearningRoom({
                     act={act}
                     busy={busy}
                     exhausted={s.providerAttempts >= 22}
+                    retryRequired={
+                      s.preparingUnit === s.plan!.units[s.active]?.id
+                    }
                   />
                 ) : (
                   <>

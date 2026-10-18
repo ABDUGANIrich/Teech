@@ -9,6 +9,7 @@ import {
   actionRecovered,
   fetchLearning,
   learningApi,
+  LearningReadError,
 } from "@/lib/learning-client";
 import { z } from "zod";
 import {
@@ -111,6 +112,8 @@ export function LearningSetup({
   const locked = useRef(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [missingId, setMissingId] = useState<string | null>(null);
+  const missingCheckpoint = !!savedId && missingId === savedId;
   function change(v: LearningInput) {
     setInput(v);
     if (!writeLocal(key, v))
@@ -124,7 +127,7 @@ export function LearningSetup({
     router.push(`/learn/${id}`);
   }
   async function create() {
-    if (locked.current) return;
+    if (locked.current || missingCheckpoint) return;
     const parsed = learningInputSchema.safeParse(input);
     if (!parsed.success) {
       setError(
@@ -183,6 +186,13 @@ export function LearningSetup({
         throw new Error("The lesson plan could not be loaded.");
       openLesson(lesson.id);
     } catch (e) {
+      if (
+        !beforePlan &&
+        savedId &&
+        e instanceof LearningReadError &&
+        e.status === 404
+      )
+        setMissingId(savedId);
       if (beforePlan && !definiteFailure) {
         try {
           const recovered = await fetchLearning(beforePlan.id);
@@ -230,7 +240,7 @@ export function LearningSetup({
           onChange={change}
           disabled={!!busy || !ready}
         />
-        <Button disabled={!!busy || !ready} type="submit">
+        <Button disabled={!!busy || !ready || missingCheckpoint} type="submit">
           {busy === "saving"
             ? "Saving your setup…"
             : busy === "planning"
@@ -252,7 +262,26 @@ export function LearningSetup({
           {error}
         </p>
       )}
-      {savedId && !busy && (
+      {missingCheckpoint && !busy && (
+        <div className="notice">
+          <p>
+            The saved lesson is no longer available. Keep these inputs and start
+            a new course when ready.
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => {
+              removeLocal(lessonKey);
+              setCreatedId(null);
+              setMissingId(null);
+              setError("");
+            }}
+          >
+            Start a new course
+          </Button>
+        </div>
+      )}
+      {savedId && !busy && !missingCheckpoint && (
         <p>
           Your setup is saved. Continue to recover a finished plan or retry
           generation, or{" "}

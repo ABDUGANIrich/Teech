@@ -19,6 +19,7 @@ import { Student } from "./student";
 import { acceptAnswer, acceptExplanation, type Session } from "@/lib/domain";
 import { fixtureReview, newPreview, previewQuestions } from "@/lib/sample";
 import { api, olderAttempts, readLocal, writeLocal } from "@/lib/client";
+type UnsentAnswer = { text: string; question: string; position: number };
 
 export function TeachingRoom({
   live,
@@ -40,6 +41,7 @@ export function TeachingRoom({
   const [history, setHistory] = useState<Session[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [compareId, setCompareId] = useState("");
+  const [unsentAnswer, setUnsentAnswer] = useState<UnsentAnswer | null>(null);
   const initialized = useRef(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const scope = userId || "visitor";
@@ -88,6 +90,12 @@ export function TeachingRoom({
           "",
         );
         setDraft(saved);
+        setUnsentAnswer(
+          readLocal<UnsentAnswer | null>(
+            `teech:draft:${scope}:${s.id}:conflict`,
+            null,
+          ),
+        );
         if (saved) setNotice("Your draft is back. Pick up where you left off.");
       } catch (e) {
         setError(
@@ -121,6 +129,28 @@ export function TeachingRoom({
     setFinishing(action === "finish");
     setError("");
     setNotice("");
+    function retainUnsent(next: Session) {
+      const retained = {
+        text: draft,
+        question:
+          session!.messages.at(-1)?.role === "student"
+            ? session!.messages.at(-1)!.text
+            : "Your initial explanation",
+        position: session!.messages.length,
+      };
+      setUnsentAnswer(retained);
+      if (!writeLocal(`teech:draft:${scope}:${session!.id}:conflict`, retained))
+        setNotice(
+          "Browser storage is unavailable. Copy the retained answer before leaving.",
+        );
+      persist(next);
+      setDraft(
+        readLocal<string>(
+          `teech:draft:${scope}:${next.id}:${next.messages.length}`,
+          "",
+        ),
+      );
+    }
     function restoreSaved(next: Session) {
       persist(next);
       if (
@@ -186,7 +216,18 @@ export function TeachingRoom({
             ? { text: draft }
             : {}),
           ...(action === "answer" ? { unsure } : {}),
+          ...(action === "answer" || action === "finish"
+            ? { expectedMessages: session.messages.length }
+            : {}),
         });
+        if (data.conflict && data.session) {
+          retainUnsent(data.session);
+          setError(
+            data.error ||
+              "This attempt changed in another tab. Review the current question before continuing.",
+          );
+          return;
+        }
         if (data.session) restoreSaved(data.session);
         if (data.error) throw new Error(data.error);
         next = data.session!;
@@ -207,6 +248,27 @@ export function TeachingRoom({
           const saved = await response.json();
           if (response.ok && saved.session) {
             const recovered = saved.session as Session;
+            const submittedWriting =
+              action === "explain" ||
+              action === "answer" ||
+              (action === "finish" &&
+                draft.trim() &&
+                session.messages.at(-1)?.role === "student");
+            const submitted = recovered.messages[session.messages.length];
+            const ownWritingSaved =
+              submitted?.role === "user" &&
+              submitted.text === (unsure ? "I'm not sure." : draft.trim());
+            if (
+              submittedWriting &&
+              recovered.messages.length !== session.messages.length &&
+              !ownWritingSaved
+            ) {
+              retainUnsent(recovered);
+              setError(
+                "This attempt changed in another tab. Your unsent answer is retained separately; review the current question before continuing.",
+              );
+              return;
+            }
             restoreSaved(recovered);
             if (
               recovered.phase === "review" ||
@@ -452,6 +514,36 @@ export function TeachingRoom({
         <p className="notice" role="status">
           {notice}
         </p>
+      )}
+      {unsentAnswer && (
+        <section className="notice" aria-label="Retained unsent answer">
+          <h2>Your unsent answer to the earlier question</h2>
+          <p>{unsentAnswer.question}</p>
+          <p className="prewrap">
+            {unsentAnswer.text || "Marked unsure; no written answer."}
+          </p>
+          <p>
+            This text was not attached to the current question. Copy it if
+            useful, then answer the current question separately.
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const originalKey = `teech:draft:${scope}:${session.id}:${unsentAnswer.position}`;
+              try {
+                if (readLocal(originalKey, null) === unsentAnswer.text)
+                  localStorage.removeItem(originalKey);
+                localStorage.removeItem(
+                  `teech:draft:${scope}:${session.id}:conflict`,
+                );
+              } catch {}
+              setUnsentAnswer(null);
+            }}
+          >
+            Discard retained answer
+          </Button>
+        </section>
       )}
       {review && session.evaluation ? (
         <>

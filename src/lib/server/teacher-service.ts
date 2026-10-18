@@ -356,8 +356,13 @@ export async function runTeacherAction(input: unknown) {
       const unitId = s.plan!.units[s.active]?.id;
       if (!unitId || s.active !== s.units.length)
         throw new AppError("Open units in lesson order.", 409);
+      // Save before any provider attempt so refresh/re-entry requires a retry
+      // even if the process dies without reaching the error handler.
+      s.preparingUnit = unitId;
+      await save(false);
       const pkg = await teacherUnit(s, unitId, ctx);
       s.units.push(studied(pkg.unit));
+      delete s.preparingUnit;
       event(s, "viewed", unitId);
       return await save(true, {}, { unitId, keys: pkg.keys });
     }

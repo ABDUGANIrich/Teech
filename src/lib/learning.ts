@@ -193,6 +193,8 @@ export const learningStateSchema = z
     issue: z.string().max(700).nullable(),
     accepted: z.boolean(),
     active: z.number().int().min(0).max(3),
+    // Durable retry marker: absent on untouched and successfully prepared units.
+    preparingUnit: id.optional(),
     units: z.array(studiedSchema).max(3),
     targeted: studiedSchema.nullable(),
     completed: z.array(id).max(3),
@@ -426,41 +428,48 @@ export function classification(a: Attempt) {
 export function objectiveSummary(s: LearningState) {
   return (
     s.plan?.objectives.map((o) => {
-      const items = allUnits(s).flatMap((u) =>
-        u.attempts.filter((a) =>
-          u.content.questions.some(
-            (q) => q.id === a.itemId && q.objectiveId === o.id,
+      const matching = (units: StudiedUnit[]) =>
+        units.flatMap((u) =>
+          u.attempts.filter((a) =>
+            u.content.questions.some(
+              (q) => q.id === a.itemId && q.objectiveId === o.id,
+            ),
           ),
-        ),
-      );
-      const independent = items.filter(
-        (a) => classification(a) === "Independent correct",
-      ).length;
-      const assisted = items.filter((a) => a.hints.length || a.solution).length;
-      const excluded = items.filter(
-        (a) =>
-          a.dispute !== null ||
-          a.feedback?.status === "Could not assess reliably",
-      ).length;
-      const unresolved = items.some(
-        (a) =>
-          a.dispute === null &&
-          !a.solution &&
-          ["Partly correct", "Needs another try"].includes(
-            a.feedback?.status || "",
-          ),
-      );
-      return {
-        ...o,
-        independent,
-        assisted,
-        excluded,
-        label: unresolved
-          ? "Needs another attempt"
-          : independent
-            ? "Demonstrated in this session"
-            : "Not yet checked",
-      };
+        );
+      const initial = summarizeAttempts(matching(s.units));
+      const fresh =
+        s.targeted && s.targetedObjective === o.id
+          ? summarizeAttempts(matching([s.targeted]))
+          : null;
+      return { ...o, ...initial, initial, fresh };
     }) || []
   );
+}
+function summarizeAttempts(items: Attempt[]) {
+  const independent = items.filter(
+    (a) => classification(a) === "Independent correct",
+  ).length;
+  const assisted = items.filter((a) => a.hints.length || a.solution).length;
+  const excluded = items.filter(
+    (a) =>
+      a.dispute !== null || a.feedback?.status === "Could not assess reliably",
+  ).length;
+  const unresolved = items.some(
+    (a) =>
+      a.dispute === null &&
+      !a.solution &&
+      ["Partly correct", "Needs another try"].includes(
+        a.feedback?.status || "",
+      ),
+  );
+  return {
+    independent,
+    assisted,
+    excluded,
+    label: unresolved
+      ? "Needs another attempt"
+      : independent
+        ? "Demonstrated in this session"
+        : "Not yet checked",
+  };
 }

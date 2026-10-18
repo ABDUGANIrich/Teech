@@ -1,5 +1,15 @@
 # Teech
 
+## Review fixes — 18 October 2026
+
+Student answers and typed finishes now include the transcript position shown by the browser. The server checks it under the existing session operation lock before accepting writing or requesting AI. Stale submissions return the current session and retain the unsent answer separately, including after an interrupted response and refresh. API callers must send `expectedMessages` for answers and finishes containing text; requests without that guard cannot append an answer.
+
+Unit preparation checkpoints a retry marker before inference. A failed or interrupted unit offers an explicit retry after refresh or reopening, while untouched units still prepare automatically and saved units reopen without generation. This optional lesson JSON field needs no database migration; existing lessons remain readable.
+
+Lesson deletion clears matching setup checkpoints while retaining setup fields. A previously deleted checkpoint offers an explicit **Start a new course** recovery; authentication and temporary service failures retain the checkpoint. Objective summaries show initial and fresh practice separately. The library exposes signed-in sample attempts and uses the complete owner-scoped deletion result to clear older attempt drafts beyond the loaded history page. **Explain another way** preserves any custom question that was not submitted. Mobile navigation stacks through 520px.
+
+These fixes are local to this checkout until deployed. See [the review and resolution record](docs/codebase-review-2026-10-18.md) for evidence and verification limits.
+
 ## Review fixes — 17 October 2026
 
 Interrupted Teacher assessments can be ended as a worked review or dispute without blocking continuation. Plan edits, clarification questions and handoff checklist edits recover from local drafts, including incomplete edits. Setup drafts are scoped to their source topic. A recovered completed action replaces the connection error with a recovery notice; a saved pending checkpoint does not count as completion.

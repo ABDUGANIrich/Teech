@@ -53,6 +53,7 @@ export const actionSchema = z.discriminatedUnion("action", [
     key: uuid,
     id: uuid,
     text: z.string().max(3000),
+    expectedMessages: z.number().int().min(0).max(7).optional(),
     unsure: z.boolean().default(false),
   }),
   z.object({
@@ -60,6 +61,7 @@ export const actionSchema = z.discriminatedUnion("action", [
     key: uuid,
     id: uuid,
     text: z.string().max(3000).optional(),
+    expectedMessages: z.number().int().min(0).max(7).optional(),
   }),
   z.object({ action: z.literal("reveal"), key: uuid, id: uuid }),
 ]);
@@ -237,7 +239,24 @@ export async function runAction(input: unknown) {
     }
     if (a.action === "delete") {
       await getTopic(a.id, who.userId);
-      return await commit({ deleted: true }, { delete: a.id });
+      // Cleanup must include drafts for attempts outside the library's page.
+      const deletedSessionIds: string[] = [];
+      for (let offset = 0; ; offset += 500) {
+        const { data, error } = await db
+          .from("sessions")
+          .select("id")
+          .eq("owner", who.id)
+          .eq("topic_id", a.id)
+          .order("id")
+          .range(offset, offset + 499);
+        dbError(error);
+        deletedSessionIds.push(...(data || []).map((row) => row.id));
+        if (!data || data.length < 500) break;
+      }
+      return await commit(
+        { deleted: true, deletedSessionIds },
+        { delete: a.id },
+      );
     }
     if (a.action === "start") {
       let topic: Topic = a.topicId
@@ -304,6 +323,16 @@ export async function runAction(input: unknown) {
     if (error || !data) throw new AppError("That attempt was not found.", 404);
     assertOwner(data.owner, who.id);
     let s = data.data as Session;
+    if (
+      (a.action === "answer" || (a.action === "finish" && a.text?.trim())) &&
+      a.expectedMessages !== s.messages.length
+    )
+      return await commit({
+        error:
+          "This attempt changed in another tab. Your unsent answer is retained separately; review the current question before continuing.",
+        conflict: true,
+        session: s,
+      });
     if (a.action === "reveal") {
       s = { ...s, notes_revealed: s.notes_revealed || s.phase !== "review" };
       return await commit({ session: s }, { session: s });

@@ -29,6 +29,16 @@ vi.mock("../src/lib/server/db", () => ({
           filters[k] = v;
           return chain;
         },
+        order: () => chain,
+        range: async (start: number, end: number) => ({
+          data: (m.rows.get(table) || [])
+            .filter((row) =>
+              Object.entries(filters).every(([k, v]) => row[k] === v),
+            )
+            .sort((a, b) => String(a.id).localeCompare(String(b.id)))
+            .slice(start, end + 1),
+          error: null,
+        }),
         single: async () => ({
           data:
             m.rows
@@ -83,8 +93,77 @@ const action = (a: Record<string, unknown>) =>
   runAction({ ...a, key: randomUUID() }) as Promise<{
     session?: Session;
     error?: string;
+    conflict?: boolean;
+    deletedSessionIds?: string[];
   }>;
 describe("server orchestration with deterministic AI and persistence doubles", () => {
+  it("rejects stale Student answers and typed finishes before any extra AI work", async () => {
+    const s = seed({
+      phase: "questions",
+      question_calls: 1,
+      messages: [
+        { role: "user", text: "The Sun warms water." },
+        { role: "student", text: "What causes evaporation?" },
+      ],
+    });
+    m.question.mockResolvedValue({
+      question: "What causes condensation?",
+      conceptId: s.concepts[0].id,
+    });
+    const first = await action({
+      action: "answer",
+      id: s.id,
+      text: "Heat from the Sun.",
+      expectedMessages: 2,
+    });
+    expect(first.session?.messages.at(-1)?.text).toBe(
+      "What causes condensation?",
+    );
+    for (const extra of [
+      { action: "answer", expectedMessages: 2 },
+      { action: "answer" },
+      { action: "finish", expectedMessages: 2 },
+    ]) {
+      const stale = await action({
+        ...extra,
+        id: s.id,
+        text: "An old answer about evaporation.",
+      });
+      expect(stale.conflict).toBe(true);
+      expect(stale.session?.messages).toEqual(first.session?.messages);
+      expect(stale.error).toContain("another tab");
+    }
+    expect(m.question).toHaveBeenCalledOnce();
+    expect(m.evaluation).not.toHaveBeenCalled();
+  });
+  it("returns every owned deleted attempt ID beyond a library page for local cleanup", async () => {
+    const id = randomUUID();
+    m.rows.set("topics", [{ id, user_id: m.actor.userId, version: 1 }]);
+    m.rows.set("checklists", [
+      { topic_id: id, version: 1, concepts: sampleConcepts },
+    ]);
+    const sessions = Array.from({ length: 650 }, () => ({
+      id: randomUUID(),
+      topic_id: id,
+      owner: m.actor.id,
+    }));
+    const other = {
+      id: randomUUID(),
+      topic_id: id,
+      owner: "user:someone-else",
+    };
+    m.rows.set("sessions", [
+      ...sessions,
+      other,
+      { id: randomUUID(), topic_id: randomUUID(), owner: m.actor.id },
+    ]);
+    const deleted = await action({ action: "delete", id });
+    expect(deleted.error).toBeUndefined();
+    expect(new Set(deleted.deletedSessionIds)).toEqual(
+      new Set(sessions.map((s) => s.id)),
+    );
+    expect(deleted.deletedSessionIds).not.toContain(other.id);
+  });
   it("rejects stale topic drafts and keeps the newest source unchanged", async () => {
     const id = randomUUID();
     m.rows.set("topics", [
@@ -187,6 +266,7 @@ describe("server orchestration with deterministic AI and persistence doubles", (
       action: "finish",
       id: s.id,
       text: "Some water infiltrates the soil.",
+      expectedMessages: s.messages.length,
     });
     expect(m.question).not.toHaveBeenCalled();
     expect(m.evaluation.mock.calls[0][0].messages.at(-1).text).toContain(
@@ -214,6 +294,7 @@ describe("server orchestration with deterministic AI and persistence doubles", (
       action: "finish",
       id: s.id,
       text: "Some water infiltrates the soil.",
+      expectedMessages: s.messages.length,
     });
     expect(failed.error).toBeTruthy();
     expect(failed.session?.messages).toHaveLength(3);

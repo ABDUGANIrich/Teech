@@ -40,6 +40,7 @@ test("unit preparation starts once, stops after failure and retries explicitly",
         ...session,
         version: session.version + 1,
         providerAttempts: 1,
+        preparingUnit: "halves",
       };
       return route.fulfill({
         json: {
@@ -49,6 +50,7 @@ test("unit preparation starts once, stops after failure and retries explicitly",
       });
     }
     session = sampleTeacherAction(session, { action: "generate" });
+    delete session.preparingUnit;
     return route.fulfill({ json: { learning: session } });
   });
   await page.goto("http://127.0.0.1:4174/?view=learning-room");
@@ -66,6 +68,11 @@ test("unit preparation starts once, stops after failure and retries explicitly",
   ).toBeEnabled();
   await page.getByRole("button", { name: "Reload saved lesson" }).click();
   await expect(page.getByRole("alert")).toHaveCount(0);
+  expect(generates).toBe(1);
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "Retry preparing unit" }),
+  ).toBeEnabled();
   expect(generates).toBe(1);
   await page.getByRole("button", { name: "Retry preparing unit" }).click();
   await expect(
