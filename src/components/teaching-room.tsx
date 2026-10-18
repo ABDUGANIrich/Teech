@@ -152,16 +152,29 @@ export function TeachingRoom({
       );
     }
     function restoreSaved(next: Session) {
-      persist(next);
       if (
         next.messages.length !== session!.messages.length ||
         next.phase === "review"
       ) {
-        try {
-          localStorage.removeItem(
-            `teech:draft:${scope}:${session!.id}:${session!.messages.length}`,
+        const submitted = next.messages[session!.messages.length];
+        const acknowledged =
+          action !== "reveal" &&
+          submitted?.role === "user" &&
+          submitted.text === (unsure ? "I'm not sure." : draft.trim());
+        if (draft.trim() && !acknowledged) {
+          retainUnsent(next);
+          setNotice(
+            "This attempt changed in another tab. Your unsent answer is retained below.",
           );
-        } catch {}
+          return;
+        }
+        if (acknowledged) {
+          const oldKey = `teech:draft:${scope}:${session!.id}:${session!.messages.length}`;
+          try {
+            if (readLocal(oldKey, null) === draft)
+              localStorage.removeItem(oldKey);
+          } catch {}
+        }
         setDraft(
           readLocal<string>(
             `teech:draft:${scope}:${next.id}:${next.messages.length}`,
@@ -169,6 +182,7 @@ export function TeachingRoom({
           ),
         );
       }
+      persist(next);
     }
     try {
       let next: Session;
@@ -240,7 +254,7 @@ export function TeachingRoom({
       }
     } catch (e) {
       // The server may have saved writing or a question before the POST was lost.
-      if (!session.preview && action !== "reveal") {
+      if (!session.preview) {
         try {
           const response = await fetch(`/api/teech?session=${session.id}`, {
             cache: "no-store",
@@ -271,9 +285,17 @@ export function TeachingRoom({
             }
             restoreSaved(recovered);
             if (
-              recovered.phase === "review" ||
-              (recovered.messages.length > session.messages.length &&
-                recovered.messages.at(-1)?.role === "student")
+              action === "reveal" &&
+              (recovered.notes_revealed || recovered.phase === "review")
+            ) {
+              setShowNotes(true);
+              return;
+            }
+            if (
+              action !== "reveal" &&
+              (recovered.phase === "review" ||
+                (recovered.messages.length > session.messages.length &&
+                  recovered.messages.at(-1)?.role === "student"))
             ) {
               heading.current?.focus();
               return;

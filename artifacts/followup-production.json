@@ -1,0 +1,35 @@
+{
+  "origin": "https://teech-nu.vercel.app",
+  "checkedAt": "2026-10-18T07:22:09.771Z",
+  "routes": {
+    "/": 200,
+    "/sample": 200,
+    "/teacher-sample": 200,
+    "/signin": 200,
+    "/robots.txt": 200,
+    "/sitemap.xml": 200,
+    "/opengraph-image": 200,
+    "/twitter-image": 200,
+    "/api/learn": 401,
+    "/api/teech?history=1": 401
+  },
+  "browsers": {
+    "desktop": {
+      "consecutiveHintFocus": true,
+      "teacherConflictRetainedAfterRefresh": true,
+      "trimmedHelpRecovered": true,
+      "lostStudentRevealRetainedAfterRefresh": true,
+      "overflow": false
+    },
+    "mobile": {
+      "consecutiveHintFocus": true,
+      "teacherConflictRetainedAfterRefresh": true,
+      "trimmedHelpRecovered": true,
+      "lostStudentRevealRetainedAfterRefresh": true,
+      "overflow": false
+    }
+  },
+  "browserErrors": [],
+  "cleanup": true,
+  "realProviderCalls": 0
+}

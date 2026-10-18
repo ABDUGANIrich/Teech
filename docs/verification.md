@@ -1,5 +1,20 @@
 # Verification record
 
+## Follow-up fixes deployed — 2026-10-18
+
+- Deployed the reviewed checkout, including the preceding eight fixes and five follow-up fixes, to Vercel production. Deployment `dpl_BpcgMN7tK4cgVe1U3CQeeKCvzrp6` is **Ready**, independently confirmed with `vercel inspect` behind https://teech-nu.vercel.app. The Vercel production build and TypeScript checks passed. No database migration or environment change was needed.
+- Production HTTP checks passed for `/`, `/sample`, `/teacher-sample`, `/signin`, robots, sitemap and both 1200×630 PNG social images. The canonical origin and OG/Twitter image URLs were verified; unauthenticated lesson/history APIs returned 401.
+- Desktop and mobile browser checks exercised the actual deployed UI: consecutive hints focused their own content; stale Teacher writing remained visible after refresh; a whitespace-padded help question recovered after a simulated lost response without a duplicate request; a lost Student notes-reveal response retained the earlier question's writing through refresh. No browser errors or horizontal overflow were observed. Personal lesson responses were deterministic browser fixtures; this confirms deployed UI behavior, not live model output or server inference repair.
+- One temporary confirmed account was created for the authenticated UI checks and deleted afterward. No confirmation email or real model/search request was sent. The semantic question-repair behavior is covered by the previously passed local provider-fixture tests; production provider accuracy/availability was not retested.
+- Evidence: `artifacts/followup-production.json`, `artifacts/followup-production-retained-{desktop,mobile}.png`. Reusable smoke command: `node --env-file=.env.local scripts/verify-followup-production.mjs https://teech-nu.vercel.app` (creates and cleans its own temporary account). The verification script passed ESLint.
+
+## Follow-up review fixes — local verification — 2026-10-18
+
+- Fixed all five findings from `docs/codebase-review-2026-10-18-followup.md`. Teacher conflicting answers remain visible and recover after refresh; matching saved answers clear only their own drafts. Student notes reveal preserves stale unsent writing, including lost-response recovery. Teacher help/plan recovery normalizes inputs consistently with server validation, preventing false failures and accidental repeat help requests.
+- Invalid/repeated Student questions now use the existing single repair attempt with a separate quota reservation and no mutation during validation. Teacher hints, solutions, disputes and feedback receive focus within their item; phase/unit navigation still focuses its heading.
+- **112 Vitest tests and 120 desktop/mobile Playwright checks passed**, including five new unit tests and sixteen new browser checks. ESLint, TypeScript, the production Next.js build and `git diff --check` passed. New regressions cover returned/lost conflicts, reload/discard, acknowledgement cleanup, newer drafts from another tab, whitespace recovery, semantic repair success/exhaustion, null questions and consecutive hint/solution focus.
+- **Local only; not deployed.** No database migration is required. Browser account/provider flows use deterministic API fixtures. No hosted data mutation, live model/search call or email was performed.
+
 ## Codebase review fixes — local verification — 2026-10-18
 
 - Fixed all eight findings from `docs/codebase-review-2026-10-18.md`. Student answers and typed finishes carry the expected transcript position, checked under the session operation lock. Stale writing is retained separately rather than submitted to a different question, including when the conflict response is lost.

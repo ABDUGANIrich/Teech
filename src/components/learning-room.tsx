@@ -167,22 +167,52 @@ export function LearningRoom({
       active = false;
     };
   }, [id, sample]);
+  const focusedSession = useRef<LearningSession | null>(null);
   useEffect(() => {
     if (!session) return;
-    const latest = session.events.at(-1);
-    const feedback =
-      session.phase === "practice" &&
-      latest &&
-      ["submitted", "assessed", "unsure"].includes(latest.type)
-        ? document.getElementById(`feedback-${latest.target}`)
-        : null;
-    const target =
-      feedback ||
-      (session.phase === "practice"
-        ? document.getElementById("practice-title")
-        : null) ||
-      heading.current;
-    target?.focus();
+    const previous = focusedSession.current;
+    focusedSession.current = session;
+    if (
+      !previous ||
+      previous.id !== session.id ||
+      previous.phase !== session.phase ||
+      previous.active !== session.active
+    ) {
+      const target =
+        session.phase === "practice"
+          ? document.getElementById("practice-title")
+          : heading.current;
+      target?.focus();
+      return;
+    }
+    // In-place updates keep the learner at the affected item. Merely loading
+    // the same state should not steal focus from an input or help control.
+    if (session.phase !== "practice") return;
+    const unit =
+      session.active === 3 ? session.targeted : session.units[session.active];
+    const oldUnit =
+      previous.active === 3
+        ? previous.targeted
+        : previous.units[previous.active];
+    for (const item of unit?.attempts || []) {
+      const old = oldUnit?.attempts.find((a) => a.itemId === item.itemId);
+      const targetId =
+        item.hints.length > (old?.hints.length || 0)
+          ? `hint-${item.itemId}-${item.hints.length - 1}`
+          : item.solution && !old?.solution
+            ? `solution-${item.itemId}`
+            : item.dispute !== null && item.dispute !== old?.dispute
+              ? `dispute-${item.itemId}`
+              : item.feedback &&
+                  JSON.stringify(item.feedback) !==
+                    JSON.stringify(old?.feedback)
+                ? `feedback-${item.itemId}`
+                : null;
+      if (targetId) {
+        document.getElementById(targetId)?.focus();
+        break;
+      }
+    }
   }, [session]);
   function adopt(next: LearningSession) {
     setSession((current) =>

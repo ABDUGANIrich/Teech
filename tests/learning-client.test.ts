@@ -7,6 +7,50 @@ import {
 } from "../src/lib/teacher-sample";
 import { studied } from "../src/lib/learning";
 describe("evidence of a recovered Teacher action", () => {
+  it("matches help after server trimming without mistaking a different clarification for success", () => {
+    let before = newTeacherSample();
+    for (const action of ["accept", "generate"])
+      before = sampleTeacherAction(before, { action });
+    const after = sampleTeacherAction(before, {
+      action: "help",
+      question: "Why halve the interval?",
+    });
+    expect(
+      actionRecovered(before, after, "help", {
+        question: "  Why halve the interval?\n",
+      }),
+    ).toBe(true);
+    expect(
+      actionRecovered(before, after, "help", {
+        question: "Why change the bound?",
+      }),
+    ).toBe(false);
+    expect(
+      actionRecovered(before, before, "help", {
+        question: "Why halve the interval?",
+      }),
+    ).toBe(false);
+  });
+  it("normalizes plan input for recovery while rejecting a different saved scope", () => {
+    const before = newTeacherSample();
+    const after = {
+      ...before,
+      version: before.version + 1,
+      events: [{ type: "plan", target: "", at: new Date().toISOString() }],
+    };
+    const input = {
+      ...before.input,
+      topic: `  ${before.input.topic}  `,
+      notes: ` ${before.input.notes} `,
+      goal: ` ${before.input.goal} `,
+    };
+    expect(actionRecovered(before, after, "plan", { input })).toBe(true);
+    expect(
+      actionRecovered(before, after, "plan", {
+        input: { ...input, topic: "Different scope" },
+      }),
+    ).toBe(false);
+  });
   it("recovers an insufficient-source plan result without treating a checkpoint as completion", () => {
     const before = newTeacherSample();
     const after = {

@@ -2,6 +2,7 @@ import "server-only";
 import { z } from "zod";
 import {
   AppError,
+  appendQuestion,
   extractionSchema,
   conceptsSchema,
   questionSchema,
@@ -354,6 +355,12 @@ export async function nextQuestion(session: Session, ctx: Context) {
       transcript: session.messages,
     },
     ctx,
+    (v) => {
+      // Validate identifiers/repetition within the same bounded repair loop as
+      // JSON shape. appendQuestion returns a copy; this does not mutate state.
+      appendQuestion(session, v);
+      return v;
+    },
   );
 }
 export async function evaluate(session: Session, ctx: Context) {

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { writeLocal } from "@/lib/client";
+import { readLocal, removeLocal, writeLocal } from "@/lib/client";
 import { useLocalSnapshot } from "@/lib/browser-storage";
 import { classification, type StudiedUnit } from "@/lib/learning";
 
@@ -75,13 +75,15 @@ function PracticeItem({
   const answer = editedAnswer ?? restored;
   const [notice, setNotice] = useState("");
   const [reason, setReason] = useState("");
+  const open = a.state === "open" && !a.solution;
+  const retainedAnswer = !open && answer !== a.answer ? answer : "";
   useEffect(() => {
-    if (a.answer !== null || a.solution) {
-      try {
-        localStorage.removeItem(draftKey);
-      } catch {}
-    }
-  }, [draftKey, a.answer, a.solution]);
+    // A different tab's saved answer is not acknowledgement of this draft.
+    // Keep this tab's writing available even if another tab replaced storage.
+    if (retainedAnswer) writeLocal(draftKey, retainedAnswer);
+    else if (a.answer !== null && readLocal(draftKey, null) === a.answer)
+      removeLocal(draftKey);
+  }, [draftKey, a.answer, retainedAnswer]);
   function change(value: string) {
     setAnswer(value);
     if (!writeLocal(draftKey, value))
@@ -89,7 +91,6 @@ function PracticeItem({
         "Browser storage is unavailable. Copy your answer before leaving; submitted answers are saved on the server.",
       );
   }
-  const open = a.state === "open" && !a.solution;
   return (
     <article className="learning-card practice-item">
       <p className="eyebrow">
@@ -166,9 +167,40 @@ function PracticeItem({
           </pre>
         </div>
       )}
+      {retainedAnswer && (
+        <section className="notice" aria-label="Retained unsent answer">
+          <h3>Your unsent answer</h3>
+          <p>
+            This writing was not saved as the answer to this item. Copy it if
+            useful; the saved response above remains unchanged.
+          </p>
+          <pre className="saved-answer">
+            {q.kind === "mcq"
+              ? q.choices.find((c) => c.id === retainedAnswer)?.text ||
+                retainedAnswer
+              : retainedAnswer}
+          </pre>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              if (readLocal(draftKey, null) === retainedAnswer)
+                removeLocal(draftKey);
+              setAnswer("");
+            }}
+          >
+            Discard retained answer
+          </Button>
+        </section>
+      )}
       {notice && <p role="status">{notice}</p>}
       {a.hints.map((hint, i) => (
-        <p className="learning-hint" key={i}>
+        <p
+          className="learning-hint"
+          id={`hint-${a.itemId}-${i}`}
+          tabIndex={-1}
+          key={i}
+        >
           <strong>Hint {i + 1}:</strong> {hint}
         </p>
       ))}
@@ -207,7 +239,11 @@ function PracticeItem({
           </div>
         )}
       {a.solution && (
-        <div className="learning-solution">
+        <div
+          className="learning-solution"
+          id={`solution-${a.itemId}`}
+          tabIndex={-1}
+        >
           <h3>Worked review</h3>
           <p>{a.solution}</p>
           <p className="micro">
@@ -238,7 +274,7 @@ function PracticeItem({
         )}
       </div>
       {a.dispute !== null ? (
-        <p className="notice">
+        <p className="notice" id={`dispute-${a.itemId}`} tabIndex={-1}>
           Question disputed. Excluded from success counts. {a.dispute} You can
           continue.
         </p>

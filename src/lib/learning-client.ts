@@ -1,4 +1,8 @@
-import { allUnits, type LearningSession } from "./learning";
+import {
+  allUnits,
+  learningInputSchema,
+  type LearningSession,
+} from "./learning";
 import { readLocal, removeLocal, writeLocal } from "./client";
 export class LearningReadError extends Error {
   constructor(
@@ -74,13 +78,15 @@ export function actionRecovered(
       return !!item?.solution;
     case "dispute":
       return item?.dispute === values.reason;
-    case "plan":
+    case "plan": {
+      const input = learningInputSchema.safeParse(values.input || before.input);
       return (
+        input.success &&
         !!(after.plan || after.issue) &&
         after.events.at(-1)?.type === "plan" &&
-        JSON.stringify(after.input) ===
-          JSON.stringify(values.input || before.input)
+        JSON.stringify(after.input) === JSON.stringify(input.data)
       );
+    }
     case "accept":
       return after.accepted;
     case "generate":
@@ -91,7 +97,8 @@ export function actionRecovered(
           u.content.id === previousUnit?.content.id &&
           u.clarifications.length >
             (previousUnit?.clarifications.length || 0) &&
-          u.clarifications.at(-1)?.question === values.question,
+          typeof values.question === "string" &&
+          u.clarifications.at(-1)?.question === values.question.trim(),
       );
     case "targeted":
       return !!after.targeted && after.targetedObjective === values.objectiveId;
