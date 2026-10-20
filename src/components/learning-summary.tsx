@@ -45,7 +45,7 @@ export function LearningSummary({
           Resume next unfinished unit →
         </Button>
       )}
-      <div className="learning-card">
+      <div className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
         <p>
           {s.units.length} of {s.plan!.units.length} units viewed ·{" "}
           {s.completed.length} completed ·{" "}
@@ -70,13 +70,16 @@ export function LearningSummary({
           }{" "}
           unresolved or unattempted
         </p>
-        <p className="micro">
+        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
           Disputed and uncertain judgments are excluded from definitive
           conclusions. Correct choices indicate agreement with generated keys.
         </p>
       </div>
       {objectives.map((o) => (
-        <div className="learning-card" key={o.id}>
+        <div
+          className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
+          key={o.id}
+        >
           <h3>{o.text}</h3>
           <p>
             <strong>Initial practice: {o.initial.label}</strong>
@@ -86,7 +89,7 @@ export function LearningSummary({
             assisted · {o.initial.excluded} disputed/uncertain
           </p>
           {o.fresh && (
-            <div className="summary-result">
+            <div className="summary-result border-t-[0.0625rem] border-solid border-t-olive-300 mt-4.5 pt-2.5 dark:border-t-olive-700 [&_h4]:font-medium">
               <p>
                 <strong>Fresh practice: {o.fresh.label}</strong>
               </p>
@@ -99,7 +102,10 @@ export function LearningSummary({
         </div>
       ))}
       {units.map((u, i) => (
-        <div className="learning-card" key={u.content.id}>
+        <div
+          className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
+          key={u.content.id}
+        >
           <h3>
             {i === s.units.length
               ? "Practice again (separate results)"
@@ -113,7 +119,10 @@ export function LearningSummary({
             Revisit explanation and worked example
           </Button>
           {u.attempts.map((a) => (
-            <div className="summary-result" key={a.itemId}>
+            <div
+              className="summary-result border-t-[0.0625rem] border-solid border-t-olive-300 mt-4.5 pt-2.5 dark:border-t-olive-700 [&_h4]:font-medium"
+              key={a.itemId}
+            >
               <h4>
                 {u.content.questions.find((q) => q.id === a.itemId)?.prompt}
               </h4>
@@ -137,7 +146,7 @@ export function LearningSummary({
         </div>
       ))}
       {!sample && !s.targetedUsed && (
-        <section className="learning-card">
+        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
           <h3>One focused practice pair</h3>
           <p>
             First revisit the relevant explanation above. Then, if useful,
@@ -169,7 +178,7 @@ export function LearningSummary({
         </section>
       )}
       {s.targetedUsed && (
-        <p className="micro">
+        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
           First-attempt results remain above.{" "}
           {s.targeted
             ? "The extra practice pair is saved separately."
@@ -188,8 +197,10 @@ export function LearningSummary({
         </Button>
       )}
       {eligible(s) ? (
-        <section className="learning-card">
-          <p className="eyebrow">NEXT: PIP BECOMES YOUR STUDENT</p>
+        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
+          <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
+            NEXT: PIP BECOMES YOUR STUDENT
+          </p>
           <h3>Teach this to Pip.</h3>
           <p>
             Preview a source made from the instruction you studied. Assessment
@@ -210,7 +221,7 @@ export function LearningSummary({
           )}
         </section>
       ) : (
-        <p className="notice">
+        <p className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
           Complete every lesson unit to prepare a source for Teach Pip.
           Unanswered questions do not block completion.
         </p>
@@ -268,7 +279,7 @@ function Handoff({
     }
   }
   return (
-    <div className="learning-handoff">
+    <div className="learning-handoff mt-6">
       {draft.notice && <p role="status">{draft.notice}</p>}
       <p>
         <strong>{provenance(s)}</strong>. This study reference is not
@@ -277,12 +288,17 @@ function Handoff({
       </p>
       <details open>
         <summary>Immutable source preview</summary>
-        <pre className="saved-answer">{h.source}</pre>
+        <pre className="saved-answer whitespace-pre-wrap wrap-anywhere break-words rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800">
+          {h.source}
+        </pre>
       </details>
       {h.done ? (
         <p>
           {s.teachingId ? (
-            <Link className="text-link" href={`/teach/${s.teachingId}`}>
+            <Link
+              className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
+              href={`/teach/${s.teachingId}`}
+            >
               Continue your teaching attempt →
             </Link>
           ) : (
@@ -310,9 +326,15 @@ function Handoff({
             Review and edit before starting. Exact passages establish
             provenance, not factual accuracy.
           </p>
-          <fieldset disabled={busy} className="learning-fields">
+          <fieldset
+            disabled={busy}
+            className="learning-fields min-w-0 mt-0 mb-5.5 mx-0 p-0 border-0 [&_label]:block [&_label]:mt-4.5 [&_label]:mb-1.5 [&_label]:font-semibold [&_input]:w-full [&_input]:min-w-0 [&_input]:border-solid [&_input]:rounded-lg [&_input]:bg-white [&_input]:text-olive-800 [&_input]:px-[0.8125rem] [&_input]:py-[0.6875rem] [&_input]:border-[0.0625rem] [&_input]:border-olive-300 dark:[&_input]:bg-neutral-800 dark:[&_input]:text-olive-200 dark:[&_input]:border-olive-700 [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:border-solid [&_textarea]:rounded-lg [&_textarea]:bg-white [&_textarea]:text-olive-800 [&_textarea]:px-[0.8125rem] [&_textarea]:py-[0.6875rem] [&_textarea]:border-[0.0625rem] [&_textarea]:border-olive-300 dark:[&_textarea]:bg-neutral-800 dark:[&_textarea]:text-olive-200 dark:[&_textarea]:border-olive-700 [&_select]:w-full [&_select]:min-w-0 [&_select]:border-solid [&_select]:rounded-lg [&_select]:bg-white [&_select]:text-olive-800 [&_select]:whitespace-normal [&_select]:mb-3.5 [&_select]:px-[0.8125rem] [&_select]:py-[0.6875rem] [&_select]:border-[0.0625rem] [&_select]:border-olive-300 dark:[&_select]:bg-neutral-800 dark:[&_select]:text-olive-200 dark:[&_select]:border-olive-700 [&_.micro]:mt-2.5 max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem] max-mobile:[&_select]:text-[1rem]"
+          >
             {concepts.map((c, i) => (
-              <div className="learning-card" key={c.id}>
+              <div
+                className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
+                key={c.id}
+              >
                 <label htmlFor={`handoff-title-${i}`}>Concept {i + 1}</label>
                 <input
                   id={`handoff-title-${i}`}
@@ -370,14 +392,20 @@ function Handoff({
             </Button>
           </fieldset>
           {sample ? (
-            <p className="notice">
+            <p className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
               Sample handoff preview only. A saved lesson creates a topic and
               starts a normal Student attempt with notes hidden.{" "}
-              <Link className="text-link" href="/signin">
+              <Link
+                className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
+                href="/signin"
+              >
                 Sign in for your own lesson
               </Link>
               , or{" "}
-              <Link className="text-link" href="/sample">
+              <Link
+                className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
+                href="/sample"
+              >
                 explore the Student sample (a different fixed topic)
               </Link>
               .
@@ -390,7 +418,10 @@ function Handoff({
         </>
       )}
       {error && (
-        <p className="error-box" role="alert">
+        <p
+          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+          role="alert"
+        >
           {error}
         </p>
       )}

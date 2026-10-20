@@ -7,7 +7,7 @@ export function PasswordForm() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   return (
-    <div className="auth-page">
+    <div className="auth-page max-w-115 mt-10 mb-17.5 text-center mx-auto px-6 py-0 [&_>_.student]:mt-0 [&_>_.student]:mb-2.5 [&_>_.student]:mx-auto [&_>_.eyebrow]:justify-center [&_>_.eyebrow]:text-[0.5625rem] [&_>_.eyebrow]:mb-3 [&_h1]:text-[2.4375rem] [&_h1]:mb-3.5 [&_>_p]:text-[0.8125rem] [&_form]:text-left [&_form]:mt-7 [&_form]:mb-3 [&_form]:mx-0 [&_form_input]:mb-5 [&_form_.button]:w-full [&_form_.button]:mt-[0.3125rem] [&_.preview-banner]:text-left [&_.preview-banner]:mt-[1.4375rem] [&_>_.micro]:text-[0.625rem] max-mobile:mt-7 max-mobile:[&_h1]:text-[2.1875rem] max-mobile:[&_input]:text-[1rem]">
       <h1>Choose a new password.</h1>
       <form
         onSubmit={async (e) => {
@@ -70,7 +70,10 @@ export function PasswordForm() {
         </Button>
       </form>
       {error && (
-        <p className="error-box" role="alert">
+        <p
+          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+          role="alert"
+        >
           {error}
         </p>
       )}

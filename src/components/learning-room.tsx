@@ -28,7 +28,7 @@ import { z } from "zod";
 
 export function LessonBlocks({ blocks }: { blocks: Unit["explanation"] }) {
   return (
-    <div className="lesson-blocks">
+    <div className="lesson-blocks text-[1rem] leading-[1.8] wrap-anywhere [&_p]:text-olive-800 [&_p]:whitespace-pre-wrap dark:[&_p]:text-olive-200 [&_figure]:mx-0 [&_figure]:my-5.5 [&_figcaption]:text-[0.75rem] [&_figcaption]:text-stone-500 dark:[&_figcaption]:text-olive-400 [&_pre]:whitespace-pre-wrap [&_pre]:wrap-anywhere [&_pre]:break-words [&_pre]:rounded-lg [&_pre]:bg-taupe-100 [&_pre]:text-[0.875rem] [&_pre]:leading-[1.7] [&_pre]:font-mono [&_pre]:max-w-full [&_pre]:p-4 dark:[&_pre]:bg-olive-800">
       {blocks.map((b, i) =>
         b.kind === "code" ? (
           <figure key={i}>
@@ -39,7 +39,7 @@ export function LessonBlocks({ blocks }: { blocks: Unit["explanation"] }) {
           </figure>
         ) : b.kind === "equation" ? (
           <pre
-            className="lesson-equation"
+            className="lesson-equation whitespace-pre-wrap wrap-anywhere break-words rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800"
             key={i}
             aria-label={`Equation: ${b.text}`}
           >
@@ -87,7 +87,7 @@ function UnitPreparation({
     void start();
   }, [busy, exhausted, retryRequired]);
   return (
-    <div className="learning-card">
+    <div className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
       <p role="status">
         {exhausted
           ? "Your saved course is available, but this unit needs more AI allowance to prepare."
@@ -324,10 +324,13 @@ export function LearningRoom({
   }
   if (!session)
     return (
-      <div className="page">
+      <div className="page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
         <h1>Learn with a teacher.</h1>
         {error ? (
-          <div className="error-box" role="alert">
+          <div
+            className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+            role="alert"
+          >
             {error}
             <Button variant="outline" onClick={() => void reload()}>
               Reload saved lesson
@@ -344,65 +347,84 @@ export function LearningRoom({
   const unitTitle =
     s.active === 3 ? "Focused practice" : s.plan?.units[s.active]?.title;
   return (
-    <div className="page learning-page">
-      <div className="learning-topbar">
-        <Link href={sample ? "/" : "/library"} className="back-link">
+    <div className="page learning-page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 [&_blockquote]:border-l-[0.125rem] [&_blockquote]:border-solid [&_blockquote]:border-l-olive-300 [&_blockquote]:pl-4 [&_blockquote]:whitespace-pre-wrap [&_blockquote]:wrap-anywhere [&_blockquote]:mx-0 [&_blockquote]:my-4 dark:[&_blockquote]:border-l-olive-700 [&_.button]:whitespace-normal [&_.button]:h-auto [&_.button]:min-h-10 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
+      <div className="learning-topbar flex items-center gap-3.5 flex-wrap justify-between mb-7">
+        <Link
+          href={sample ? "/" : "/library"}
+          className="back-link inline-flex items-center gap-2 text-[0.6875rem] text-neutral-500 dark:text-olive-400"
+        >
           ← {sample ? "Home" : "Pause and return to library"}
         </Link>
-        <span className="eyebrow">PIP · TEACHER</span>
+        <span className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
+          PIP · TEACHER
+        </span>
       </div>
       {sample && (
-        <div className="preview-banner teacher-preview">
-          <div className="teacher-preview-copy">
+        <div className="preview-banner teacher-preview border-solid bg-olive-100 rounded-[0.4375rem] flex gap-2.5 items-center mb-7 justify-between px-4 py-3 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_p]:text-[0.6875rem] [&_p]:leading-[1.65] [&_p]:text-stone-500 [&_p]:m-0 dark:[&_p]:text-olive-400 [&_strong]:font-semibold [&_a]:underline max-mobile:flex-col max-mobile:items-stretch max-mobile:mb-6 max-mobile:px-3 max-mobile:py-[0.6875rem] max-mobile:[&_p]:text-[0.625rem]">
+          <div className="teacher-preview-copy flex-[1] min-w-0">
             <strong>Teacher sample · fixed content</strong>
             <p>
               No credentials or AI calls. Open-text feedback is illustrative,
               not an assessment.
             </p>
           </div>
-          <div className="teacher-preview-actions">
+          <div className="teacher-preview-actions flex items-center flex-wrap gap-3 [&_a]:text-[0.75rem] max-mobile:justify-between">
             <Button variant="ghost" size="sm" onClick={() => void reload()}>
               Reset sample
             </Button>
-            <Link className="text-link" href="/sample">
+            <Link
+              className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
+              href="/sample"
+            >
               Try the Student sample →
             </Link>
           </div>
         </div>
       )}
-      <div className="page-heading">
+      <div className="page-heading flex items-center justify-between gap-6 mt-5 mb-9 mx-0 [&_.eyebrow]:text-[0.5625rem] [&_.eyebrow]:mb-3.5 [&_h1]:mb-3.5 [&_p:last-child]:text-[0.8125rem] [&_p:last-child]:mb-0 max-mobile:mt-3.5 max-mobile:items-start max-mobile:flex-col max-mobile:gap-5.5 max-mobile:[&_h1]:text-[2.25rem] max-mobile:[&_.eyebrow]:text-[0.5rem] max-mobile:[&_.eyebrow]:tracking-[0.0625rem] max-mobile:[&_>_p]:text-[0.75rem]">
         <div>
-          <p className="eyebrow">LEARN → PRACTICE → TEACH</p>
+          <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
+            LEARN → PRACTICE → TEACH
+          </p>
           <h1 ref={heading} tabIndex={-1}>
             {s.plan?.title || s.input.topic}
           </h1>
           <p>{provenance(s)}</p>
         </div>
-        <div className="learning-pip">
+        <div className="learning-pip w-25 text-center text-[0.75rem] shrink-0 [&_.student-wrap]:w-22.5 max-lesson:hidden">
           <Student small roleName="teacher" />
           <span>Teacher</span>
         </div>
       </div>
       {!sample && (
-        <p className="micro">
+        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
           AI feedback can be wrong. Teacher and Student share your account
           allowance. {s.providerAttempts}/22 lesson AI attempts used, including
           failed calls and repairs. Daily capacity is not reserved.
         </p>
       )}
       {s.providerAttempts >= 22 && (
-        <p className="notice" role="status">
+        <p
+          className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400"
+          role="status"
+        >
           This lesson’s AI budget is exhausted. Saved content, navigation,
           cached hints, solutions and summary remain accessible.
         </p>
       )}
       {busy && (
-        <p className="loading-line" role="status">
+        <p
+          className="loading-line flex items-center gap-3 text-[0.8125rem] p-7.5"
+          role="status"
+        >
           {pendingLabel}
         </p>
       )}
       {error && (
-        <div className="error-box" role="alert">
+        <div
+          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+          role="alert"
+        >
           {error}
           <Button
             variant="outline"
@@ -427,8 +449,8 @@ export function LearningRoom({
           sample={sample}
         />
       ) : (
-        <div className="learning-layout">
-          <aside className="learning-outline">
+        <div className="learning-layout grid grid-cols-[14.6875rem_minmax(0,1fr)] gap-10.5 mt-8.5 items-start max-lesson:grid-cols-[minmax(0,1fr)] max-lesson:gap-6">
+          <aside className="learning-outline min-w-0 sticky top-5 border-solid rounded-xl text-[0.8125rem] p-4.5 border-[0.0625rem] border-olive-300 dark:border-olive-700 [&_summary]:font-semibold [&_summary]:cursor-pointer [&_ol]:pl-4.5 [&_li]:mx-0 [&_li]:my-4.5 [&_li[aria-current]]:text-olive-600 [&_li[aria-current]]:font-bold dark:[&_li[aria-current]]:text-olive-400 [&_.button]:mt-[0.4375rem] [&_.button]:whitespace-normal [&_.button]:text-left max-lesson:static max-lesson:[&_ol]:flex max-lesson:[&_ol]:flex-wrap max-lesson:[&_ol]:gap-3 max-lesson:[&_ol]:list-none max-lesson:[&_ol]:p-0 max-lesson:[&_li]:flex-[1_1_10rem] max-lesson:[&_li]:m-0">
             <details open>
               <summary>
                 Lesson outline · {s.completed.length}/{s.plan!.units.length}{" "}
@@ -471,7 +493,7 @@ export function LearningRoom({
               </Button>
             </details>
           </aside>
-          <div className="learning-main">
+          <div className="learning-main min-w-0">
             {s.phase === "summary" ? (
               <LearningSummary
                 userId={userId}
@@ -492,7 +514,9 @@ export function LearningRoom({
               />
             ) : (
               <section>
-                <p className="eyebrow">UNIT {s.active + 1} · INSTRUCTION</p>
+                <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
+                  UNIT {s.active + 1} · INSTRUCTION
+                </p>
                 <h2>{unitTitle}</h2>
                 {!u ? (
                   <UnitPreparation
@@ -506,12 +530,12 @@ export function LearningRoom({
                   />
                 ) : (
                   <>
-                    <p className="learning-outcome">
+                    <p className="learning-outcome text-olive-600 bg-olive-100 rounded-lg p-4 dark:text-olive-400 dark:bg-olive-800">
                       <strong>After this:</strong> {u.content.outcome}
                     </p>
                     <LessonBlocks blocks={u.content.explanation} />
                     {!!u.content.definitions.length && (
-                      <section className="learning-card">
+                      <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
                         <h3>Definitions to keep nearby</h3>
                         <ul>
                           {u.content.definitions.map((d) => (
@@ -520,12 +544,12 @@ export function LearningRoom({
                         </ul>
                       </section>
                     )}
-                    <section className="learning-card">
+                    <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
                       <h3>A worked example</h3>
                       <LessonBlocks blocks={u.content.workedExample} />
                     </section>
                     {u.content.misunderstanding && (
-                      <p className="learning-hint">
+                      <p className="learning-hint bg-orange-100 rounded-lg text-olive-800 p-4 dark:bg-olive-800 dark:text-olive-200">
                         <strong>Watch for this:</strong>{" "}
                         {u.content.misunderstanding}
                       </p>
@@ -536,14 +560,17 @@ export function LearningRoom({
                         {u.content.sourceExcerpts.map((quote, i) => (
                           <blockquote key={i}>{quote}</blockquote>
                         ))}
-                        <p className="micro">
+                        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
                           Exact text matching checks provenance, not the
                           correctness of an explanation.
                         </p>
                       </details>
                     )}
                     {u.clarifications.map((c, i) => (
-                      <section className="learning-card" key={i}>
+                      <section
+                        className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
+                        key={i}
+                      >
                         <h3>{c.question}</h3>
                         <LessonBlocks blocks={c.blocks} />
                         {c.sourceExcerpts.map((q, j) => (
@@ -551,13 +578,13 @@ export function LearningRoom({
                         ))}
                       </section>
                     ))}
-                    <section className="learning-card">
+                    <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
                       <h3>A little help with this step</h3>
                       <p>
                         {2 - s.helpUsed} help requests remain for the whole
                         lesson. Failed requests also use a help request.
                       </p>
-                      <div className="learning-actions">
+                      <div className="learning-actions flex items-center gap-3.5 flex-wrap max-lesson:items-stretch max-lesson:[&_>_.button]:flex-[1_1_auto]">
                         <Button
                           variant="outline"
                           disabled={
@@ -611,7 +638,7 @@ export function LearningRoom({
         </div>
       )}
       {!sample && (
-        <div className="learning-delete">
+        <div className="learning-delete mx-0 my-9">
           <Button
             variant="ghost"
             disabled={busy}
@@ -620,7 +647,10 @@ export function LearningRoom({
             Delete learning session
           </Button>
           {deleting && (
-            <div className="confirm-box" role="alert">
+            <div
+              className="confirm-box bg-taupe-100 border-solid rounded-[0.5625rem] flex items-center gap-3.5 mt-5 p-5 border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:border-olive-600 [&_>_div]:flex-[1] [&_h2]:text-[1.1875rem] [&_p]:text-[0.75rem] [&_p]:m-0 max-mobile:flex-wrap max-mobile:[&_>_div]:flex-[1_1_100%]"
+              role="alert"
+            >
               <p>
                 Permanently delete this lesson, submitted answers, private
                 assessments and its request history? Derived teaching topics and
@@ -667,9 +697,12 @@ function PlanSetup({
   );
   const input = draft.value;
   return (
-    <div className="learning-plan">
+    <div className="learning-plan max-w-190">
       {s.issue && (
-        <p className="notice" role="status">
+        <p
+          className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400"
+          role="status"
+        >
           {s.issue}{" "}
           {s.policy === "notes"
             ? "You can add missing material, or explicitly remove the notes below to request a separate general-knowledge plan."
@@ -677,7 +710,7 @@ function PlanSetup({
         </p>
       )}
       {s.plan && (
-        <section className="learning-card">
+        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
           <h2>Your proposed destination</h2>
           <p>
             <strong>Interpretation:</strong> {s.plan.interpretation}
@@ -715,7 +748,7 @@ function PlanSetup({
           {s.plan.sourceExcerpts.map((q, i) => (
             <blockquote key={i}>{q}</blockquote>
           ))}
-          <p className="micro">
+          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
             Accepting freezes this plan. A different scope later needs a new
             course. Your first unit prepares automatically using AI allowance;
             later units prepare as you reach them. Reopening saved units uses no
@@ -727,7 +760,7 @@ function PlanSetup({
         </section>
       )}
       {!sample && (
-        <section className="learning-card">
+        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
           <h2>
             {s.plan
               ? "Correct the interpretation or scope"
@@ -749,7 +782,7 @@ function PlanSetup({
               ? "Generate revised plan · uses AI allowance"
               : "Create course · uses AI allowance"}
           </Button>
-          <p className="micro">
+          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
             Only this button regenerates a plan. Editing a field uses no AI
             calls.
           </p>

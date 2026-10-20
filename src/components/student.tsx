@@ -9,7 +9,7 @@ export function Student({
 }) {
   return (
     <div
-      className={`student student-${state} ${small ? "student-small" : ""}`}
+      className={`student w-50 max-w-full shrink-0 [&_svg]:w-full [&_svg]:h-auto [&_svg]:block [&.student-small]:w-[6.5625rem] [&.student-thinking]:animate-[sway_2.5s_ease-in-out_infinite] student-${state} ${small ? "student-small" : ""}`}
       role="img"
       aria-label={`Pip, your AI ${roleName}, is ${state}`}
     >
@@ -39,7 +39,7 @@ export function Student({
           strokeWidth="5"
           strokeLinecap="round"
         />
-        <g className="student-eyes">
+        <g className="student-eyes origin-center animate-[blink_8s_infinite]">
           <ellipse cx="89" cy="105" rx="5" ry="7" fill="#273c31" />
           <ellipse cx="139" cy="105" rx="5" ry="7" fill="#273c31" />
         </g>

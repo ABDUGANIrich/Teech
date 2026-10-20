@@ -137,27 +137,32 @@ export function Library() {
     }
   }
   return (
-    <div className="page">
-      <div className="page-heading">
+    <div className="page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
+      <div className="page-heading flex items-center justify-between gap-6 mt-5 mb-9 mx-0 [&_.eyebrow]:text-[0.5625rem] [&_.eyebrow]:mb-3.5 [&_h1]:mb-3.5 [&_p:last-child]:text-[0.8125rem] [&_p:last-child]:mb-0 max-mobile:mt-3.5 max-mobile:items-start max-mobile:flex-col max-mobile:gap-5.5 max-mobile:[&_h1]:text-[2.25rem] max-mobile:[&_.eyebrow]:text-[0.5rem] max-mobile:[&_.eyebrow]:tracking-[0.0625rem] max-mobile:[&_>_p]:text-[0.75rem]">
         <div>
-          <p className="eyebrow">A PLACE FOR YOUR IDEAS</p>
+          <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
+            A PLACE FOR YOUR IDEAS
+          </p>
           <h1>Your study shelf.</h1>
           <p>Learn something new, or explain what you know.</p>
         </div>
-        <div className="learning-actions">
+        <div className="learning-actions flex items-center gap-3.5 flex-wrap max-lesson:items-stretch max-lesson:[&_>_.button]:flex-[1_1_auto]">
           <Button asChild variant="outline">
             <Link href="/learn/new">Learn with a teacher</Link>
           </Button>
           <Button asChild>
             <Link href="/new">
-              <Plus size={17} />
+              <Plus className="size-[1.0625rem]" />
               Teach Pip
             </Link>
           </Button>
         </div>
       </div>
       {error && (
-        <div className="error-box" role="alert">
+        <div
+          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+          role="alert"
+        >
           {error}
           <Button
             variant="ghost"
@@ -168,7 +173,7 @@ export function Library() {
           </Button>
         </div>
       )}
-      <div className="mode-choices">
+      <div className="mode-choices flex items-stretch gap-3.5 flex-wrap mx-0 my-5.5 [&_>_p]:flex-[1_1_12.5rem] [&_>_p]:border-solid [&_>_p]:rounded-xl [&_>_p]:p-4.5 [&_>_p]:border-[0.0625rem] [&_>_p]:border-olive-300 dark:[&_>_p]:border-olive-700">
         <p>
           <strong>Learn with a teacher</strong>
           <br />
@@ -183,30 +188,36 @@ export function Library() {
       <LearningShelf />
       <h2>Teach Pip · your topics & attempts</h2>
       {loading ? (
-        <p className="loading-line" role="status">
-          <LoaderCircle className="spin" size={20} />
+        <p
+          className="loading-line flex items-center gap-3 text-[0.8125rem] p-7.5"
+          role="status"
+        >
+          <LoaderCircle className="spin animate-[spin_1.2s_linear_infinite] size-5" />
           Opening your library…
         </p>
       ) : topics.length === 0 ? (
-        <section className="empty-state">
+        <section className="empty-state text-center pt-[2.8125rem] pb-[4.0625rem] border-dashed rounded-xl bg-olive-100 flex items-center flex-col px-5 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_h2]:font-serif [&_h2]:text-[1.75rem] [&_h2]:mt-[0.9375rem] [&_>_p]:text-[0.8125rem] [&_>_p]:mb-6.5 max-mobile:pt-[1.5625rem] max-mobile:pb-[2.1875rem] max-mobile:px-5 max-mobile:[&_h2]:text-[1.625rem]">
           <Student small />
           <h2>A little room for your next big idea.</h2>
           <p>Start with a page of notes. We’ll turn it into a conversation.</p>
           <Button asChild>
             <Link href="/new">
               Create your first topic
-              <ArrowRight size={16} />
+              <ArrowRight className="size-4" />
             </Link>
           </Button>
         </section>
       ) : (
         <div className="topic-list">
           {topics.map((t) => (
-            <article key={t.id} className="topic-row">
-              <div className="topic-symbol">
-                <BookOpen size={24} />
+            <article
+              key={t.id}
+              className="topic-row flex items-start gap-6 border-t-[0.0625rem] border-solid border-t-olive-300 px-0 py-6.5 dark:border-t-olive-700 max-mobile:gap-3.5 max-mobile:flex-wrap"
+            >
+              <div className="topic-symbol bg-olive-200 text-olive-500 w-13 h-15 rounded-[0.4375rem] grid place-items-center shrink-0 dark:bg-olive-800 dark:text-olive-400 max-mobile:w-10 max-mobile:h-12">
+                <BookOpen className="size-6" />
               </div>
-              <div className="topic-info">
+              <div className="topic-info flex-[1] min-w-0 [&_h2]:mt-[0.1875rem] [&_h2]:mb-2.5 [&_h2]:wrap-anywhere [&_h2]:mx-0 [&_p]:text-[0.6875rem] [&_p]:mb-[0.1875rem] max-mobile:[&_h2]:text-[1.375rem]">
                 <h2>{t.title}</h2>
                 <p>
                   {t.concepts.length} concepts · Checklist v{t.version}
@@ -224,19 +235,19 @@ export function Library() {
                         <Link
                           key={s.id}
                           href={`/teach/${s.id}`}
-                          className="attempt-link"
+                          className="attempt-link flex justify-between gap-[0.9375rem] text-[0.6875rem] text-olive-500 max-w-110 px-0 py-[0.4375rem] dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-[0.3125rem]"
                         >
                           {new Date(s.created_at).toLocaleString()}
                           <span>
                             {s.phase === "review" ? "View review" : "Continue"}
-                            <ArrowRight size={12} />
+                            <ArrowRight className="size-3" />
                           </span>
                         </Link>
                       ))}
                   </details>
                 )}
               </div>
-              <div className="topic-actions">
+              <div className="topic-actions flex items-center gap-3.5 [&_.text-link]:text-[0.625rem] max-layout:flex-col max-layout:items-end max-layout:gap-2 max-mobile:flex-row max-mobile:items-center max-mobile:justify-between max-mobile:w-full max-mobile:ml-13.5">
                 <Button
                   variant="outline"
                   size="sm"
@@ -244,12 +255,18 @@ export function Library() {
                   disabled={busy}
                 >
                   Teach Pip
-                  <ArrowRight size={14} />
+                  <ArrowRight className="size-3.5" />
                 </Button>
-                <Link href={`/new?edit=${t.id}`} className="text-link">
+                <Link
+                  href={`/new?edit=${t.id}`}
+                  className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
+                >
                   Edit checklist
                 </Link>
-                <Link href={`/learn/new?topic=${t.id}`} className="text-link">
+                <Link
+                  href={`/learn/new?topic=${t.id}`}
+                  className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
+                >
                   Learn from these notes
                 </Link>
                 <Button
@@ -258,7 +275,7 @@ export function Library() {
                   aria-label={`Delete ${t.title}`}
                   onClick={() => setDeleting(t)}
                 >
-                  <Trash2 size={16} />
+                  <Trash2 className="size-4" />
                 </Button>
               </div>
             </article>
@@ -267,7 +284,7 @@ export function Library() {
       )}
       {sessions.some((s) => s.topic_id === null) && (
         <section
-          className="learning-shelf"
+          className="learning-shelf mx-0 my-9"
           aria-labelledby="saved-samples-title"
         >
           <h2 id="saved-samples-title">Teach Pip · saved sample attempts</h2>
@@ -275,13 +292,17 @@ export function Library() {
           {sessions
             .filter((s) => s.topic_id === null)
             .map((s) => (
-              <Link key={s.id} href={`/teach/${s.id}`} className="attempt-link">
+              <Link
+                key={s.id}
+                href={`/teach/${s.id}`}
+                className="attempt-link flex justify-between gap-[0.9375rem] text-[0.6875rem] text-olive-500 max-w-110 px-0 py-[0.4375rem] dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-[0.3125rem]"
+              >
                 <span>
                   {s.title} · {new Date(s.created_at).toLocaleString()}
                 </span>
                 <span>
                   {s.phase === "review" ? "View review" : "Continue"}
-                  <ArrowRight size={12} />
+                  <ArrowRight className="size-3" />
                 </span>
               </Link>
             ))}
@@ -297,7 +318,10 @@ export function Library() {
         </Button>
       )}
       {deleting && (
-        <div className="confirm-box" role="alert">
+        <div
+          className="confirm-box bg-taupe-100 border-solid rounded-[0.5625rem] flex items-center gap-3.5 mt-5 p-5 border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:border-olive-600 [&_>_div]:flex-[1] [&_h2]:text-[1.1875rem] [&_p]:text-[0.75rem] [&_p]:m-0 max-mobile:flex-wrap max-mobile:[&_>_div]:flex-[1_1_100%]"
+          role="alert"
+        >
           <div>
             <h2>Delete “{deleting.title}”?</h2>
             <p>
@@ -316,13 +340,13 @@ export function Library() {
             onClick={() => setDeleting(null)}
             disabled={busy}
           >
-            <X size={15} />
+            <X className="size-[0.9375rem]" />
             Keep it
           </Button>
         </div>
       )}
-      <div className="library-footer">
-        <p className="micro">
+      <div className="library-footer mt-7 flex items-center justify-between gap-[0.9375rem] [&_p]:m-0 max-mobile:items-start max-mobile:flex-col">
+        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
           Personal topics are saved to your account. Drafts also stay on this
           device.
         </p>

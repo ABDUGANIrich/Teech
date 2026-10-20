@@ -92,15 +92,17 @@ function PracticeItem({
       );
   }
   return (
-    <article className="learning-card practice-item">
-      <p className="eyebrow">
+    <article className="learning-card practice-item min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_label:not(.learning-choice)]:block [&_label:not(.learning-choice)]:mt-4.5 [&_label:not(.learning-choice)]:mb-1.5 [&_label:not(.learning-choice)]:font-semibold [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:border-solid [&_textarea]:rounded-lg [&_textarea]:bg-white [&_textarea]:text-olive-800 [&_textarea]:px-[0.8125rem] [&_textarea]:py-[0.6875rem] [&_textarea]:border-[0.0625rem] [&_textarea]:border-olive-300 dark:[&_textarea]:bg-neutral-800 dark:[&_textarea]:text-olive-200 dark:[&_textarea]:border-olive-700 [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 [&_fieldset]:min-w-0 [&_fieldset]:m-0 [&_fieldset]:p-0 [&_fieldset]:border-0 max-lesson:p-4.5 max-mobile:[&_textarea]:text-[1rem] max-mobile:[&_>_textarea]:text-[1rem]">
+      <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
         {q.kind === "mcq" ? "CONCEPT CHECK" : "APPLICATION PROBLEM"} ·{" "}
         {q.objectiveId}
       </p>
       <h3 id={`${q.id}-prompt`}>{q.prompt}</h3>
-      <p className="learning-status">{classification(a)}</p>
+      <p className="learning-status text-[0.8125rem] font-semibold text-olive-600 dark:text-olive-400">
+        {classification(a)}
+      </p>
       {sample && q.kind === "application" && (
-        <p className="notice">
+        <p className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
           Fixed sample: open-text feedback is illustrative. It does not assess
           what you write.
         </p>
@@ -115,7 +117,10 @@ function PracticeItem({
           <fieldset disabled={busy} aria-labelledby={`${q.id}-prompt`}>
             {q.kind === "mcq" ? (
               q.choices.map((c) => (
-                <label className="learning-choice" key={c.id}>
+                <label
+                  className="learning-choice flex items-start gap-3 border-solid rounded-lg cursor-pointer mx-0 my-2.5 p-3.5 border-[0.0625rem] border-olive-300 dark:border-olive-700 [&_input]:w-4.5 [&_input]:h-4.5 [&_input]:mt-1 [&_input]:shrink-0"
+                  key={c.id}
+                >
                   <input
                     type="radio"
                     name={q.id}
@@ -138,7 +143,7 @@ function PracticeItem({
                 />
               </>
             )}
-            <div className="learning-actions">
+            <div className="learning-actions flex items-center gap-3.5 flex-wrap max-lesson:items-stretch max-lesson:[&_>_.button]:flex-[1_1_auto]">
               <Button type="submit" disabled={!answer.trim()}>
                 Submit answer
               </Button>
@@ -156,8 +161,10 @@ function PracticeItem({
         </form>
       ) : (
         <div>
-          <p className="micro">Original response (frozen)</p>
-          <pre className="saved-answer">
+          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+            Original response (frozen)
+          </p>
+          <pre className="saved-answer whitespace-pre-wrap wrap-anywhere break-words rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800">
             {a.unsure ? "Marked unsure. " : ""}
             {q.kind === "mcq"
               ? q.choices.find((c) => c.id === a.answer)?.text ||
@@ -168,13 +175,16 @@ function PracticeItem({
         </div>
       )}
       {retainedAnswer && (
-        <section className="notice" aria-label="Retained unsent answer">
+        <section
+          className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400"
+          aria-label="Retained unsent answer"
+        >
           <h3>Your unsent answer</h3>
           <p>
             This writing was not saved as the answer to this item. Copy it if
             useful; the saved response above remains unchanged.
           </p>
-          <pre className="saved-answer">
+          <pre className="saved-answer whitespace-pre-wrap wrap-anywhere break-words rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800">
             {q.kind === "mcq"
               ? q.choices.find((c) => c.id === retainedAnswer)?.text ||
                 retainedAnswer
@@ -196,7 +206,7 @@ function PracticeItem({
       {notice && <p role="status">{notice}</p>}
       {a.hints.map((hint, i) => (
         <p
-          className="learning-hint"
+          className="learning-hint bg-orange-100 rounded-lg text-olive-800 p-4 dark:bg-olive-800 dark:text-olive-200"
           id={`hint-${a.itemId}-${i}`}
           tabIndex={-1}
           key={i}
@@ -208,7 +218,7 @@ function PracticeItem({
         <div
           id={`feedback-${a.itemId}`}
           tabIndex={-1}
-          className="learning-feedback"
+          className="learning-feedback border-l-[0.1875rem] border-solid border-l-olive-600 bg-olive-100 mx-0 my-4.5 p-4.5 dark:border-l-olive-400 dark:bg-olive-800"
           role="status"
         >
           <h3>{a.feedback.status}</h3>
@@ -222,7 +232,10 @@ function PracticeItem({
       {(a.state === "pending" || a.state === "failed") &&
         !a.solution &&
         a.dispute === null && (
-          <div className="notice" role="status">
+          <div
+            className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400"
+            role="status"
+          >
             <p>
               Your original answer is saved.{" "}
               {a.state === "pending"
@@ -240,18 +253,18 @@ function PracticeItem({
         )}
       {a.solution && (
         <div
-          className="learning-solution"
+          className="learning-solution border-l-[0.1875rem] border-solid border-l-olive-600 bg-olive-100 mx-0 my-4.5 p-4.5 dark:border-l-olive-400 dark:bg-olive-800"
           id={`solution-${a.itemId}`}
           tabIndex={-1}
         >
           <h3>Worked review</h3>
           <p>{a.solution}</p>
-          <p className="micro">
+          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
             A revealed solution cannot count as independently solved.
           </p>
         </div>
       )}
-      <div className="learning-actions">
+      <div className="learning-actions flex items-center gap-3.5 flex-wrap max-lesson:items-stretch max-lesson:[&_>_.button]:flex-[1_1_auto]">
         {open && (
           <Button
             variant="outline"
@@ -274,12 +287,16 @@ function PracticeItem({
         )}
       </div>
       {a.dispute !== null ? (
-        <p className="notice" id={`dispute-${a.itemId}`} tabIndex={-1}>
+        <p
+          className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400"
+          id={`dispute-${a.itemId}`}
+          tabIndex={-1}
+        >
           Question disputed. Excluded from success counts. {a.dispute} You can
           continue.
         </p>
       ) : (
-        <details className="learning-dispute">
+        <details className="learning-dispute mt-5 text-[0.8125rem] [&_label]:block [&_label]:mt-4.5 [&_label]:mb-1.5 [&_label]:font-semibold [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:border-solid [&_textarea]:rounded-lg [&_textarea]:bg-white [&_textarea]:text-olive-800 [&_textarea]:px-[0.8125rem] [&_textarea]:py-[0.6875rem] [&_textarea]:border-[0.0625rem] [&_textarea]:border-olive-300 dark:[&_textarea]:bg-neutral-800 dark:[&_textarea]:text-olive-200 dark:[&_textarea]:border-olive-700 [&_summary]:cursor-pointer">
           <summary>This question seems wrong</summary>
           <label htmlFor={`${q.id}-dispute`}>Reason (optional)</label>
           <textarea
