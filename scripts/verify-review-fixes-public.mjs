@@ -79,7 +79,7 @@ try {
       .getByRole("button", { name: "Resend confirmation email" })
       .waitFor();
     await page.goto(origin + "/teacher-sample");
-    await page.getByRole("button", { name: "Accept plan & begin" }).click();
+    await page.getByRole("button", { name: "Accept outline & begin" }).click();
     await page.getByRole("button", { name: "Prepare this unit" }).click();
     await page.getByRole("heading", { name: "A worked example" }).waitFor();
     assert(

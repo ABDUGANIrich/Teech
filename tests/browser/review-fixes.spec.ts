@@ -5,12 +5,12 @@ import {
 } from "../../src/lib/teacher-sample";
 import { sampleTopic } from "../../src/lib/sample";
 const harness = "http://127.0.0.1:4174";
-test("resetting the Teacher sample clears practice and handoff drafts", async ({
+test("resetting the Sage sample clears practice and handoff drafts", async ({
   page,
 }) => {
   await page.goto("/teacher-sample");
   async function practice() {
-    await page.getByRole("button", { name: "Accept plan & begin" }).click();
+    await page.getByRole("button", { name: "Accept outline & begin" }).click();
     await page.getByRole("button", { name: "Continue to practice" }).click();
   }
   await practice();
@@ -99,12 +99,12 @@ test("plan edits survive reload and a failed revision; successful generation cle
   await expect(page.getByLabel("Topic", { exact: true })).toHaveValue(
     "Revised binary search",
   );
-  await page.getByRole("button", { name: "Generate revised plan" }).click();
+  await page.getByRole("button", { name: "Revise outline" }).click();
   await expect(page.getByRole("alert")).toContainText("Capacity busy");
   await expect(
     page.getByLabel("Notes (optional", { exact: false }),
   ).toHaveValue("My important draft notes");
-  await page.getByRole("button", { name: "Generate revised plan" }).click();
+  await page.getByRole("button", { name: "Revise outline" }).click();
   await expect(page.getByRole("alert")).toHaveCount(0);
   await expect
     .poll(() =>

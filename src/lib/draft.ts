@@ -32,7 +32,7 @@ export function useDraft<T>(key: string, schema: z.ZodType<T>, fallback: T) {
     notice: storageError
       ? "Browser storage is unavailable. Copy your edits before leaving this tab."
       : edited === null && restored !== undefined
-        ? "Unsaved edits restored from this device. Review them against the saved lesson before continuing."
+        ? "Unsaved edits restored from this device. Review them against the saved course before continuing."
         : "",
   };
 }

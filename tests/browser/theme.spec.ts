@@ -44,7 +44,7 @@ for (const theme of ["light", "dark"] as const) {
 
     await page
       .getByRole("navigation")
-      .getByRole("link", { name: "Try a sample", exact: true })
+      .getByRole("link", { name: "Pip sample", exact: true })
       .click();
     await expect(
       page.getByLabel("Your explanation", { exact: true }),
@@ -77,7 +77,7 @@ test("tracks system changes without losing the current explanation", async ({
   await expectColor(explanation, "outline-color", "olive-300");
 
   await page.goto("/teacher-sample");
-  await page.getByRole("button", { name: "Accept plan & begin" }).click();
+  await page.getByRole("button", { name: "Accept outline & begin" }).click();
   await expectColor(
     page.locator(".learning-outcome"),
     "background-color",

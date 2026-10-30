@@ -300,7 +300,7 @@ export function sampleTeacherAction(
     }
     default:
       throw new AppError(
-        "This action needs a saved lesson. Sign in to try the complete flow.",
+        "This action needs a saved course. Sign in to try the complete flow.",
       );
   }
   s.version++;

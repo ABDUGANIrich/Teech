@@ -15,7 +15,7 @@ export function Shell({
       >
         Skip to content
       </a>
-      <header className="header h-24.5 max-w-310 flex items-center justify-between border-b-[0.0625rem] border-solid border-b-olive-300 m-auto px-12 py-0 dark:border-b-olive-700 [&_nav]:flex [&_nav]:items-center [&_nav]:gap-8 [&_nav]:text-[0.8125rem] [&_nav_>_a:hover]:text-emerald-700 dark:[&_nav_>_a:hover]:text-olive-300 max-layout:mx-6 max-layout:my-0 max-layout:px-2 max-layout:py-0 max-mobile:h-19.5 max-mobile:mx-5 max-mobile:my-0 max-mobile:p-0 max-mobile:[&_nav]:gap-[1.0625rem] max-mobile:[&_nav]:text-[0.6875rem] max-phone:h-auto max-phone:min-h-19.5 max-phone:gap-3.5 max-phone:flex-wrap max-phone:px-0 max-phone:py-4 max-phone:[&_nav]:w-full max-phone:[&_nav]:justify-between max-phone:[&_nav]:gap-3 max-phone:[&_nav_>_a]:whitespace-nowrap">
+      <header className="header h-24.5 max-w-310 flex items-center justify-between border-b-[0.0625rem] border-solid border-b-olive-300 m-auto px-12 py-0 dark:border-b-olive-700 [&_nav]:flex [&_nav]:items-center [&_nav]:gap-8 [&_nav]:text-[0.8125rem] [&_nav_>_a:hover]:text-emerald-700 dark:[&_nav_>_a:hover]:text-olive-300 max-layout:mx-6 max-layout:my-0 max-layout:px-2 max-layout:py-0 max-mobile:h-19.5 max-mobile:mx-5 max-mobile:my-0 max-mobile:p-0 max-mobile:[&_nav]:gap-[1.0625rem] max-mobile:[&_nav]:text-[0.6875rem] max-phone:h-auto max-phone:min-h-19.5 max-phone:gap-3.5 max-phone:flex-wrap max-phone:px-0 max-phone:py-4 max-phone:[&_nav]:w-full max-phone:[&_nav]:flex-wrap max-phone:[&_nav]:justify-between max-phone:[&_nav]:gap-3 max-phone:[&_nav_>_a]:whitespace-nowrap">
         <Link
           href="/"
           className="logo inline-flex items-center font-[750] text-[1.875rem] tracking-[-0.09375rem] leading-[1] max-mobile:text-[1.6875rem]"
@@ -28,8 +28,8 @@ export function Shell({
           <span className="logo-dot text-olive-500 dark:text-olive-400">.</span>
         </Link>
         <nav aria-label="Main navigation">
-          <Link href="/teacher-sample">Teacher sample</Link>
-          <Link href="/sample">Try a sample</Link>
+          <Link href="/teacher-sample">Sage sample</Link>
+          <Link href="/sample">Pip sample</Link>
           <Link
             href={signedIn ? "/library" : "/signin"}
             className="nav-account flex items-center gap-4 border-solid rounded-[0.4375rem] px-[1.0625rem] py-[0.5625rem] border-[0.0625rem] border-stone-300 dark:border-olive-700 max-mobile:gap-[0.4375rem] max-mobile:px-[0.6875rem] max-mobile:py-[0.4375rem]"

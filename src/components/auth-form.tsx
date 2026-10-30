@@ -89,7 +89,7 @@ export function AuthForm({
           <p>
             <strong>Accounts aren’t configured yet.</strong> Connect Supabase
             and apply the migration in the README to enable sign-in and saving.{" "}
-            <Link href="/sample">Try the sample preview</Link> in the meantime.
+            <Link href="/sample">Try Pip</Link> in the meantime.
           </p>
         </div>
       )}

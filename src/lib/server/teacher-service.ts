@@ -138,7 +138,7 @@ async function owned(id: string, userId: string) {
     .single();
   dbError(error && error.code !== "PGRST116" ? error : null);
   if (!data)
-    throw new AppError("This lesson is not available in your account.", 404);
+    throw new AppError("This course is not available in your account.", 404);
   return data as Row;
 }
 export async function readLearning(id?: string, before?: string) {
@@ -206,7 +206,7 @@ export async function runTeacherAction(input: unknown) {
     if (current) return { ...begin.result, learning: publicLearning(current) };
     return begin.result?.deleted
       ? { deleted: true }
-      : { error: "This lesson is no longer available." };
+      : { error: "This course is no longer available." };
   }
   let s: LearningState;
   let version = -1;
@@ -246,7 +246,7 @@ export async function runTeacherAction(input: unknown) {
   function requirePhase(...phases: LearningState["phase"][]) {
     if (!phases.includes(s.phase))
       throw new AppError(
-        "That step is not available here. Reload the saved lesson.",
+        "That step is not available here. Reload the saved course.",
         409,
       );
   }
@@ -297,7 +297,7 @@ export async function runTeacherAction(input: unknown) {
     version = row.version;
     if (!("version" in a) || a.version !== version)
       throw new AppError(
-        "This lesson changed in another tab. Reload the saved lesson before continuing.",
+        "This course changed in another tab. Reload the saved course before continuing.",
         409,
       );
     if (a.action === "delete") {
@@ -314,7 +314,7 @@ export async function runTeacherAction(input: unknown) {
       requirePhase("setup", "plan");
       if (s.accepted)
         throw new AppError(
-          "The accepted plan is frozen. Start a new lesson to change it.",
+          "The accepted outline is fixed. Start a new course to change it.",
           409,
         );
       if (a.input) {
@@ -343,19 +343,20 @@ export async function runTeacherAction(input: unknown) {
     }
     if (a.action === "accept") {
       requirePhase("plan");
-      if (!s.plan) throw new AppError("Generate a plan first.");
+      if (!s.plan) throw new AppError("Create a course outline first.");
       s.accepted = true;
       s.phase = "learning";
       event(s, "accepted");
       return await save();
     }
-    if (!s.accepted) throw new AppError("Confirm the lesson plan first.", 409);
+    if (!s.accepted)
+      throw new AppError("Accept the course outline first.", 409);
     if (a.action === "generate") {
       requirePhase("learning");
       if (s.units[s.active]) return await save();
       const unitId = s.plan!.units[s.active]?.id;
       if (!unitId || s.active !== s.units.length)
-        throw new AppError("Open units in lesson order.", 409);
+        throw new AppError("Open units in course order.", 409);
       // Save before any provider attempt so refresh/re-entry requires a retry
       // even if the process dies without reaching the error handler.
       s.preparingUnit = unitId;
@@ -477,7 +478,7 @@ export async function runTeacherAction(input: unknown) {
     }
     if (a.action === "handoff_extract") {
       if (!eligible(s) || !s.handoff || s.handoff.done)
-        throw new AppError("Preview the completed lesson source first.");
+        throw new AppError("Preview the completed course source first.");
       if (s.handoff.concepts) return await save();
       if (s.handoff.extractionCalls >= 2)
         throw new AppError(
@@ -530,7 +531,8 @@ export async function runTeacherAction(input: unknown) {
       event(s, "handed-off");
       return await save(true, {}, undefined, { topic, session });
     }
-    if (!("itemId" in a)) throw new AppError("Unknown lesson action.");
+    if (!("itemId" in a))
+      throw new AppError("This course action is not available.");
     requirePhase("practice");
     const u = activeUnit();
     const q = u.content.questions.find((q) => q.id === a.itemId);
@@ -657,7 +659,7 @@ export async function runTeacherAction(input: unknown) {
       e instanceof AppError
         ? e.message
         : e instanceof z.ZodError
-          ? "Check the input fields. The generated response may not meet the lesson format; saved work is unchanged."
+          ? "Check the input fields. The generated response may not meet the course format; saved work is unchanged."
           : "This step could not be saved or assessed. Reload to recover saved work, then explicitly retry if needed.";
     if (grading && s!) {
       const at = allUnits(s)

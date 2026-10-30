@@ -253,7 +253,7 @@ function excerpts(
     (!quotes.length || quotes.some((q) => !exactExcerpt(notes, q)))
   )
     throw new AppError(
-      "The lesson did not provide exact supporting passages from your notes. No generated content was saved.",
+      "The course did not provide exact supporting passages from your notes. No generated content was saved.",
       502,
     );
   if (policy === "general" && quotes.length)
@@ -276,7 +276,10 @@ export function validatePlan(plan: Plan, input: LearningInput) {
       (o) => !plan.units.some((u) => u.objectiveIds.includes(o.id)),
     )
   )
-    throw new AppError("The plan has inconsistent learning objectives.", 502);
+    throw new AppError(
+      "The course outline has inconsistent learning objectives.",
+      502,
+    );
   excerpts(input.notes ? "notes" : "general", input.notes, plan.sourceExcerpts);
   return plan;
 }
@@ -306,7 +309,7 @@ export function validatePackage(
     keys.some((k) => !unit.questions.some((q) => q.id === k.itemId))
   )
     throw new AppError(
-      "The lesson returned inconsistent question or objective IDs.",
+      "The unit returned inconsistent question or objective IDs.",
       502,
     );
   for (const q of unit.questions) {
@@ -387,7 +390,7 @@ export function eligible(s: LearningState) {
 export function sourceForHandoff(s: LearningState) {
   if (!eligible(s))
     throw new AppError(
-      "Complete all lesson units before preparing a teaching source.",
+      "Complete all course units before preparing a teaching source.",
     );
   const source = [
     s.plan!.title,
@@ -405,14 +408,14 @@ export function sourceForHandoff(s: LearningState) {
     .join("\n\n");
   if (source.length > LIMITS.notes)
     throw new AppError(
-      "This lesson is too long for a teaching source. Copy a smaller selection into Teach Pip and review its checklist.",
+      "This course is too long for a teaching source. Copy a smaller selection into Teach Pip and review its checklist.",
     );
   return source;
 }
 export function provenance(s: Pick<LearningState, "policy">) {
   return s.policy === "notes"
-    ? "Lesson adapted from your notes"
-    : "AI-generated lesson — not independently source-verified";
+    ? "Course adapted from your notes"
+    : "AI-generated course — not independently source-verified";
 }
 export function classification(a: Attempt) {
   if (a.dispute !== null) return "Disputed — excluded";

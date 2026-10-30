@@ -40,34 +40,32 @@ export function LearningShelf() {
       ]);
       setCursor(d.nextCursor || null);
     } catch (e) {
-      setError(
-        e instanceof Error ? e.message : "Could not load learning sessions.",
-      );
+      setError(e instanceof Error ? e.message : "Could not load courses.");
     } finally {
       setBusy(false);
     }
   }
   const phases = {
-    setup: "Ready to plan",
-    plan: "Plan ready to confirm",
+    setup: "Ready to create",
+    plan: "Outline ready to review",
     learning: "Learning",
     practice: "Practicing",
-    summary: "Session review",
+    summary: "Course review",
   };
   return (
     <section className="learning-shelf mx-0 my-9">
-      <h2>Learn with a teacher · your sessions</h2>
+      <h2>Learn with Sage · your courses</h2>
       {error && (
         <p className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
-          Learning sessions could not load.{" "}
+          Your courses could not load.{" "}
           <Button variant="ghost" size="sm" onClick={() => void load()}>
-            Retry loading lessons
+            Retry loading courses
           </Button>
         </p>
       )}
-      {busy && <p role="status">Opening learning sessions…</p>}
+      {busy && <p role="status">Opening your courses…</p>}
       {!lessons.length && !busy && !error && (
-        <p>No learning sessions yet. Start with a topic; notes are optional.</p>
+        <p>No courses yet. Start with a topic; notes are optional.</p>
       )}
       {lessons.map((s) => (
         <article
@@ -76,7 +74,7 @@ export function LearningShelf() {
         >
           <div className="topic-info flex-[1] min-w-0 [&_h2]:mt-[0.1875rem] [&_h2]:mb-2.5 [&_h2]:wrap-anywhere [&_h2]:mx-0 [&_p]:text-[0.6875rem] [&_p]:mb-[0.1875rem] max-mobile:[&_h2]:text-[1.375rem]">
             <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
-              TEACHER
+              SAGE
             </p>
             <h3>{s.title}</h3>
             <p>
@@ -90,13 +88,13 @@ export function LearningShelf() {
             className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
             href={`/learn/${s.id}`}
           >
-            Resume lesson →
+            Resume course →
           </Link>
         </article>
       ))}
       {cursor && (
         <Button variant="outline" disabled={busy} onClick={() => void load()}>
-          Load older learning sessions
+          Load older courses
         </Button>
       )}
     </section>

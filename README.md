@@ -21,7 +21,9 @@ The library requests compact attempt records, loads only current checklist versi
 The auth form supports password-reset requests and confirmation-email resends. The reset page requires a verified session and checks password confirmation. With Supabase SSR, configure the **Reset password** email template to use the token-hash callback:
 
 ```html
-<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery">Reset password</a>
+<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery"
+  >Reset password</a
+>
 ```
 
 Allow the production callback URL and `APP_URL/auth/confirm?next=/reset-password` in Supabase Redirect URLs, with explicit development equivalents when needed. The callback also supports PKCE codes and accepts only the fixed reset-page destination. Email delivery still needs working Supabase SMTP; a successful request does not establish that an email was delivered. These flows follow [Supabase's password recovery guidance](https://supabase.com/docs/guides/auth/passwords).
@@ -42,14 +44,14 @@ Topic-only lesson plans use model knowledge without requiring notes. For softwar
 
 Two entry points share the existing account and AI allowance:
 
-- **Learn with a teacher** (`/learn/new`): submit a topic or pasted notes with **Create course · uses AI allowance**. The setup saves first and planning starts from the same submission. Review the interpretation, prerequisites and exclusions, then explicitly accept the plan. Each unit prepares automatically as you reach it, including the first unit after acceptance; failed preparation offers an explicit retry. Reopening generated units uses saved content. Later plan revisions require an explicit generation request. Failed initial planning retains the inputs and saved lesson for a retry; a completed saved plan is recovered without another AI request. The accepted plan is frozen. Existing library topics can prefill notes.
+- **Learn with Sage** (`/learn/new`): submit a topic or pasted notes with **Create course · uses AI allowance**. The setup saves first and planning starts from the same submission. Review the interpretation, prerequisites and exclusions, then explicitly accept the plan. Each unit prepares automatically as you reach it, including the first unit after acceptance; failed preparation offers an explicit retry. Reopening generated units uses saved content. Later plan revisions require an explicit generation request. Failed initial planning retains the inputs and saved lesson for a retry; a completed saved plan is recovered without another AI request. The accepted plan is frozen. Existing library topics can prefill notes.
 - **Teach Pip** (`/new`): the existing source-required checklist and Student experience remain available. Saved attempts and comparison rules are unchanged.
 
 A lesson has 1–3 on-demand units, usually targeting about 15 minutes (an estimate). Each has structured instruction, definitions, a worked example, a concept check and an application problem. Saved units do not regenerate on refresh. Learners may use two clarification requests across the session, two cached hints per item, solution reveal, an unsure response, or a dispute. Answers are frozen after submission; revealing a solution permanently labels the item as worked review. Questions need not be answered correctly, or at all, to continue. Early-ended sessions can resume their next unfinished unit.
 
 The stored summary separates independent correct, assisted, unattempted, uncertain and disputed results by objective. First and fresh practice attempts remain separate. One additional practice pair can target an unresolved objective; failed generation can be explicitly retried for that same objective, subject to the session cap. There is no mastery percentage or improvement claim across uncalibrated questions.
 
-Try `/teacher-sample` without credentials for a **fixed demonstration** of instruction, help, hints, local MCQ checking, illustrative open-answer feedback, summary and handoff preview. Open visitor text is **not assessed** in that sample. `/sample` remains the existing Student sample. Personal routes require sign-in, declare noindex/nofollow, and are absent from the sitemap.
+Try `/teacher-sample` without credentials for a **fixed demonstration** of instruction, help, hints, local MCQ checking, illustrative open-answer feedback, summary and handoff preview. Open visitor text is **not assessed** in that sample. `/sample` remains the Pip sample. Personal routes require sign-in, declare noindex/nofollow, and are absent from the sitemap.
 
 ### Storage, migration and deployment
 

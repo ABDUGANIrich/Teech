@@ -66,7 +66,7 @@ test("unit preparation starts once, stops after failure and retries explicitly",
   await expect(
     page.getByRole("button", { name: "Retry preparing unit" }),
   ).toBeEnabled();
-  await page.getByRole("button", { name: "Reload saved lesson" }).click();
+  await page.getByRole("button", { name: "Reload saved course" }).click();
   await expect(page.getByRole("alert")).toHaveCount(0);
   expect(generates).toBe(1);
   await page.reload();
@@ -186,13 +186,13 @@ test("automatic preparation respects the lesson AI cap", async ({ page }) => {
   ).toHaveCount(0);
 });
 
-test("fixed Teacher sample covers instruction, help, practice, feedback, summary and handoff preview", async ({
+test("fixed Sage sample covers instruction, help, practice, feedback, summary and handoff preview", async ({
   page,
 }, info) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/teacher-sample");
-  await expect(page.getByText("Teacher sample · fixed content")).toBeVisible();
-  await page.getByRole("button", { name: "Accept plan & begin" }).click();
+  await expect(page.getByText("Sage sample · fixed content")).toBeVisible();
+  await page.getByRole("button", { name: "Accept outline & begin" }).click();
   await expect(
     page.getByRole("heading", { name: "A worked example" }),
   ).toBeVisible();
@@ -238,7 +238,7 @@ test("fixed Teacher sample covers instruction, help, practice, feedback, summary
   ).toHaveCount(0);
   await page.getByRole("button", { name: "Continue from this unit" }).click();
   await expect(
-    page.getByRole("heading", { name: "What happened in this session." }),
+    page.getByRole("heading", { name: "Your course review." }),
   ).toBeVisible();
   await expect(
     page.getByText("0 independent correct · 2 assisted", { exact: false }),
@@ -349,7 +349,7 @@ test("saved Teacher room preserves answer through pending feedback, failure, ret
   ).toBeVisible();
   await page.getByRole("button", { name: "Continue from this unit" }).click();
   await expect(
-    page.getByRole("heading", { name: "What happened in this session." }),
+    page.getByRole("heading", { name: "Your course review." }),
   ).toBeVisible();
   await page.reload();
   expect(gradeCalls).toBe(2);
@@ -419,7 +419,7 @@ test("Teacher plan shows editable scope and only regenerates on explicit request
   await page.getByLabel("Topic", { exact: true }).fill("Java island geography");
   await page.getByLabel("Starting level").selectOption("refreshing");
   expect(calls).toBe(0);
-  await page.getByRole("button", { name: "Generate revised plan" }).click();
+  await page.getByRole("button", { name: "Revise outline" }).click();
   await expect(page.getByLabel("Topic", { exact: true })).toHaveValue(
     "Java island geography",
   );
@@ -469,7 +469,7 @@ test("Teacher setup saves and plans in one submission, leaving acceptance explic
   release();
   await expect(page).toHaveURL(/\/learn\//);
   await expect(
-    page.getByRole("button", { name: "Accept plan & begin" }),
+    page.getByRole("button", { name: "Accept outline & begin" }),
   ).toBeVisible();
   expect(session.input).toEqual({
     topic: "Binary search",
@@ -479,7 +479,7 @@ test("Teacher setup saves and plans in one submission, leaving acceptance explic
   });
   expect(session.accepted).toBe(false);
   expect(actions).toEqual(["create", "plan"]);
-  await page.getByRole("button", { name: "Accept plan & begin" }).click();
+  await page.getByRole("button", { name: "Accept outline & begin" }).click();
   await expect(
     page.getByRole("heading", { name: "A worked example" }),
   ).toBeVisible();
@@ -533,7 +533,7 @@ test("failed initial planning retains every input and retries the same saved les
   await page.getByRole("button", { name: "Create course" }).click();
   await expect(page.getByRole("alert")).toContainText("AI provider timed out");
   await expect(
-    page.getByRole("link", { name: "open the saved lesson" }),
+    page.getByRole("link", { name: "open the saved course" }),
   ).toHaveAttribute("href", `/learn/${session.id}`);
   expect(creates).toBe(1);
   expect(plans).toBe(1);
@@ -551,7 +551,7 @@ test("failed initial planning retains every input and retries the same saved les
   expect(plans).toBe(1);
   await page.getByRole("button", { name: "Continue creating course" }).click();
   await expect(
-    page.getByRole("button", { name: "Accept plan & begin" }),
+    page.getByRole("button", { name: "Accept outline & begin" }),
   ).toBeVisible();
   expect(creates).toBe(1);
   expect(plans).toBe(2);
@@ -578,7 +578,7 @@ test("lost initial plan response recovers its saved result without another AI ac
   await page.getByLabel("Topic", { exact: true }).fill("Binary search");
   await page.getByRole("button", { name: "Create course" }).click();
   await expect(
-    page.getByRole("button", { name: "Accept plan & begin" }),
+    page.getByRole("button", { name: "Accept outline & begin" }),
   ).toBeVisible();
   await expect(page.getByRole("alert")).toHaveCount(0);
   expect(actions).toEqual(["create", "plan"]);
@@ -614,7 +614,7 @@ test("interrupted initial planning keeps the checkpoint and recovers later compl
   expect(actions).toEqual(["create", "plan"]);
   await page.getByRole("button", { name: "Continue creating course" }).click();
   await expect(
-    page.getByRole("button", { name: "Accept plan & begin" }),
+    page.getByRole("button", { name: "Accept outline & begin" }),
   ).toBeVisible();
   expect(actions).toEqual(["create", "plan"]);
 });

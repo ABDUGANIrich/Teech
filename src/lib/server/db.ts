@@ -95,7 +95,7 @@ export function dbError(error: { message: string; code?: string } | null) {
     );
   if (error.message.includes("VERSION_CONFLICT"))
     throw new AppError(
-      "This lesson changed in another tab. Reload its saved state before continuing.",
+      "This item changed in another tab. Reload it before continuing.",
       409,
     );
   if (error.message.includes("ANONYMOUS_POOL_EXCEEDED"))

@@ -413,16 +413,16 @@ export function TeachingRoom({
           {userId ? "My library" : "Back to home"}
         </Link>
         <span className="quiet-badge text-[0.5625rem] tracking-[0.06875rem] text-olive-500 border-solid bg-olive-100 rounded-[0.3125rem] px-2 py-1 border-[0.0625rem] border-olive-300 dark:text-olive-400 dark:bg-olive-800 dark:border-olive-700">
-          {session.preview ? "SAMPLE PREVIEW" : "PIP · STUDENT"}
+          {session.preview ? "PIP · FIXED PREVIEW" : "PIP · STUDENT"}
         </span>
       </div>
       {session.preview && (
         <div className="preview-banner border-solid bg-olive-100 rounded-[0.4375rem] flex gap-2.5 items-start mb-7 px-4 py-3 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_p]:text-[0.6875rem] [&_p]:leading-[1.65] [&_p]:text-stone-500 [&_p]:m-0 dark:[&_p]:text-olive-400 [&_strong]:font-semibold [&_a]:underline max-mobile:mb-6 max-mobile:px-3 max-mobile:py-[0.6875rem] max-mobile:[&_p]:text-[0.625rem]">
           <span className="preview-dot w-1.5 h-1.5 bg-stone-400 rounded-full mt-1.5 shrink-0 dark:bg-olive-400" />
           <p>
-            <strong>Sample preview</strong> · Questions and feedback are fixed
-            examples, not an AI assessment of your writing. Personal saving
-            requires configuration.
+            <strong>Pip sample · fixed preview</strong> · Questions and feedback
+            are fixed examples, not an AI assessment of your writing. Personal
+            saving requires configuration.
           </p>
         </div>
       )}

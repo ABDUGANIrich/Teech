@@ -183,7 +183,7 @@ export async function fetchLearning(
   const data = await response.json();
   if (!response.ok || data.error)
     throw new LearningReadError(
-      data.error || "Could not load saved lessons.",
+      data.error || "Could not load saved courses.",
       response.status,
     );
   return data;

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "Teech — Learn it. Practice it. Teach it. Learn with a teacher, then teach Pip.";
+  "Teech — Learn it. Practice it. Teach it. Learn with Sage or teach Pip.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -63,7 +63,7 @@ export default function Image() {
               color: "#667064",
             }}
           >
-            Learn with a teacher. Teach it back to Pip.
+            Learn with Sage. Teach Pip.
           </div>
         </div>
         <div

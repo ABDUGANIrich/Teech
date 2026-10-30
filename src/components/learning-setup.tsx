@@ -78,7 +78,7 @@ export function LearningFields({
       <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
         {input.notes.trim()
           ? "Notes-based learning: your notes set the content boundary. Missing coverage will be flagged."
-          : "Topic-only learning: AI-generated from model knowledge, without independent source verification. Paste material for current facts or a specific document."}
+          : "Topic-based learning: Sage can look up public web sources when needed. Add notes to study a specific document. AI-generated content is not independently verified."}
       </p>
     </fieldset>
   );
@@ -157,12 +157,12 @@ export function LearningSetup({
             input: parsed.data,
           });
       if (d.error || !d.learning)
-        throw new Error(d.error || "The lesson was not saved.");
+        throw new Error(d.error || "The course was not saved.");
       lesson = d.learning;
       setCreatedId(lesson.id);
       if (!writeLocal(lessonKey, lesson.id))
         setNotice(
-          "Browser storage is unavailable. Open the saved lesson before leaving.",
+          "Browser storage is unavailable. Open the saved course before leaving.",
         );
       // A prior submission may have completed while its response was lost.
       if (
@@ -186,7 +186,7 @@ export function LearningSetup({
         throw new Error(planned.error);
       }
       if (!planned.learning)
-        throw new Error("The lesson plan could not be loaded.");
+        throw new Error("The course outline could not be loaded.");
       openLesson(lesson.id);
     } catch (e) {
       if (
@@ -213,7 +213,7 @@ export function LearningSetup({
         }
       }
       setError(
-        e instanceof Error ? e.message : "Could not create this lesson.",
+        e instanceof Error ? e.message : "Could not create this course.",
       );
     } finally {
       locked.current = false;
@@ -229,7 +229,7 @@ export function LearningSetup({
         ← Your library
       </Link>
       <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
-        TEACHER MODE
+        LEARN WITH SAGE
       </p>
       <h1>Start with a little curiosity.</h1>
       <p>
@@ -276,7 +276,7 @@ export function LearningSetup({
       {missingCheckpoint && !busy && (
         <div className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
           <p>
-            The saved lesson is no longer available. Keep these inputs and start
+            The saved course is no longer available. Keep these inputs and start
             a new course when ready.
           </p>
           <Button
@@ -294,15 +294,15 @@ export function LearningSetup({
       )}
       {savedId && !busy && !missingCheckpoint && (
         <p>
-          Your setup is saved. Continue to recover a finished plan or retry
+          Your setup is saved. Continue to recover a finished outline or retry
           generation, or{" "}
-          <Link href={`/learn/${savedId}`}>open the saved lesson</Link>.
+          <Link href={`/learn/${savedId}`}>open the saved course</Link>.
         </p>
       )}
       {notice && <p role="status">{notice}</p>}
       <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
-        Planning and instruction use the same AI allowance as Teach Pip.
-        Capacity is not reserved for a complete lesson.
+        Learn with Sage and Teach Pip share your AI allowance. Capacity is not
+        reserved for a complete course.
       </p>
     </div>
   );

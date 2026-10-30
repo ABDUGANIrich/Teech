@@ -80,8 +80,10 @@ describe("teacher tasks on shared provider transport", () => {
     expect(
       JSON.stringify(body.response_format.json_schema.schema),
     ).not.toContain("prefixItems");
-    expect(body.messages[0].content).toContain("Teacher");
-    expect(body.messages[0].content).not.toContain("curious student helping");
+    expect(body.messages[0].content).toContain(
+      "You are Sage, Teech's AI teacher",
+    );
+    expect(body.messages[0].content).not.toContain("You are Pip");
     expect(body.messages[1].content).toContain("untrusted_data");
     expect(m.rpc).toHaveBeenCalledWith(
       "reserve_teacher_usage",

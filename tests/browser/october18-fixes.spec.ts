@@ -140,7 +140,7 @@ test("an unavailable setup checkpoint can be discarded explicitly without losing
       return route.request().url().includes(dead)
         ? route.fulfill({
             status: 404,
-            json: { error: "This lesson is not available in your account." },
+            json: { error: "This course is not available in your account." },
           })
         : route.fulfill({ json: { learning: s } });
     const body = route.request().postDataJSON();
@@ -172,7 +172,7 @@ test("an unavailable setup checkpoint can be discarded explicitly without losing
   );
   await page.getByRole("button", { name: "Create course" }).click();
   await expect(
-    page.getByRole("button", { name: "Accept plan & begin" }),
+    page.getByRole("button", { name: "Accept outline & begin" }),
   ).toBeVisible();
   expect(actions).toEqual(["create", "plan"]);
 });
@@ -247,10 +247,10 @@ test("lesson deletion clears matching setup pointers and preserves other lessons
   );
   await page.goto(`${harness}/?view=learning-room`);
   await page
-    .getByRole("button", { name: "Delete learning session", exact: true })
+    .getByRole("button", { name: "Delete course", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Delete lesson permanently", exact: true })
+    .getByRole("button", { name: "Delete course permanently", exact: true })
     .click();
   await expect(page).toHaveURL(`${harness}/library`);
   const storage = await page.evaluate(() => ({ ...localStorage }));

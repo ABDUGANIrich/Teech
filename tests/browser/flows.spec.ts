@@ -405,7 +405,9 @@ test("sample: recover draft, reveal notes, three questions, review and compare r
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/sample");
-  await expect(page.getByText("Sample preview", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Pip sample · fixed preview", { exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Your source material" }),
   ).toHaveCount(0);

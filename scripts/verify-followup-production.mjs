@@ -97,7 +97,9 @@ try {
         assert.equal((await fetch(new URL(url, origin))).status, 200);
       }
       await page.goto(origin + "/teacher-sample");
-      await page.getByRole("button", { name: "Accept plan & begin" }).click();
+      await page
+        .getByRole("button", { name: "Accept outline & begin" })
+        .click();
       await page.getByRole("heading", { name: "A worked example" }).waitFor();
       await page.getByRole("button", { name: "Continue to practice" }).click();
       const item = page
@@ -133,7 +135,7 @@ try {
           return route.fulfill({
             json: {
               learning: teacher,
-              error: "This lesson changed in another tab.",
+              error: "This course changed in another tab.",
             },
           });
         }

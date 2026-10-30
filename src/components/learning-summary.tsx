@@ -34,7 +34,7 @@ export function LearningSummary({
   const [target, setTarget] = useState("");
   return (
     <section aria-labelledby="summary-title">
-      <h2 id="summary-title">What happened in this session.</h2>
+      <h2 id="summary-title">Your course review.</h2>
       <p>
         This is a record of practice, not a measure of mastery or lasting
         retention. Fresh questions have uncalibrated difficulty; their results
@@ -199,7 +199,7 @@ export function LearningSummary({
       {eligible(s) ? (
         <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
           <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
-            NEXT: PIP BECOMES YOUR STUDENT
+            NEXT: TEACH PIP
           </p>
           <h3>Teach this to Pip.</h3>
           <p>
@@ -222,7 +222,7 @@ export function LearningSummary({
         </section>
       ) : (
         <p className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
-          Complete every lesson unit to prepare a source for Teach Pip.
+          Complete every course unit to prepare a source for Teach Pip.
           Unanswered questions do not block completion.
         </p>
       )}
@@ -274,7 +274,7 @@ function Handoff({
       if (await act("handoff", { concepts })) draft.clear(concepts);
     } catch {
       setError(
-        "Keep 4–8 distinct concepts, with exact supporting passages copied from this source. Expand a narrow lesson instead of manufacturing concepts.",
+        "Keep 4–8 distinct concepts, with exact supporting passages copied from this source. Expand a narrow course instead of manufacturing concepts.",
       );
     }
   }
@@ -302,14 +302,14 @@ function Handoff({
               Continue your teaching attempt →
             </Link>
           ) : (
-            "The linked teaching material was removed. This lesson remains saved."
+            "The linked teaching material was removed. This course remains saved."
           )}
         </p>
       ) : !h.concepts ? (
         <>
           <p>
             A faithful checklist needs at least four distinct concepts. If the
-            lesson is too narrow, add material in a new Teach Pip topic.
+            course is too narrow, add material in a new Teach Pip topic.
           </p>
           <Button
             disabled={busy || h.extractionCalls >= 2}
@@ -393,20 +393,20 @@ function Handoff({
           </fieldset>
           {sample ? (
             <p className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
-              Sample handoff preview only. A saved lesson creates a topic and
-              starts a normal Student attempt with notes hidden.{" "}
+              Sample handoff preview only. A saved course creates a topic and
+              starts a Teach Pip attempt with notes hidden.{" "}
               <Link
                 className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
                 href="/signin"
               >
-                Sign in for your own lesson
+                Sign in for your own course
               </Link>
               , or{" "}
               <Link
                 className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
                 href="/sample"
               >
-                explore the Student sample (a different fixed topic)
+                try Pip on a different topic
               </Link>
               .
             </p>

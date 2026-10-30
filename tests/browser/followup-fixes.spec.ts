@@ -34,7 +34,7 @@ for (const lost of [false, true]) {
               json: {
                 learning: s,
                 error:
-                  "This lesson changed in another tab. Reload the saved lesson before continuing.",
+                  "This course changed in another tab. Reload the saved course before continuing.",
               },
             });
       }

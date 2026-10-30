@@ -148,7 +148,7 @@ export function Library() {
         </div>
         <div className="learning-actions flex items-center gap-3.5 flex-wrap max-lesson:items-stretch max-lesson:[&_>_.button]:flex-[1_1_auto]">
           <Button asChild variant="outline">
-            <Link href="/learn/new">Learn with a teacher</Link>
+            <Link href="/learn/new">Learn with Sage</Link>
           </Button>
           <Button asChild>
             <Link href="/new">
@@ -175,7 +175,7 @@ export function Library() {
       )}
       <div className="mode-choices flex items-stretch gap-3.5 flex-wrap mx-0 my-5.5 [&_>_p]:flex-[1_1_12.5rem] [&_>_p]:border-solid [&_>_p]:rounded-xl [&_>_p]:p-4.5 [&_>_p]:border-[0.0625rem] [&_>_p]:border-olive-300 dark:[&_>_p]:border-olive-700">
         <p>
-          <strong>Learn with a teacher</strong>
+          <strong>Learn with Sage</strong>
           <br />
           Start with a topic. Learn it step by step.
         </p>
@@ -288,7 +288,7 @@ export function Library() {
           aria-labelledby="saved-samples-title"
         >
           <h2 id="saved-samples-title">Teach Pip · saved sample attempts</h2>
-          <p>Your live Student sample attempts are saved to your account.</p>
+          <p>Your live Pip sample attempts are saved to your account.</p>
           {sessions
             .filter((s) => s.topic_id === null)
             .map((s) => (
@@ -347,8 +347,8 @@ export function Library() {
       )}
       <div className="library-footer mt-7 flex items-center justify-between gap-[0.9375rem] [&_p]:m-0 max-mobile:items-start max-mobile:flex-col">
         <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
-          Personal topics are saved to your account. Drafts also stay on this
-          device.
+          Your courses, topics and attempts are saved to your account. Drafts
+          also stay on this device.
         </p>
         <Button
           variant="ghost"

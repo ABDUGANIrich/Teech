@@ -3,4 +3,4 @@ export const siteUrl = new URL(
 ).origin;
 export const siteTitle = "Teech — Learn it. Practice it. Teach it.";
 export const siteDescription =
-  "Learn a topic step by step with an AI teacher, practice applying it, then teach it back to Pip. A quiet space to find what to revisit.";
+  "Learn with Sage from a topic or your notes, or explain what you know to Pip. Short courses, thoughtful practice, and reviews that show what to revisit.";

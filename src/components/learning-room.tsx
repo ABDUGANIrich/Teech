@@ -3,7 +3,7 @@ import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { Student } from "./student";
+import { Teacher } from "./teacher";
 import { LearningFields } from "./learning-setup";
 import { LearningPractice, type LearningAction } from "./learning-practice";
 import { LearningSummary } from "./learning-summary";
@@ -325,7 +325,7 @@ export function LearningRoom({
   if (!session)
     return (
       <div className="page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
-        <h1>Learn with a teacher.</h1>
+        <h1>Learn with Sage.</h1>
         {error ? (
           <div
             className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
@@ -333,12 +333,12 @@ export function LearningRoom({
           >
             {error}
             <Button variant="outline" onClick={() => void reload()}>
-              Reload saved lesson
+              Reload saved course
             </Button>
             <Link href="/library">Return to library</Link>
           </div>
         ) : (
-          <p role="status">Opening the saved lesson…</p>
+          <p role="status">Opening the saved course…</p>
         )}
       </div>
     );
@@ -356,13 +356,13 @@ export function LearningRoom({
           ← {sample ? "Home" : "Pause and return to library"}
         </Link>
         <span className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
-          PIP · TEACHER
+          SAGE · TEACHER
         </span>
       </div>
       {sample && (
         <div className="preview-banner teacher-preview border-solid bg-olive-100 rounded-[0.4375rem] flex gap-2.5 items-center mb-7 justify-between px-4 py-3 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_p]:text-[0.6875rem] [&_p]:leading-[1.65] [&_p]:text-stone-500 [&_p]:m-0 dark:[&_p]:text-olive-400 [&_strong]:font-semibold [&_a]:underline max-mobile:flex-col max-mobile:items-stretch max-mobile:mb-6 max-mobile:px-3 max-mobile:py-[0.6875rem] max-mobile:[&_p]:text-[0.625rem]">
           <div className="teacher-preview-copy flex-[1] min-w-0">
-            <strong>Teacher sample · fixed content</strong>
+            <strong>Sage sample · fixed content</strong>
             <p>
               No credentials or AI calls. Open-text feedback is illustrative,
               not an assessment.
@@ -376,7 +376,7 @@ export function LearningRoom({
               className="text-link text-[0.75rem] inline-flex gap-2 items-center hover:underline"
               href="/sample"
             >
-              Try the Student sample →
+              Try Pip →
             </Link>
           </div>
         </div>
@@ -391,16 +391,16 @@ export function LearningRoom({
           </h1>
           <p>{provenance(s)}</p>
         </div>
-        <div className="learning-pip w-25 text-center text-[0.75rem] shrink-0 [&_.student-wrap]:w-22.5 max-lesson:hidden">
-          <Student small roleName="teacher" />
-          <span>Teacher</span>
+        <div className="learning-teacher w-25 text-center text-[0.75rem] shrink-0 max-lesson:hidden">
+          <Teacher small />
+          <span>Sage · Teacher</span>
         </div>
       </div>
       {!sample && (
         <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
-          AI feedback can be wrong. Teacher and Student share your account
-          allowance. {s.providerAttempts}/22 lesson AI attempts used, including
-          failed calls and repairs. Daily capacity is not reserved.
+          AI feedback can be wrong. Sage and Pip share your account allowance.{" "}
+          {s.providerAttempts}/22 course AI attempts used, including failed
+          calls and repairs. Daily capacity is not reserved.
         </p>
       )}
       {s.providerAttempts >= 22 && (
@@ -408,7 +408,7 @@ export function LearningRoom({
           className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400"
           role="status"
         >
-          This lesson’s AI budget is exhausted. Saved content, navigation,
+          This course’s AI allowance is exhausted. Saved content, navigation,
           cached hints, solutions and summary remain accessible.
         </p>
       )}
@@ -432,7 +432,7 @@ export function LearningRoom({
             disabled={busy}
             onClick={() => void reload()}
           >
-            Reload saved lesson
+            Reload saved course
           </Button>
         </div>
       )}
@@ -453,7 +453,7 @@ export function LearningRoom({
           <aside className="learning-outline min-w-0 sticky top-5 border-solid rounded-xl text-[0.8125rem] p-4.5 border-[0.0625rem] border-olive-300 dark:border-olive-700 [&_summary]:font-semibold [&_summary]:cursor-pointer [&_ol]:pl-4.5 [&_li]:mx-0 [&_li]:my-4.5 [&_li[aria-current]]:text-olive-600 [&_li[aria-current]]:font-bold dark:[&_li[aria-current]]:text-olive-400 [&_.button]:mt-[0.4375rem] [&_.button]:whitespace-normal [&_.button]:text-left max-lesson:static max-lesson:[&_ol]:flex max-lesson:[&_ol]:flex-wrap max-lesson:[&_ol]:gap-3 max-lesson:[&_ol]:list-none max-lesson:[&_ol]:p-0 max-lesson:[&_li]:flex-[1_1_10rem] max-lesson:[&_li]:m-0">
             <details open>
               <summary>
-                Lesson outline · {s.completed.length}/{s.plan!.units.length}{" "}
+                Course outline · {s.completed.length}/{s.plan!.units.length}{" "}
                 complete
               </summary>
               <ol>
@@ -582,7 +582,7 @@ export function LearningRoom({
                       <h3>A little help with this step</h3>
                       <p>
                         {2 - s.helpUsed} help requests remain for the whole
-                        lesson. Failed requests also use a help request.
+                        course. Failed requests also use a help request.
                       </p>
                       <div className="learning-actions flex items-center gap-3.5 flex-wrap max-lesson:items-stretch max-lesson:[&_>_.button]:flex-[1_1_auto]">
                         <Button
@@ -644,7 +644,7 @@ export function LearningRoom({
             disabled={busy}
             onClick={() => setDeleting(true)}
           >
-            Delete learning session
+            Delete course
           </Button>
           {deleting && (
             <div
@@ -652,23 +652,23 @@ export function LearningRoom({
               role="alert"
             >
               <p>
-                Permanently delete this lesson, submitted answers, private
-                assessments and its request history? Derived teaching topics and
-                attempts will remain.
+                Permanently delete this course, its submitted answers and
+                practice records? Topics and teaching attempts created from it
+                will remain.
               </p>
               <Button
                 variant="destructive"
                 disabled={busy}
                 onClick={() => void act("delete")}
               >
-                Delete lesson permanently
+                Delete course permanently
               </Button>
               <Button
                 variant="outline"
                 disabled={busy}
                 onClick={() => setDeleting(false)}
               >
-                Keep lesson
+                Keep course
               </Button>
             </div>
           )}
@@ -705,13 +705,13 @@ function PlanSetup({
         >
           {s.issue}{" "}
           {s.policy === "notes"
-            ? "You can add missing material, or explicitly remove the notes below to request a separate general-knowledge plan."
-            : "Provide source material if this requires current facts or a specific document."}
+            ? "You can add missing material, or explicitly remove the notes below to request a separate topic-based course."
+            : "Add material for a specific document, or narrow the goal if the needed information is unavailable."}
         </p>
       )}
       {s.plan && (
         <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
-          <h2>Your proposed destination</h2>
+          <h2>Your course outline</h2>
           <p>
             <strong>Interpretation:</strong> {s.plan.interpretation}
           </p>
@@ -749,13 +749,13 @@ function PlanSetup({
             <blockquote key={i}>{q}</blockquote>
           ))}
           <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
-            Accepting freezes this plan. A different scope later needs a new
+            Accepting fixes this outline. A different scope later needs a new
             course. Your first unit prepares automatically using AI allowance;
             later units prepare as you reach them. Reopening saved units uses no
             AI allowance.
           </p>
           <Button disabled={busy} onClick={() => void act("accept")}>
-            Accept plan & begin
+            Accept outline & begin
           </Button>
         </section>
       )}
@@ -764,7 +764,7 @@ function PlanSetup({
           <h2>
             {s.plan
               ? "Correct the interpretation or scope"
-              : "Shape a short lesson"}
+              : "Shape a short course"}
           </h2>
           <LearningFields
             input={input}
@@ -779,11 +779,11 @@ function PlanSetup({
             }}
           >
             {s.plan
-              ? "Generate revised plan · uses AI allowance"
+              ? "Revise outline · uses AI allowance"
               : "Create course · uses AI allowance"}
           </Button>
           <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
-            Only this button regenerates a plan. Editing a field uses no AI
+            Only this button revises the outline. Editing a field uses no AI
             calls.
           </p>
         </section>
