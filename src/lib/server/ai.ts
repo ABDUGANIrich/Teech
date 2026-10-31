@@ -193,8 +193,8 @@ export async function structuredCall<T>(
               }
             : {}),
           max_tokens: options.tokens ?? (name === "evaluation" ? 4500 : 2200),
-          reasoning: { enabled: false },
-          temperature: 0.3,
+          reasoning: { effort: "none" },
+          temperature: 0.1,
         }),
       });
       // The provider may send headers before generation finishes. Body timeouts

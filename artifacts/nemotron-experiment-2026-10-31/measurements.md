@@ -1,37 +1,50 @@
-# Nemotron experiment measurements
+# Measurements
 
-2026-10-31T09:16:44.367Z
-
-16 synthetic case runs, 17 live OpenRouter inference requests. Reported provider cost: $0.
+130 action runs; 179 live requests; reported cost $0. Accepted means app validation, not factual correctness. Read report.md and manual-audit.json before interpreting the tables.
 
 ## Screening
 
-| Setting | Cases | Valid | First pass | Rubric checks | Median service time | Mean output tokens | Mean reasoning tokens |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| t0.7-off | 1 | 1/1 | 1/1 | 100.0% | 4.17s | 612 | 0 |
-| t0.1-off | 1 | 1/1 | 1/1 | 100.0% | 5.69s | 624 | 0 |
-| t0.7-medium | 1 | 1/1 | 1/1 | 100.0% | 8.76s | 1569 | 949 |
-| t0.7-low | 1 | 1/1 | 1/1 | 100.0% | 9.38s | 1680 | 1059 |
-| t0.3-medium | 1 | 1/1 | 1/1 | 100.0% | 11.14s | 2040 | 1371 |
-| t0.1-high | 1 | 1/1 | 1/1 | 100.0% | 11.58s | 2129 | 1462 |
-| t0.3-off | 1 | 1/1 | 1/1 | 100.0% | 13.30s | 631 | 0 |
-| t0.3-high | 1 | 1/1 | 1/1 | 100.0% | 14.03s | 1833 | 1182 |
-| t0.3-low | 1 | 1/1 | 1/1 | 100.0% | 17.16s | 2200 | 1515 |
-| t0.1-medium | 1 | 1/1 | 1/1 | 100.0% | 34.77s | 1924 | 1269 |
-| t0.1-low | 1 | 1/1 | 1/1 | 83.3% | 12.63s | 2200 | 1781 |
-| t0.7-high | 1 | 0/1 | 0/1 | 0.0% | 26.88s | 4010 | 2873 |
+| Requested setting | Accepted actions | Median model service time | Final responses at token limit |
+|---|---:|---:|---:|
+| t0.7-off | 6/6 | 4.74 seconds | 0 |
+| t0.7-medium | 5/6 | 19.59 seconds | 1 |
+| t0.1-off | 5/6 | 7.30 seconds | 0 |
+| t0.3-high | 5/6 | 26.50 seconds | 0 |
+| t0.3-low | 4/6 | 21.55 seconds | 2 |
+| t0.3-off | 4/6 | 13.06 seconds | 0 |
+| t0.3-medium | 4/6 | 21.59 seconds | 2 |
+| t0.1-medium | 4/6 | 33.09 seconds | 1 |
+| t0.1-high | 3/6 | 28.30 seconds | 0 |
+| t0.1-low | 3/6 | 56.36 seconds | 3 |
+| t0.7-low | 3/6 | 29.33 seconds | 0 |
+| t0.7-high | 2/6 | 27.73 seconds | 2 |
 
-## Confirmation
+## Reasoning-off combined
 
-| Setting | Cases | Valid | First pass | Rubric checks | Median service time | Mean output tokens | Mean reasoning tokens |
-|---|---:|---:|---:|---:|---:|---:|---:|
+| Requested setting | Accepted actions | Median model service time | Final responses at token limit |
+|---|---:|---:|---:|
+| t0.7-off | 20/20 | 4.74 seconds | 0 |
+| t0.1-off | 19/20 | 5.15 seconds | 0 |
+| t0.3-off | 16/20 | 9.58 seconds | 0 |
 
-## Interpretation limits
+## Confirmation only
 
-- These are small, deliberately chosen synthetic cases, not a population accuracy benchmark.
-- Rubric checks are predefined deterministic proxies, macro-averaged per case; failed actions score zero. Schema acceptance alone is not factual correctness.
-- Service time sums actual OpenRouter network/body durations per action, including repairs and model tool turns. It excludes harness admission waits, real database work and real Keenable latency.
-- Search responses are fixed synthetic official-documentation excerpts; this experiment measures tool selection and use, not search quality.
-- Reasoning tokens share the existing production output caps. No larger token budget was given to reasoning configurations.
-- Effort settings are accepted by the API, but the catalog does not advertise selectable effort levels. Acceptance and nonzero reasoning tokens do not prove low/medium/high map to distinct underlying modes.
-- Raw provider hidden reasoning and credentials are not saved.
+| Requested setting | Accepted actions | Median model service time | Final responses at token limit |
+|---|---:|---:|---:|
+| t0.1-off | 14/14 | 4.15 seconds | 0 |
+| t0.7-off | 14/14 | 4.58 seconds | 0 |
+| t0.3-off | 12/14 | 5.96 seconds | 0 |
+
+## Extra token headroom
+
+| Requested setting | Accepted actions | Median model service time | Final responses at token limit |
+|---|---:|---:|---:|
+| t0.7-medium-roomy | 5/6 | 36.92 seconds | 0 |
+
+## Focused reasoning probe
+
+| Requested setting | Accepted actions | Median model service time | Final responses at token limit |
+|---|---:|---:|---:|
+| t0.1-low-roomy | 1/2 | 58.54 seconds | 0 |
+
+Durations exclude harness pacing and real database/search overhead. Cases are small and synthetic; repeated cases are not independent subjects. Timeout token usage is unavailable.

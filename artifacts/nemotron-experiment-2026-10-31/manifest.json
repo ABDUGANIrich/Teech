@@ -226,5 +226,108 @@
       "family": "evaluation"
     }
   ],
-  "methodology": "Real production prompts and validators. Fixed synthetic notes/answers, fixed Keenable evidence, no DB writes. No model judge. Deterministic checks are narrow rubric proxies, not a comprehensive accuracy score. Provider reasoning text is not stored. Existing output budgets/deadlines retained."
+  "methodology": "Real production prompts and validators. Fixed synthetic notes/answers, fixed Keenable evidence, no DB writes. No model judge. Deterministic checks are narrow rubric proxies, not a comprehensive accuracy score. Provider reasoning text is not stored. Existing output budgets/deadlines retained.",
+  "executions": [
+    {
+      "at": "2026-10-31T09:34:55.757Z",
+      "mode": "prompt-probe",
+      "harnessHash": "37021215ff3c6debafab780058f6e9649c0f933a28a6e858b5a42bbc38ac1c08",
+      "configurations": [
+        {
+          "id": "t0.3-off-explicit-grade",
+          "temperature": 0.3,
+          "effort": "off",
+          "explicitGrade": true
+        }
+      ],
+      "tasks": [
+        "grade-wrong-trace",
+        "grade-flawed-key"
+      ]
+    },
+    {
+      "at": "2026-10-31T09:35:48.932Z",
+      "mode": "roomy",
+      "harnessHash": "e453c1c0055d90a710bf712e085b993654eaa507bfd2dc3d16fa7ed5593dd45e",
+      "configurations": [
+        {
+          "id": "t0.7-medium-roomy",
+          "temperature": 0.7,
+          "effort": "medium",
+          "extraTokens": 2048
+        }
+      ],
+      "tasks": [
+        "extract-injection",
+        "review-mixed",
+        "unit-binary-search",
+        "grade-correct-alternative",
+        "grade-wrong-trace",
+        "research-current-api"
+      ]
+    },
+    {
+      "at": "2026-10-31T09:38:51.556Z",
+      "mode": "confirm",
+      "harnessHash": "ff129b3282fd3e92062c04d88c8ccaf2ceb84568dea8c6a3644300355aa3e99a",
+      "configurations": [
+        {
+          "id": "t0.1-off",
+          "temperature": 0.1,
+          "effort": "off"
+        },
+        {
+          "id": "t0.3-off",
+          "temperature": 0.3,
+          "effort": "off"
+        },
+        {
+          "id": "t0.7-off",
+          "temperature": 0.7,
+          "effort": "off"
+        }
+      ],
+      "tasks": [
+        "grade-flawed-key",
+        "question-omission",
+        "plan-insufficient-notes",
+        "clarification-scope",
+        "review-unsupported",
+        "review-mixed",
+        "unit-binary-search"
+      ]
+    },
+    {
+      "at": "2026-10-31T09:45:21.268Z",
+      "mode": "reason-probe",
+      "harnessHash": "4c47e144dff73c331ee33c21e4f21db3fed78e7b0546e8af2ae62034eef36b58",
+      "configurations": [
+        {
+          "id": "t0.1-low-roomy",
+          "temperature": 0.1,
+          "effort": "low",
+          "extraTokens": 2048
+        }
+      ],
+      "tasks": [
+        "review-unsupported"
+      ]
+    },
+    {
+      "at": "2026-10-31T09:46:49.290Z",
+      "mode": "reason-probe",
+      "harnessHash": "fa1a6b9c25c96d268d76805605fcec69f07b9fa6dfe261ffb22a30acb9f996b8",
+      "configurations": [
+        {
+          "id": "t0.1-low-roomy",
+          "temperature": 0.1,
+          "effort": "low",
+          "extraTokens": 2048
+        }
+      ],
+      "tasks": [
+        "review-unsupported"
+      ]
+    }
+  ]
 }

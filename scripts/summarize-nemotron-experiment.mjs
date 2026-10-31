@@ -11,8 +11,10 @@ function summarize(rows) {
     const group = rows.filter((r) => r.config.id === id);
     const network = group.map((r) => r.inferenceMs);
     const networkSorted = [...network].sort((a,b) => a-b);
-    return { id, n: group.length, valid: group.filter((r) => r.valid).length, firstPass: group.filter((r) => r.firstPass).length,
+    return { id, n: group.length, valid: group.filter((r) => r.valid).length, singleInference: group.filter((r) => r.calls === 1).length,
       allChecks: group.filter((r) => r.valid && r.earned === r.possible).length,
+      finalCutoffs: group.filter((r) => calls.filter((c) => c.runId === r.runId).at(-1)?.finishReason === 'length').length,
+      missingUsageCalls: calls.filter((c) => group.some((r) => r.runId === c.runId) && !c.usage).length,
       rubricPercent: 100 * mean(group.map((r) => r.valid ? r.earned / r.possible : 0)),
       medianInferenceSeconds: median(network)/1000,
       p90InferenceSeconds: networkSorted[Math.ceil(networkSorted.length*.9)-1]/1000,
@@ -27,6 +29,10 @@ function summarize(rows) {
 const summary = { generatedAt: new Date().toISOString(), jobs: results.length, calls: calls.length,
   cost: calls.reduce((s,c) => s+(c.usage?.cost||0),0),
   screen: summarize(results.filter((r) => r.round === 'screen')),
+  roomy: summarize(results.filter((r) => r.round === 'roomy')),
+  promptProbe: summarize(results.filter((r) => r.round.startsWith('prompt-probe'))),
+  reasonProbe: summarize(results.filter((r) => r.round.startsWith('reason-probe'))),
+  offCombined: summarize(results.filter((r) => (r.round === 'screen' || r.round.startsWith('confirm')) && r.config.effort === 'off')),
   confirmation: summarize(results.filter((r) => r.round.startsWith('confirm'))),
   byTask: [...new Set(results.map((r) => r.task))].map((task) => ({ task, configurations: summarize(results.filter((r) => r.task === task && r.round !== 'pilot')) })),
   transportErrors: calls.filter((c) => c.status !== 200).map((c) => ({ config:c.config,task:c.task,status:c.status,error:c.error })),
@@ -37,6 +43,6 @@ const summary = { generatedAt: new Date().toISOString(), jobs: results.length, c
   }),
 };
 fs.writeFileSync(path.join(base,'summary.json'), JSON.stringify(summary,null,2));
-const table = (rows) => ['| Setting | Cases | Valid | First pass | Rubric checks | Median service time | Mean output tokens | Mean reasoning tokens |', '|---|---:|---:|---:|---:|---:|---:|---:|', ...rows.map((r) => `| ${r.id} | ${r.n} | ${r.valid}/${r.n} | ${r.firstPass}/${r.n} | ${r.rubricPercent.toFixed(1)}% | ${r.medianInferenceSeconds.toFixed(2)}s | ${r.meanCompletionTokens.toFixed(0)} | ${r.meanReasoningTokens.toFixed(0)} |`)].join('\n');
-fs.writeFileSync(path.join(base,'measurements.md'), `# Nemotron experiment measurements\n\n${summary.generatedAt}\n\n${summary.jobs} synthetic case runs, ${summary.calls} live OpenRouter inference requests. Reported provider cost: $${summary.cost}.\n\n## Screening\n\n${table(summary.screen)}\n\n## Confirmation\n\n${table(summary.confirmation)}\n\n## Interpretation limits\n\n- These are small, deliberately chosen synthetic cases, not a population accuracy benchmark.\n- Rubric checks are predefined deterministic proxies, macro-averaged per case; failed actions score zero. Schema acceptance alone is not factual correctness.\n- Service time sums actual OpenRouter network/body durations per action, including repairs and model tool turns. It excludes harness admission waits, real database work and real Keenable latency.\n- Search responses are fixed synthetic official-documentation excerpts; this experiment measures tool selection and use, not search quality.\n- Reasoning tokens share the existing production output caps. No larger token budget was given to reasoning configurations.\n- Effort settings are accepted by the API, but the catalog does not advertise selectable effort levels. Acceptance and nonzero reasoning tokens do not prove low/medium/high map to distinct underlying modes.\n- Raw provider hidden reasoning and credentials are not saved.\n`);
+const table = (rows) => ['| Setting | Cases | Valid | One inference | Rubric checks | Median service time | Reported output tokens/case | Reported reasoning tokens/case |', '|---|---:|---:|---:|---:|---:|---:|---:|', ...rows.map((r) => `| ${r.id} | ${r.n} | ${r.valid}/${r.n} | ${r.singleInference}/${r.n} | ${r.rubricPercent.toFixed(1)}% | ${r.medianInferenceSeconds.toFixed(2)}s | ${r.meanCompletionTokens.toFixed(0)} | ${r.meanReasoningTokens.toFixed(0)} |`)].join('\n');
+fs.writeFileSync(path.join(base,'measurements.md'), `# Nemotron experiment measurements\n\n${summary.generatedAt}\n\n${summary.jobs} synthetic case runs, ${summary.calls} live OpenRouter inference requests. Reported provider cost: $${summary.cost}.\n\n## Screening\n\n${table(summary.screen)}\n\n## Confirmation\n\n${table(summary.confirmation)}\n\n## Interpretation limits\n\n- These are small, deliberately chosen synthetic cases, not a population accuracy benchmark.\n- Rubric checks are predefined deterministic proxies, macro-averaged per case; failed actions score zero. Schema acceptance alone is not factual correctness.\n- Service time sums actual OpenRouter network/body durations per action, including repairs and model tool turns. It excludes harness admission waits, real database work and real Keenable latency.\n- Search responses are fixed synthetic official-documentation excerpts; this experiment measures tool selection and use, not search quality.\n- Main screening and confirmation retain production output caps. Diagnostic runs explicitly marked roomy add 2,048 tokens and are interpreted separately.\n- Effort settings are accepted by the API, but the catalog does not advertise selectable effort levels. Acceptance and nonzero reasoning tokens do not prove low/medium/high map to distinct underlying modes.\n- Raw provider hidden reasoning and credentials are not saved.\n`);
 console.log(JSON.stringify({jobs:summary.jobs,calls:summary.calls,cost:summary.cost,screen:summary.screen,confirmation:summary.confirmation,transportErrors:summary.transportErrors,truncations:summary.truncations.length,promptHashCheck:summary.promptHashCheck},null,2));

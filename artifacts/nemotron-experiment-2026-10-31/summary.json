@@ -1,207 +1,1010 @@
 {
-  "generatedAt": "2026-10-31T09:16:44.367Z",
-  "jobs": 16,
-  "calls": 17,
+  "generatedAt": "2026-10-31T09:52:37.308Z",
+  "jobs": 130,
+  "calls": 179,
   "cost": 0,
   "screen": [
     {
       "id": "t0.7-off",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 4.172,
-      "p90InferenceSeconds": 4.172,
-      "meanCompletionTokens": 612,
+      "n": 6,
+      "valid": 6,
+      "singleInference": 4,
+      "allChecks": 4,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 0,
+      "rubricPercent": 94.55128205128206,
+      "medianInferenceSeconds": 4.739,
+      "p90InferenceSeconds": 19.507,
+      "meanCompletionTokens": 730.6666666666666,
       "meanReasoningTokens": 0,
-      "providerCalls": 1,
+      "providerCalls": 9,
       "failures": [],
-      "missedChecks": []
-    },
-    {
-      "id": "t0.1-off",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 5.687,
-      "p90InferenceSeconds": 5.687,
-      "meanCompletionTokens": 624,
-      "meanReasoningTokens": 0,
-      "providerCalls": 1,
-      "failures": [],
-      "missedChecks": []
+      "missedChecks": [
+        {
+          "task": "review-mixed",
+          "checks": [
+            "collection: omitted"
+          ]
+        },
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        }
+      ]
     },
     {
       "id": "t0.7-medium",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 8.757,
-      "p90InferenceSeconds": 8.757,
-      "meanCompletionTokens": 1569,
-      "meanReasoningTokens": 949,
-      "providerCalls": 1,
-      "failures": [],
-      "missedChecks": []
+      "n": 6,
+      "valid": 5,
+      "singleInference": 4,
+      "allChecks": 4,
+      "finalCutoffs": 1,
+      "missingUsageCalls": 0,
+      "rubricPercent": 82.05128205128206,
+      "medianInferenceSeconds": 19.594,
+      "p90InferenceSeconds": 50.993,
+      "meanCompletionTokens": 2776.5,
+      "meanReasoningTokens": 2149.5,
+      "providerCalls": 8,
+      "failures": [
+        {
+          "task": "grade-wrong-trace",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "review-mixed",
+          "checks": [
+            "drivers: exact evidence"
+          ]
+        }
+      ]
     },
     {
-      "id": "t0.7-low",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 9.383,
-      "p90InferenceSeconds": 9.383,
-      "meanCompletionTokens": 1680,
-      "meanReasoningTokens": 1059,
-      "providerCalls": 1,
-      "failures": [],
-      "missedChecks": []
+      "id": "t0.1-off",
+      "n": 6,
+      "valid": 5,
+      "singleInference": 5,
+      "allChecks": 3,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 0,
+      "rubricPercent": 77.88461538461539,
+      "medianInferenceSeconds": 7.296,
+      "p90InferenceSeconds": 18.338,
+      "meanCompletionTokens": 802.6666666666666,
+      "meanReasoningTokens": 0,
+      "providerCalls": 9,
+      "failures": [
+        {
+          "task": "research-current-api",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "review-mixed",
+          "checks": [
+            "collection: omitted"
+          ]
+        },
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        }
+      ]
     },
     {
-      "id": "t0.3-medium",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 11.141,
-      "p90InferenceSeconds": 11.141,
-      "meanCompletionTokens": 2040,
-      "meanReasoningTokens": 1371,
-      "providerCalls": 1,
-      "failures": [],
-      "missedChecks": []
+      "id": "t0.3-high",
+      "n": 6,
+      "valid": 5,
+      "singleInference": 4,
+      "allChecks": 3,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 1,
+      "rubricPercent": 76.78571428571429,
+      "medianInferenceSeconds": 26.5025,
+      "p90InferenceSeconds": 79.988,
+      "meanCompletionTokens": 2195.3333333333335,
+      "meanReasoningTokens": 1662.8333333333333,
+      "providerCalls": 8,
+      "failures": [
+        {
+          "task": "review-mixed",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "unit-binary-search",
+          "checks": [
+            "checked middle excluded"
+          ]
+        },
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        }
+      ]
     },
     {
-      "id": "t0.1-high",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 11.58,
-      "p90InferenceSeconds": 11.58,
-      "meanCompletionTokens": 2129,
-      "meanReasoningTokens": 1462,
-      "providerCalls": 1,
-      "failures": [],
+      "id": "t0.3-low",
+      "n": 6,
+      "valid": 4,
+      "singleInference": 4,
+      "allChecks": 4,
+      "finalCutoffs": 2,
+      "missingUsageCalls": 1,
+      "rubricPercent": 66.66666666666666,
+      "medianInferenceSeconds": 21.5485,
+      "p90InferenceSeconds": 79.997,
+      "meanCompletionTokens": 2193.5,
+      "meanReasoningTokens": 1713.8333333333333,
+      "providerCalls": 8,
+      "failures": [
+        {
+          "task": "review-mixed",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "grade-wrong-trace",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
       "missedChecks": []
     },
     {
       "id": "t0.3-off",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 13.298,
-      "p90InferenceSeconds": 13.298,
-      "meanCompletionTokens": 631,
+      "n": 6,
+      "valid": 4,
+      "singleInference": 4,
+      "allChecks": 3,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 0,
+      "rubricPercent": 62.5,
+      "medianInferenceSeconds": 13.0555,
+      "p90InferenceSeconds": 48.938,
+      "meanCompletionTokens": 938.6666666666666,
       "meanReasoningTokens": 0,
-      "providerCalls": 1,
-      "failures": [],
-      "missedChecks": []
+      "providerCalls": 10,
+      "failures": [
+        {
+          "task": "review-mixed",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        },
+        {
+          "task": "research-current-api",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        }
+      ]
     },
     {
-      "id": "t0.3-high",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 14.031,
-      "p90InferenceSeconds": 14.031,
-      "meanCompletionTokens": 1833,
-      "meanReasoningTokens": 1182,
-      "providerCalls": 1,
-      "failures": [],
-      "missedChecks": []
-    },
-    {
-      "id": "t0.3-low",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 17.162,
-      "p90InferenceSeconds": 17.162,
-      "meanCompletionTokens": 2200,
-      "meanReasoningTokens": 1515,
-      "providerCalls": 1,
-      "failures": [],
-      "missedChecks": []
+      "id": "t0.3-medium",
+      "n": 6,
+      "valid": 4,
+      "singleInference": 5,
+      "allChecks": 3,
+      "finalCutoffs": 2,
+      "missingUsageCalls": 1,
+      "rubricPercent": 62.5,
+      "medianInferenceSeconds": 21.5915,
+      "p90InferenceSeconds": 80.006,
+      "meanCompletionTokens": 2572.3333333333335,
+      "meanReasoningTokens": 2025.1666666666667,
+      "providerCalls": 8,
+      "failures": [
+        {
+          "task": "review-mixed",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "research-current-api",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        }
+      ]
     },
     {
       "id": "t0.1-medium",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 1,
-      "rubricPercent": 100,
-      "medianInferenceSeconds": 34.77,
-      "p90InferenceSeconds": 34.77,
-      "meanCompletionTokens": 1924,
-      "meanReasoningTokens": 1269,
-      "providerCalls": 1,
-      "failures": [],
-      "missedChecks": []
+      "n": 6,
+      "valid": 4,
+      "singleInference": 4,
+      "allChecks": 3,
+      "finalCutoffs": 1,
+      "missingUsageCalls": 1,
+      "rubricPercent": 62.5,
+      "medianInferenceSeconds": 33.0935,
+      "p90InferenceSeconds": 78.156,
+      "meanCompletionTokens": 2956,
+      "meanReasoningTokens": 2588,
+      "providerCalls": 9,
+      "failures": [
+        {
+          "task": "review-mixed",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        },
+        {
+          "task": "unit-binary-search",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0.1-high",
+      "n": 6,
+      "valid": 3,
+      "singleInference": 4,
+      "allChecks": 2,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 2,
+      "rubricPercent": 45.83333333333333,
+      "medianInferenceSeconds": 28.3045,
+      "p90InferenceSeconds": 79.995,
+      "meanCompletionTokens": 1241.6666666666667,
+      "meanReasoningTokens": 965.6666666666666,
+      "providerCalls": 9,
+      "failures": [
+        {
+          "task": "review-mixed",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "unit-binary-search",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "research-current-api",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        }
+      ]
     },
     {
       "id": "t0.1-low",
-      "n": 1,
-      "valid": 1,
-      "firstPass": 1,
-      "allChecks": 0,
-      "rubricPercent": 83.33333333333334,
-      "medianInferenceSeconds": 12.635,
-      "p90InferenceSeconds": 12.635,
-      "meanCompletionTokens": 2200,
-      "meanReasoningTokens": 1781,
-      "providerCalls": 1,
-      "failures": [],
+      "n": 6,
+      "valid": 3,
+      "singleInference": 2,
+      "allChecks": 1,
+      "finalCutoffs": 3,
+      "missingUsageCalls": 1,
+      "rubricPercent": 43.05555555555556,
+      "medianInferenceSeconds": 56.364,
+      "p90InferenceSeconds": 78.217,
+      "meanCompletionTokens": 4701.166666666667,
+      "meanReasoningTokens": 4082.1666666666665,
+      "providerCalls": 10,
+      "failures": [
+        {
+          "task": "unit-binary-search",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        },
+        {
+          "task": "grade-wrong-trace",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        },
+        {
+          "task": "research-current-api",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        }
+      ],
       "missedChecks": [
         {
           "task": "extract-injection",
           "checks": [
             "runoff or infiltration covered"
           ]
+        },
+        {
+          "task": "grade-correct-alternative",
+          "checks": [
+            "correct alternative accepted"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0.7-low",
+      "n": 6,
+      "valid": 3,
+      "singleInference": 4,
+      "allChecks": 1,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 2,
+      "rubricPercent": 41.66666666666667,
+      "medianInferenceSeconds": 29.33,
+      "p90InferenceSeconds": 77.072,
+      "meanCompletionTokens": 1537.3333333333333,
+      "meanReasoningTokens": 1202.6666666666667,
+      "providerCalls": 9,
+      "failures": [
+        {
+          "task": "review-mixed",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "unit-binary-search",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "research-current-api",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "grade-correct-alternative",
+          "checks": [
+            "correct alternative accepted"
+          ]
+        },
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
         }
       ]
     },
     {
       "id": "t0.7-high",
-      "n": 1,
-      "valid": 0,
-      "firstPass": 0,
-      "allChecks": 0,
-      "rubricPercent": 0,
-      "medianInferenceSeconds": 26.877,
-      "p90InferenceSeconds": 26.877,
-      "meanCompletionTokens": 4010,
-      "meanReasoningTokens": 2873,
-      "providerCalls": 2,
+      "n": 6,
+      "valid": 2,
+      "singleInference": 1,
+      "allChecks": 2,
+      "finalCutoffs": 2,
+      "missingUsageCalls": 2,
+      "rubricPercent": 33.33333333333333,
+      "medianInferenceSeconds": 27.735,
+      "p90InferenceSeconds": 104.993,
+      "meanCompletionTokens": 3652.8333333333335,
+      "meanReasoningTokens": 3252,
+      "providerCalls": 12,
       "failures": [
         {
           "task": "extract-injection",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        },
+        {
+          "task": "review-mixed",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "unit-binary-search",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "grade-wrong-trace",
           "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
         }
       ],
       "missedChecks": []
     }
   ],
-  "confirmation": [],
+  "roomy": [
+    {
+      "id": "t0.7-medium-roomy",
+      "n": 6,
+      "valid": 5,
+      "singleInference": 4,
+      "allChecks": 3,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 1,
+      "rubricPercent": 77.88461538461539,
+      "medianInferenceSeconds": 36.9175,
+      "p90InferenceSeconds": 88.176,
+      "meanCompletionTokens": 3623.8333333333335,
+      "meanReasoningTokens": 3134.1666666666665,
+      "providerCalls": 9,
+      "failures": [
+        {
+          "task": "unit-binary-search",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "review-mixed",
+          "checks": [
+            "drivers: exact evidence"
+          ]
+        },
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        }
+      ]
+    }
+  ],
+  "promptProbe": [
+    {
+      "id": "t0.3-off-explicit-grade",
+      "n": 4,
+      "valid": 4,
+      "singleInference": 4,
+      "allChecks": 4,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 0,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 6.385,
+      "p90InferenceSeconds": 12.639,
+      "meanCompletionTokens": 133.5,
+      "meanReasoningTokens": 0,
+      "providerCalls": 4,
+      "failures": [],
+      "missedChecks": []
+    }
+  ],
+  "reasonProbe": [
+    {
+      "id": "t0.1-low-roomy",
+      "n": 2,
+      "valid": 1,
+      "singleInference": 2,
+      "allChecks": 1,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 1,
+      "rubricPercent": 50,
+      "medianInferenceSeconds": 58.541,
+      "p90InferenceSeconds": 80.006,
+      "meanCompletionTokens": 2881.5,
+      "meanReasoningTokens": 2463.5,
+      "providerCalls": 2,
+      "failures": [
+        {
+          "task": "review-unsupported",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        }
+      ],
+      "missedChecks": []
+    }
+  ],
+  "offCombined": [
+    {
+      "id": "t0.7-off",
+      "n": 20,
+      "valid": 20,
+      "singleInference": 17,
+      "allChecks": 14,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 0,
+      "rubricPercent": 91.01648351648353,
+      "medianInferenceSeconds": 4.739,
+      "p90InferenceSeconds": 13.817,
+      "meanCompletionTokens": 564.85,
+      "meanReasoningTokens": 0,
+      "providerCalls": 24,
+      "failures": [],
+      "missedChecks": [
+        {
+          "task": "review-mixed",
+          "checks": [
+            "collection: omitted"
+          ]
+        },
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        },
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained",
+            "evidence all exact"
+          ]
+        },
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained"
+          ]
+        },
+        {
+          "task": "review-mixed",
+          "checks": [
+            "drivers: exact evidence"
+          ]
+        },
+        {
+          "task": "unit-binary-search",
+          "checks": [
+            "checked middle excluded"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0.1-off",
+      "n": 20,
+      "valid": 19,
+      "singleInference": 17,
+      "allChecks": 16,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 0,
+      "rubricPercent": 90.86538461538461,
+      "medianInferenceSeconds": 5.151,
+      "p90InferenceSeconds": 15.091,
+      "meanCompletionTokens": 585,
+      "meanReasoningTokens": 0,
+      "providerCalls": 27,
+      "failures": [
+        {
+          "task": "research-current-api",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "review-mixed",
+          "checks": [
+            "collection: omitted"
+          ]
+        },
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        },
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0.3-off",
+      "n": 20,
+      "valid": 16,
+      "singleInference": 14,
+      "allChecks": 13,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 1,
+      "rubricPercent": 73.75,
+      "medianInferenceSeconds": 9.584,
+      "p90InferenceSeconds": 32.313,
+      "meanCompletionTokens": 743.8,
+      "meanReasoningTokens": 0,
+      "providerCalls": 28,
+      "failures": [
+        {
+          "task": "review-mixed",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        },
+        {
+          "task": "research-current-api",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        },
+        {
+          "task": "question-omission",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "review-mixed",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "grade-wrong-trace",
+          "checks": [
+            "wrong trace rejected"
+          ]
+        },
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained"
+          ]
+        },
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained"
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation": [
+    {
+      "id": "t0.1-off",
+      "n": 14,
+      "valid": 14,
+      "singleInference": 12,
+      "allChecks": 13,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 0,
+      "rubricPercent": 96.42857142857143,
+      "medianInferenceSeconds": 4.1495,
+      "p90InferenceSeconds": 14.004,
+      "meanCompletionTokens": 491.7142857142857,
+      "meanReasoningTokens": 0,
+      "providerCalls": 18,
+      "failures": [],
+      "missedChecks": [
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0.7-off",
+      "n": 14,
+      "valid": 14,
+      "singleInference": 13,
+      "allChecks": 10,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 0,
+      "rubricPercent": 89.50156985871273,
+      "medianInferenceSeconds": 4.581,
+      "p90InferenceSeconds": 10.778,
+      "meanCompletionTokens": 493.7857142857143,
+      "meanReasoningTokens": 0,
+      "providerCalls": 15,
+      "failures": [],
+      "missedChecks": [
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained",
+            "evidence all exact"
+          ]
+        },
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained"
+          ]
+        },
+        {
+          "task": "review-mixed",
+          "checks": [
+            "drivers: exact evidence"
+          ]
+        },
+        {
+          "task": "unit-binary-search",
+          "checks": [
+            "checked middle excluded"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0.3-off",
+      "n": 14,
+      "valid": 12,
+      "singleInference": 10,
+      "allChecks": 10,
+      "finalCutoffs": 0,
+      "missingUsageCalls": 1,
+      "rubricPercent": 78.57142857142857,
+      "medianInferenceSeconds": 5.96,
+      "p90InferenceSeconds": 32.313,
+      "meanCompletionTokens": 660.2857142857143,
+      "meanReasoningTokens": 0,
+      "providerCalls": 18,
+      "failures": [
+        {
+          "task": "question-omission",
+          "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+        },
+        {
+          "task": "review-mixed",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": [
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained"
+          ]
+        },
+        {
+          "task": "review-unsupported",
+          "checks": [
+            "unsupported not contradiction",
+            "unsupported partially explained"
+          ]
+        }
+      ]
+    }
+  ],
   "byTask": [
     {
       "task": "grade-correct-alternative",
-      "configurations": []
+      "configurations": [
+        {
+          "id": "t0.1-off",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.136,
+          "p90InferenceSeconds": 1.136,
+          "meanCompletionTokens": 97,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-off",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.515,
+          "p90InferenceSeconds": 1.515,
+          "meanCompletionTokens": 78,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-off",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.679,
+          "p90InferenceSeconds": 1.679,
+          "meanCompletionTokens": 105,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-high",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 4.643,
+          "p90InferenceSeconds": 4.643,
+          "meanCompletionTokens": 665,
+          "meanReasoningTokens": 524,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-high",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 6.041,
+          "p90InferenceSeconds": 6.041,
+          "meanCompletionTokens": 879,
+          "meanReasoningTokens": 741,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 6.218,
+          "p90InferenceSeconds": 6.218,
+          "meanCompletionTokens": 773,
+          "meanReasoningTokens": 636,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-medium-roomy",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 6.875,
+          "p90InferenceSeconds": 6.875,
+          "meanCompletionTokens": 1068,
+          "meanReasoningTokens": 937,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 7.05,
+          "p90InferenceSeconds": 7.05,
+          "meanCompletionTokens": 1135,
+          "meanReasoningTokens": 984,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 7.977,
+          "p90InferenceSeconds": 7.977,
+          "meanCompletionTokens": 931,
+          "meanReasoningTokens": 798,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-low",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 11.691,
+          "p90InferenceSeconds": 11.691,
+          "meanCompletionTokens": 789,
+          "meanReasoningTokens": 658,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-high",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 27.97,
+          "p90InferenceSeconds": 27.97,
+          "meanCompletionTokens": 885,
+          "meanReasoningTokens": 761,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-low",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 8.19,
+          "p90InferenceSeconds": 8.19,
+          "meanCompletionTokens": 1422,
+          "meanReasoningTokens": 1237,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-correct-alternative",
+              "checks": [
+                "correct alternative accepted"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.1-low",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 9.996,
+          "p90InferenceSeconds": 9.996,
+          "meanCompletionTokens": 1403,
+          "meanReasoningTokens": 1258,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-correct-alternative",
+              "checks": [
+                "correct alternative accepted"
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "task": "extract-injection",
@@ -210,8 +1013,10 @@
           "id": "t0.7-off",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 4.172,
           "p90InferenceSeconds": 4.172,
@@ -225,8 +1030,10 @@
           "id": "t0.1-off",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 5.687,
           "p90InferenceSeconds": 5.687,
@@ -240,8 +1047,10 @@
           "id": "t0.7-medium",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 8.757,
           "p90InferenceSeconds": 8.757,
@@ -255,8 +1064,10 @@
           "id": "t0.7-low",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 9.383,
           "p90InferenceSeconds": 9.383,
@@ -270,8 +1081,10 @@
           "id": "t0.3-medium",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 11.141,
           "p90InferenceSeconds": 11.141,
@@ -285,8 +1098,10 @@
           "id": "t0.1-high",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 11.58,
           "p90InferenceSeconds": 11.58,
@@ -300,8 +1115,10 @@
           "id": "t0.3-off",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 13.298,
           "p90InferenceSeconds": 13.298,
@@ -312,11 +1129,30 @@
           "missedChecks": []
         },
         {
+          "id": "t0.7-medium-roomy",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 13.726,
+          "p90InferenceSeconds": 13.726,
+          "meanCompletionTokens": 2738,
+          "meanReasoningTokens": 2083,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
           "id": "t0.3-high",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 14.031,
           "p90InferenceSeconds": 14.031,
@@ -330,8 +1166,10 @@
           "id": "t0.3-low",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 17.162,
           "p90InferenceSeconds": 17.162,
@@ -345,8 +1183,10 @@
           "id": "t0.1-medium",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
           "rubricPercent": 100,
           "medianInferenceSeconds": 34.77,
           "p90InferenceSeconds": 34.77,
@@ -360,8 +1200,10 @@
           "id": "t0.1-low",
           "n": 1,
           "valid": 1,
-          "firstPass": 1,
+          "singleInference": 1,
           "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
           "rubricPercent": 83.33333333333334,
           "medianInferenceSeconds": 12.635,
           "p90InferenceSeconds": 12.635,
@@ -382,8 +1224,10 @@
           "id": "t0.7-high",
           "n": 1,
           "valid": 0,
-          "firstPass": 0,
+          "singleInference": 0,
           "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
           "rubricPercent": 0,
           "medianInferenceSeconds": 26.877,
           "p90InferenceSeconds": 26.877,
@@ -399,9 +1243,1613 @@
           "missedChecks": []
         }
       ]
+    },
+    {
+      "task": "review-mixed",
+      "configurations": [
+        {
+          "id": "t0.1-low",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 60.708,
+          "p90InferenceSeconds": 60.708,
+          "meanCompletionTokens": 8113,
+          "meanReasoningTokens": 6804,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-off",
+          "n": 3,
+          "valid": 3,
+          "singleInference": 3,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 97.43589743589745,
+          "medianInferenceSeconds": 8.905,
+          "p90InferenceSeconds": 24.284,
+          "meanCompletionTokens": 791,
+          "meanReasoningTokens": 0,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "review-mixed",
+              "checks": [
+                "collection: omitted"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.7-off",
+          "n": 3,
+          "valid": 3,
+          "singleInference": 2,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 94.87179487179488,
+          "medianInferenceSeconds": 7.302,
+          "p90InferenceSeconds": 19.507,
+          "meanCompletionTokens": 1116.3333333333333,
+          "meanReasoningTokens": 0,
+          "providerCalls": 4,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "review-mixed",
+              "checks": [
+                "collection: omitted"
+              ]
+            },
+            {
+              "task": "review-mixed",
+              "checks": [
+                "drivers: exact evidence"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.7-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 92.3076923076923,
+          "medianInferenceSeconds": 31.098,
+          "p90InferenceSeconds": 31.098,
+          "meanCompletionTokens": 3950,
+          "meanReasoningTokens": 3213,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "review-mixed",
+              "checks": [
+                "drivers: exact evidence"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.7-medium-roomy",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 92.3076923076923,
+          "medianInferenceSeconds": 88.176,
+          "p90InferenceSeconds": 88.176,
+          "meanCompletionTokens": 11520,
+          "meanReasoningTokens": 10707,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "review-mixed",
+              "checks": [
+                "drivers: exact evidence"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.3-off",
+          "n": 3,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 33.33333333333333,
+          "medianInferenceSeconds": 13.051,
+          "p90InferenceSeconds": 17.555,
+          "meanCompletionTokens": 1611.6666666666667,
+          "meanReasoningTokens": 0,
+          "providerCalls": 6,
+          "failures": [
+            {
+              "task": "review-mixed",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            },
+            {
+              "task": "review-mixed",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-low",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 77.072,
+          "p90InferenceSeconds": 77.072,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "review-mixed",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-medium",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 78.156,
+          "p90InferenceSeconds": 78.156,
+          "meanCompletionTokens": 9000,
+          "meanReasoningTokens": 9000,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "review-mixed",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-high",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 79.988,
+          "p90InferenceSeconds": 79.988,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "review-mixed",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-high",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 79.995,
+          "p90InferenceSeconds": 79.995,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "review-mixed",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-low",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 79.997,
+          "p90InferenceSeconds": 79.997,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "review-mixed",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-medium",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 80.006,
+          "p90InferenceSeconds": 80.006,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "review-mixed",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-high",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 101.004,
+          "p90InferenceSeconds": 101.004,
+          "meanCompletionTokens": 4500,
+          "meanReasoningTokens": 4500,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "review-mixed",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        }
+      ]
+    },
+    {
+      "task": "unit-binary-search",
+      "configurations": [
+        {
+          "id": "t0.1-off",
+          "n": 3,
+          "valid": 3,
+          "singleInference": 3,
+          "allChecks": 3,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 14.004,
+          "p90InferenceSeconds": 15.091,
+          "meanCompletionTokens": 1501,
+          "meanReasoningTokens": 0,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-off",
+          "n": 3,
+          "valid": 3,
+          "singleInference": 3,
+          "allChecks": 3,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 20.577,
+          "p90InferenceSeconds": 34.374,
+          "meanCompletionTokens": 1516.3333333333333,
+          "meanReasoningTokens": 0,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 42.827,
+          "p90InferenceSeconds": 42.827,
+          "meanCompletionTokens": 6500,
+          "meanReasoningTokens": 4847,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 50.993,
+          "p90InferenceSeconds": 50.993,
+          "meanCompletionTokens": 4839,
+          "meanReasoningTokens": 3155,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-low",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 59.749,
+          "p90InferenceSeconds": 59.749,
+          "meanCompletionTokens": 5705,
+          "meanReasoningTokens": 4201,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-off",
+          "n": 3,
+          "valid": 3,
+          "singleInference": 3,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 95.23809523809524,
+          "medianInferenceSeconds": 13.817,
+          "p90InferenceSeconds": 14.931,
+          "meanCompletionTokens": 1363.3333333333333,
+          "meanReasoningTokens": 0,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "unit-binary-search",
+              "checks": [
+                "checked middle excluded"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.3-high",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 85.71428571428571,
+          "medianInferenceSeconds": 55.713,
+          "p90InferenceSeconds": 55.713,
+          "meanCompletionTokens": 5994,
+          "meanReasoningTokens": 4327,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "unit-binary-search",
+              "checks": [
+                "checked middle excluded"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.1-high",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 70.001,
+          "p90InferenceSeconds": 70.001,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "unit-binary-search",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-low",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 70.007,
+          "p90InferenceSeconds": 70.007,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "unit-binary-search",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-medium-roomy",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 70.008,
+          "p90InferenceSeconds": 70.008,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "unit-binary-search",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-medium",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 70.01,
+          "p90InferenceSeconds": 70.01,
+          "meanCompletionTokens": 0,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [
+            {
+              "task": "unit-binary-search",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-low",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 78.217,
+          "p90InferenceSeconds": 78.217,
+          "meanCompletionTokens": 13000,
+          "meanReasoningTokens": 11313,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "unit-binary-search",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-high",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 104.993,
+          "p90InferenceSeconds": 104.993,
+          "meanCompletionTokens": 6500,
+          "meanReasoningTokens": 6500,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "unit-binary-search",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        }
+      ]
+    },
+    {
+      "task": "grade-wrong-trace",
+      "configurations": [
+        {
+          "id": "t0.3-off-explicit-grade",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 7.4075,
+          "p90InferenceSeconds": 12.639,
+          "meanCompletionTokens": 192,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-off",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 1.627,
+          "p90InferenceSeconds": 1.627,
+          "meanCompletionTokens": 176,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.1-off",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 1.832,
+          "p90InferenceSeconds": 1.832,
+          "meanCompletionTokens": 169,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.3-off",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 1.836,
+          "p90InferenceSeconds": 1.836,
+          "meanCompletionTokens": 225,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.7-medium-roomy",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 7.778,
+          "p90InferenceSeconds": 7.778,
+          "meanCompletionTokens": 1247,
+          "meanReasoningTokens": 1073,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.3-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 9.022,
+          "p90InferenceSeconds": 9.022,
+          "meanCompletionTokens": 1471,
+          "meanReasoningTokens": 1256,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.1-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 11.272,
+          "p90InferenceSeconds": 11.272,
+          "meanCompletionTokens": 1585,
+          "meanReasoningTokens": 1350,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.1-high",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 17.071,
+          "p90InferenceSeconds": 17.071,
+          "meanCompletionTokens": 2605,
+          "meanReasoningTokens": 2420,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.7-low",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 17.167,
+          "p90InferenceSeconds": 17.167,
+          "meanCompletionTokens": 2555,
+          "meanReasoningTokens": 2352,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.3-high",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 25.035,
+          "p90InferenceSeconds": 25.035,
+          "meanCompletionTokens": 3016,
+          "meanReasoningTokens": 2838,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "grade-wrong-trace",
+              "checks": [
+                "wrong trace rejected"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.7-medium",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 18.212,
+          "p90InferenceSeconds": 18.212,
+          "meanCompletionTokens": 3200,
+          "meanReasoningTokens": 3200,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "grade-wrong-trace",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-high",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 22.928,
+          "p90InferenceSeconds": 22.928,
+          "meanCompletionTokens": 3200,
+          "meanReasoningTokens": 3200,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "grade-wrong-trace",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-low",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 24.782,
+          "p90InferenceSeconds": 24.782,
+          "meanCompletionTokens": 3200,
+          "meanReasoningTokens": 3200,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "grade-wrong-trace",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-low",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 52.02,
+          "p90InferenceSeconds": 52.02,
+          "meanCompletionTokens": 3200,
+          "meanReasoningTokens": 3096,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "grade-wrong-trace",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        }
+      ]
+    },
+    {
+      "task": "research-current-api",
+      "configurations": [
+        {
+          "id": "t0.7-off",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 5.306,
+          "p90InferenceSeconds": 5.306,
+          "meanCompletionTokens": 472,
+          "meanReasoningTokens": 0,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-high",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 12.181,
+          "p90InferenceSeconds": 12.181,
+          "meanCompletionTokens": 1444,
+          "meanReasoningTokens": 869,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-low",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 18.315,
+          "p90InferenceSeconds": 18.315,
+          "meanCompletionTokens": 1267,
+          "meanReasoningTokens": 709,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 20.976,
+          "p90InferenceSeconds": 20.976,
+          "meanCompletionTokens": 1966,
+          "meanReasoningTokens": 1396,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-high",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 28.593,
+          "p90InferenceSeconds": 28.593,
+          "meanCompletionTokens": 2828,
+          "meanReasoningTokens": 1698,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-medium",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 31.417,
+          "p90InferenceSeconds": 31.417,
+          "meanCompletionTokens": 4296,
+          "meanReasoningTokens": 3111,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-medium-roomy",
+          "n": 1,
+          "valid": 1,
+          "singleInference": 0,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 60.109,
+          "p90InferenceSeconds": 60.109,
+          "meanCompletionTokens": 5170,
+          "meanReasoningTokens": 4005,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-off",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 18.338,
+          "p90InferenceSeconds": 18.338,
+          "meanCompletionTokens": 1494,
+          "meanReasoningTokens": 0,
+          "providerCalls": 4,
+          "failures": [
+            {
+              "task": "research-current-api",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-medium",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 1,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 32.042,
+          "p90InferenceSeconds": 32.042,
+          "meanCompletionTokens": 4650,
+          "meanReasoningTokens": 4041,
+          "providerCalls": 3,
+          "failures": [
+            {
+              "task": "research-current-api",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-high",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 39.538,
+          "p90InferenceSeconds": 39.538,
+          "meanCompletionTokens": 2051,
+          "meanReasoningTokens": 1388,
+          "providerCalls": 3,
+          "failures": [
+            {
+              "task": "research-current-api",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-low",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 41.493,
+          "p90InferenceSeconds": 41.493,
+          "meanCompletionTokens": 3567,
+          "meanReasoningTokens": 2568,
+          "providerCalls": 3,
+          "failures": [
+            {
+              "task": "research-current-api",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-off",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 48.938,
+          "p90InferenceSeconds": 48.938,
+          "meanCompletionTokens": 1489,
+          "meanReasoningTokens": 0,
+          "providerCalls": 4,
+          "failures": [
+            {
+              "task": "research-current-api",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-low",
+          "n": 1,
+          "valid": 0,
+          "singleInference": 0,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 72.084,
+          "p90InferenceSeconds": 72.084,
+          "meanCompletionTokens": 291,
+          "meanReasoningTokens": 241,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "research-current-api",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        }
+      ]
+    },
+    {
+      "task": "grade-flawed-key",
+      "configurations": [
+        {
+          "id": "t0.3-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.265,
+          "p90InferenceSeconds": 1.296,
+          "meanCompletionTokens": 69,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.6975,
+          "p90InferenceSeconds": 2.004,
+          "meanCompletionTokens": 119.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.8,
+          "p90InferenceSeconds": 2.296,
+          "meanCompletionTokens": 118,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-off-explicit-grade",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 6.1355,
+          "p90InferenceSeconds": 10.594,
+          "meanCompletionTokens": 75,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        }
+      ]
+    },
+    {
+      "task": "question-omission",
+      "configurations": [
+        {
+          "id": "t0.7-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.616,
+          "p90InferenceSeconds": 1.814,
+          "meanCompletionTokens": 55,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 2.2275,
+          "p90InferenceSeconds": 2.727,
+          "meanCompletionTokens": 50.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-off",
+          "n": 2,
+          "valid": 1,
+          "singleInference": 2,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 50,
+          "medianInferenceSeconds": 16.809,
+          "p90InferenceSeconds": 32.313,
+          "meanCompletionTokens": 23.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "question-omission",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        }
+      ]
+    },
+    {
+      "task": "plan-insufficient-notes",
+      "configurations": [
+        {
+          "id": "t0.7-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.9895,
+          "p90InferenceSeconds": 2.032,
+          "meanCompletionTokens": 66.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 2.6795,
+          "p90InferenceSeconds": 3.653,
+          "meanCompletionTokens": 67.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 4.4455,
+          "p90InferenceSeconds": 6.355,
+          "meanCompletionTokens": 74.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": []
+        }
+      ]
+    },
+    {
+      "task": "clarification-scope",
+      "configurations": [
+        {
+          "id": "t0.3-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 1,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 1.6775,
+          "p90InferenceSeconds": 2.052,
+          "meanCompletionTokens": 113.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 0,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 3.6265,
+          "p90InferenceSeconds": 4.646,
+          "meanCompletionTokens": 242.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 6,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 1,
+          "allChecks": 2,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 4.1045,
+          "p90InferenceSeconds": 6.866,
+          "meanCompletionTokens": 151.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": []
+        }
+      ]
+    },
+    {
+      "task": "review-unsupported",
+      "configurations": [
+        {
+          "id": "t0.1-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 75,
+          "medianInferenceSeconds": 5.9695,
+          "p90InferenceSeconds": 6.283,
+          "meanCompletionTokens": 740,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "review-unsupported",
+              "checks": [
+                "unsupported not contradiction",
+                "unsupported partially explained"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.3-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 1,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 50,
+          "medianInferenceSeconds": 10.309,
+          "p90InferenceSeconds": 15.053,
+          "meanCompletionTokens": 1254,
+          "meanReasoningTokens": 0,
+          "providerCalls": 3,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "review-unsupported",
+              "checks": [
+                "unsupported not contradiction",
+                "unsupported partially explained"
+              ]
+            },
+            {
+              "task": "review-unsupported",
+              "checks": [
+                "unsupported not contradiction",
+                "unsupported partially explained"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.7-off",
+          "n": 2,
+          "valid": 2,
+          "singleInference": 2,
+          "allChecks": 0,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 0,
+          "rubricPercent": 37.5,
+          "medianInferenceSeconds": 8.057,
+          "p90InferenceSeconds": 8.198,
+          "meanCompletionTokens": 855.5,
+          "meanReasoningTokens": 0,
+          "providerCalls": 2,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "review-unsupported",
+              "checks": [
+                "unsupported not contradiction",
+                "unsupported partially explained",
+                "evidence all exact"
+              ]
+            },
+            {
+              "task": "review-unsupported",
+              "checks": [
+                "unsupported not contradiction",
+                "unsupported partially explained"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.1-low-roomy",
+          "n": 2,
+          "valid": 1,
+          "singleInference": 2,
+          "allChecks": 1,
+          "finalCutoffs": 0,
+          "missingUsageCalls": 1,
+          "rubricPercent": 50,
+          "medianInferenceSeconds": 58.541,
+          "p90InferenceSeconds": 80.006,
+          "meanCompletionTokens": 2881.5,
+          "meanReasoningTokens": 2463.5,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "review-unsupported",
+              "error": "The AI request timed out or lost connection. Your writing is saved. Try Finish and review again to review this attempt."
+            }
+          ],
+          "missedChecks": []
+        }
+      ]
     }
   ],
-  "transportErrors": [],
+  "transportErrors": [
+    {
+      "config": "t0.3-medium",
+      "task": "review-mixed",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.7-high",
+      "task": "review-mixed",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.7-low",
+      "task": "review-mixed",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.3-high",
+      "task": "review-mixed",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.3-low",
+      "task": "review-mixed",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.1-high",
+      "task": "review-mixed",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.1-medium",
+      "task": "unit-binary-search",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.1-high",
+      "task": "unit-binary-search",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.7-high",
+      "task": "unit-binary-search",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.7-low",
+      "task": "unit-binary-search",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.1-low",
+      "task": "research-current-api",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.7-medium-roomy",
+      "task": "unit-binary-search",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.3-off",
+      "task": "question-omission",
+      "status": 0,
+      "error": "TimeoutError"
+    },
+    {
+      "config": "t0.1-low-roomy",
+      "task": "review-unsupported",
+      "status": 0,
+      "error": "TimeoutError"
+    }
+  ],
   "truncations": [
     {
       "config": "t0.3-low",
@@ -483,11 +2931,657 @@
           "audio_tokens": 0
         }
       }
+    },
+    {
+      "config": "t0.1-low",
+      "task": "review-mixed",
+      "usage": {
+        "prompt_tokens": 900,
+        "completion_tokens": 4500,
+        "total_tokens": 5400,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4023,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-high",
+      "task": "review-mixed",
+      "usage": {
+        "prompt_tokens": 900,
+        "completion_tokens": 4500,
+        "total_tokens": 5400,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4500,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.1-medium",
+      "task": "review-mixed",
+      "usage": {
+        "prompt_tokens": 900,
+        "completion_tokens": 4500,
+        "total_tokens": 5400,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4500,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.1-medium",
+      "task": "review-mixed",
+      "usage": {
+        "prompt_tokens": 979,
+        "completion_tokens": 4500,
+        "total_tokens": 5479,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4500,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.1-low",
+      "task": "unit-binary-search",
+      "usage": {
+        "prompt_tokens": 880,
+        "completion_tokens": 6500,
+        "total_tokens": 7380,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4813,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.1-low",
+      "task": "unit-binary-search",
+      "usage": {
+        "prompt_tokens": 976,
+        "completion_tokens": 6500,
+        "total_tokens": 7476,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 6500,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.3-medium",
+      "task": "unit-binary-search",
+      "usage": {
+        "prompt_tokens": 880,
+        "completion_tokens": 6500,
+        "total_tokens": 7380,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4847,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-high",
+      "task": "unit-binary-search",
+      "usage": {
+        "prompt_tokens": 880,
+        "completion_tokens": 6500,
+        "total_tokens": 7380,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 6500,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-low",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1429,
+        "completion_tokens": 1600,
+        "total_tokens": 3029,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.3-high",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1429,
+        "completion_tokens": 1600,
+        "total_tokens": 3029,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.3-low",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1429,
+        "completion_tokens": 1600,
+        "total_tokens": 3029,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.3-low",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1508,
+        "completion_tokens": 1600,
+        "total_tokens": 3108,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-medium",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1429,
+        "completion_tokens": 1600,
+        "total_tokens": 3029,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.1-high",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1429,
+        "completion_tokens": 1600,
+        "total_tokens": 3029,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-medium",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1508,
+        "completion_tokens": 1600,
+        "total_tokens": 3108,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-high",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1429,
+        "completion_tokens": 1600,
+        "total_tokens": 3029,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-high",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1508,
+        "completion_tokens": 1600,
+        "total_tokens": 3108,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.1-low",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1429,
+        "completion_tokens": 1600,
+        "total_tokens": 3029,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1600,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.1-low",
+      "task": "grade-wrong-trace",
+      "usage": {
+        "prompt_tokens": 1508,
+        "completion_tokens": 1600,
+        "total_tokens": 3108,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1496,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.3-medium",
+      "task": "research-current-api",
+      "usage": {
+        "prompt_tokens": 1963,
+        "completion_tokens": 2200,
+        "total_tokens": 4163,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2200,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.3-medium",
+      "task": "research-current-api",
+      "usage": {
+        "prompt_tokens": 2042,
+        "completion_tokens": 2200,
+        "total_tokens": 4242,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1641,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-low",
+      "task": "research-current-api",
+      "usage": {
+        "prompt_tokens": 1962,
+        "completion_tokens": 2200,
+        "total_tokens": 4162,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1715,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-medium-roomy",
+      "task": "review-mixed",
+      "usage": {
+        "prompt_tokens": 900,
+        "completion_tokens": 6548,
+        "total_tokens": 7448,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 6548,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
     }
   ],
   "promptHashCheck": [
     {
       "task": "extract-injection",
+      "firstPrompts": 12,
+      "distinctHashes": 1
+    },
+    {
+      "task": "review-mixed",
+      "firstPrompts": 12,
+      "distinctHashes": 1
+    },
+    {
+      "task": "unit-binary-search",
+      "firstPrompts": 12,
+      "distinctHashes": 1
+    },
+    {
+      "task": "grade-correct-alternative",
+      "firstPrompts": 12,
+      "distinctHashes": 1
+    },
+    {
+      "task": "grade-wrong-trace",
+      "firstPrompts": 12,
+      "distinctHashes": 1
+    },
+    {
+      "task": "research-current-api",
       "firstPrompts": 12,
       "distinctHashes": 1
     }

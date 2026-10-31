@@ -1,5 +1,21 @@
 # Teech
 
+## Keenable free allowance — 31 October 2026
+
+Supporting-material searches keep `mode: "pro"` and the server-only API key. Pro is the deeper search mode and can use Keenable's recurring **100,000 free requests per organization per month**; authenticated requests are limited to **10/second per organization**, without an hourly cap. No purchase is required. Sources: [credits](https://docs.keenable.ai/credits), [rate limits](https://docs.keenable.ai/rate-limits), [pricing/reset rules](https://keenable.ai/pricing).
+
+Apply `supabase/migrations/20261031111719_keenable_free_limits.sql` after the existing migrations **before deploying this version**. It adds service-role-only admission and billing records with RLS and no browser grants. Teech atomically reserves each search across all server instances, with shared limits of **10 attempts in a rolling second** and **100,000 attempts in a rolling 31 days**. The latter is deliberately conservative because Keenable resets on the organization's creation-day anniversary, not necessarily the first of the month. The ledger begins when this migration is installed; it cannot account for earlier calls or other applications using the organization. Keenable's balance remains authoritative.
+
+Failed, cancelled and checkpoint-interrupted reservations count conservatively. Old records expire after 32 days; **do not delete recent `keenable_usage` rows under the seven-day AI event cleanup policy**. AI quotas and per-person minute limits stay separate. Search remains bounded to two calls per action, eight per course/session and twelve saved sources. Each request asks for at most three results, with up to 5,000 characters per snippet, and has a maximum 15-second timeout. Saved evidence is reused; notes-only courses never search.
+
+When Keenable returns `402`, new searches pause across the app for one hour; later explicit actions can check whether the provider allowance has reset. On `429`, the shared pause honors `Retry-After` (seconds or HTTP date, conservatively defaulting to 60 seconds and bounded to one day). There is no automatic retry or keyless fallback. Denied admission and database failures cannot issue a search. Users receive a saved-work notice and can continue opening already saved content.
+
+Every successful search must report `usage.sku="search.pro"`, `amount=1`, `credits<=1` and `paid=false`. The billing metadata is stored privately, never added to model context or learner content. Paid, missing or unexpected billing metadata pauses all future searches until an administrator reviews the account and explicitly clears `keenable_guard`. This is a post-response safeguard: it cannot undo the call that reported paid usage. With no purchased credits, Keenable itself refuses exhausted free requests. **Keep purchased credits and auto top-up disabled** to preserve that provider-side spending boundary; Teech does not change account billing settings or purchase credits. The local ledger cannot guarantee a free balance if other software spends the organization's allowance.
+
+After resolving an unexpected billing pause in the Keenable console, a server administrator can deliberately clear it with `update public.keenable_guard set blocked_until='-infinity', reason='rate' where id=1;`. Do not automatically clear this pause on startup or deployment. A normal provider `402`/`429` cooldown expires automatically.
+
+The selected OpenRouter default is temperature **0.1** with `reasoning: {"effort":"none"}`. Free-model allowlisting, disabled paid fallbacks, task budgets and existing AI quotas remain in force.
+
 ## Review fixes — 18 October 2026
 
 Student answers and typed finishes now include the transcript position shown by the browser. The server checks it under the existing session operation lock before accepting writing or requesting AI. Stale submissions return the current session and retain the unsent answer separately, including after an interrupted response and refresh. API callers must send `expectedMessages` for answers and finishes containing text; requests without that guard cannot append an answer.

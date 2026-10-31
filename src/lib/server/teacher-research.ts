@@ -3,6 +3,12 @@ import { z } from "zod";
 import { AppError } from "../domain";
 import type { LearningState } from "../learning";
 import type { Context, ModelTools } from "./ai";
+import {
+  recordSearch,
+  reserveSearch,
+  searchRetrySeconds,
+  searchUsage,
+} from "./search-budget";
 
 const querySchema = z
   .object({
@@ -74,6 +80,9 @@ export function teacherResearch(
           "This step reached its time limit. Your lesson is saved; retry when ready.",
           504,
         );
+      // Shared admission must succeed before any external search. Unavailable
+      // quota storage fails closed, including on fresh serverless instances.
+      const requestId = await reserveSearch();
       s.research ||= { calls: 0, sources: [] };
       s.research.calls++;
       // Count even failed requests, and checkpoint before the external call.
@@ -81,7 +90,10 @@ export function teacherResearch(
       await ctx.checkpoint?.();
       let data;
       let status: number | undefined;
+      let recorded = false;
       try {
+        const timeLeft = (ctx.deadline ?? Date.now() + 15000) - Date.now();
+        if (timeLeft < 2000) throw new Error("Search deadline exhausted");
         const response = await fetch("https://api.keenable.ai/v1/search", {
           method: "POST",
           headers: {
@@ -92,14 +104,37 @@ export function teacherResearch(
           body: JSON.stringify({
             query,
             mode: "pro",
+            max_results: 3,
             snippet_max_length: 5000,
             ...(site ? { site } : {}),
           }),
-          signal: AbortSignal.timeout(Math.min(15000, remaining - 1000)),
+          signal: AbortSignal.timeout(Math.min(15000, timeLeft - 1000)),
           cache: "no-store",
         });
         status = response.status;
-        if (!response.ok) throw new Error("Supporting material unavailable");
+        if (!response.ok) {
+          const outcome =
+            status === 402
+              ? "exhausted"
+              : status === 429
+                ? "rate_limited"
+                : "failed";
+          recorded = true;
+          await recordSearch(
+            requestId,
+            outcome,
+            null,
+            searchRetrySeconds(response.headers.get("Retry-After")),
+          );
+          if (status === 402 || status === 429)
+            throw new AppError(
+              status === 402
+                ? "The shared supporting-material allowance is temporarily used up. Saved lessons remain available; try again later."
+                : "Supporting-material requests are busy. Wait a moment and try again. Saved work remains available.",
+              429,
+            );
+          throw new Error("Supporting material unavailable");
+        }
         // Limit both the network body and the text retained for future steps.
         const reader = response.body?.getReader();
         if (!reader) throw new Error("Empty response");
@@ -116,9 +151,19 @@ export function teacherResearch(
         } finally {
           await reader.cancel().catch(() => {});
         }
-        data = responseSchema.parse(
-          JSON.parse(Buffer.concat(chunks).toString("utf8")),
+        const body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+        const usage = searchUsage.safeParse(body?.usage);
+        // This reports the provider's billing decision after the call; it
+        // cannot undo that call. Pause all future searches on paid/unknown
+        // billing rather than silently continuing to spend purchased credits.
+        recorded = true;
+        await recordSearch(
+          requestId,
+          usage.success ? "free" : "billing",
+          usage.success ? usage.data.credits : null,
         );
+        if (!usage.success) throw new Error("Unverified search billing");
+        data = responseSchema.parse(body);
       } catch (error) {
         // Operational metadata only: never log keys, queries, pages or provider bodies.
         console.warn("Teacher supporting-material request failed", {
@@ -130,10 +175,13 @@ export function teacherResearch(
                 ? error.name
                 : "unknown",
         });
+        if (error instanceof AppError) throw error;
         throw new AppError(
           "Supporting material could not be loaded right now. Your lesson is saved; try again later.",
           503,
         );
+      } finally {
+        if (!recorded) await recordSearch(requestId, "failed");
       }
       const sources = data.results
         .flatMap((raw) => {
