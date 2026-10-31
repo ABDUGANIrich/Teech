@@ -397,7 +397,7 @@ export function LearningRoom({
         </div>
       </div>
       {!sample && (
-        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
           AI feedback can be wrong. Sage and Pip share your account allowance.{" "}
           {s.providerAttempts}/22 course AI attempts used, including failed
           calls and repairs. Daily capacity is not reserved.
@@ -560,7 +560,7 @@ export function LearningRoom({
                         {u.content.sourceExcerpts.map((quote, i) => (
                           <blockquote key={i}>{quote}</blockquote>
                         ))}
-                        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+                        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
                           Exact text matching checks provenance, not the
                           correctness of an explanation.
                         </p>
@@ -748,7 +748,7 @@ function PlanSetup({
           {s.plan.sourceExcerpts.map((q, i) => (
             <blockquote key={i}>{q}</blockquote>
           ))}
-          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
             Accepting fixes this outline. A different scope later needs a new
             course. Your first unit prepares automatically using AI allowance;
             later units prepare as you reach them. Reopening saved units uses no
@@ -782,7 +782,7 @@ function PlanSetup({
               ? "Revise outline · uses AI allowance"
               : "Create course · uses AI allowance"}
           </Button>
-          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
             Only this button revises the outline. Editing a field uses no AI
             calls.
           </p>

@@ -80,7 +80,7 @@ export function LearningShelf() {
             <p>
               {phases[s.phase]} · {s.completed}/{s.units} units completed
             </p>
-            <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+            <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
               {s.provenance}
             </p>
           </div>

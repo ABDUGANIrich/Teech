@@ -25,7 +25,7 @@ export function Shell({
             <Sprout className="size-5.5" />
           </span>
           teech
-          <span className="logo-dot text-olive-500 dark:text-olive-400">.</span>
+          <span className="logo-dot text-olive-600 dark:text-olive-400">.</span>
         </Link>
         <nav aria-label="Main navigation">
           <Link href="/teacher-sample">Sage sample</Link>

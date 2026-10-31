@@ -412,7 +412,7 @@ export function TeachingRoom({
           <ArrowLeft className="size-[0.9375rem]" />
           {userId ? "My library" : "Back to home"}
         </Link>
-        <span className="quiet-badge text-[0.5625rem] tracking-[0.06875rem] text-olive-500 border-solid bg-olive-100 rounded-[0.3125rem] px-2 py-1 border-[0.0625rem] border-olive-300 dark:text-olive-400 dark:bg-olive-800 dark:border-olive-700">
+        <span className="quiet-badge text-[0.5625rem] tracking-[0.06875rem] text-olive-600 border-solid bg-olive-100 rounded-[0.3125rem] px-2 py-1 border-[0.0625rem] border-olive-300 dark:text-olive-400 dark:bg-olive-800 dark:border-olive-700">
           {session.preview ? "PIP · FIXED PREVIEW" : "PIP · STUDENT"}
         </span>
       </div>
@@ -510,7 +510,7 @@ export function TeachingRoom({
         >
           <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-[0.5625rem] max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
             <h2>Your source material</h2>
-            <span className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+            <span className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
               {session.concepts.length} concepts · checklist v
               {session.checklist_version}
             </span>
@@ -612,7 +612,7 @@ export function TeachingRoom({
                   ? "These example statuses don’t evaluate what you wrote."
                   : "An AI assessment relative to your notes, which may be incomplete or incorrect."}
               </p>
-              <div className="review-tags flex gap-[0.4375rem] flex-wrap [&_>_span]:text-[0.5625rem] [&_>_span]:border-solid [&_>_span]:rounded-sm [&_>_span]:text-olive-500 [&_>_span]:px-2 [&_>_span]:py-[0.1875rem] [&_>_span]:border-[0.0625rem] [&_>_span]:border-olive-300 dark:[&_>_span]:text-olive-400 dark:[&_>_span]:border-olive-700 max-mobile:[&_span]:text-[0.5rem]">
+              <div className="review-tags flex gap-[0.4375rem] flex-wrap [&_>_span]:text-[0.5625rem] [&_>_span]:border-solid [&_>_span]:rounded-sm [&_>_span]:text-olive-600 [&_>_span]:px-2 [&_>_span]:py-[0.1875rem] [&_>_span]:border-[0.0625rem] [&_>_span]:border-olive-300 dark:[&_>_span]:text-olive-400 dark:[&_>_span]:border-olive-700 max-mobile:[&_span]:text-[0.5rem]">
                 <span>
                   {session.notes_revealed
                     ? "Practiced with notes"
@@ -646,7 +646,7 @@ export function TeachingRoom({
               </p>
               {session.evaluation.revisit.map((s, i) => (
                 <p key={i}>
-                  <span className="small-number text-[0.625rem] text-olive-500 mt-0.5 dark:text-olive-400">
+                  <span className="small-number text-[0.625rem] text-olive-600 mt-0.5 dark:text-olive-400">
                     0{i + 1}
                   </span>
                   {s}
@@ -657,7 +657,7 @@ export function TeachingRoom({
           <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-[0.5625rem] max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
             <h2>Concept by concept</h2>
             {previousOptions.length > 0 && (
-              <label className="compare-label text-[0.625rem] text-olive-500 flex gap-2 items-center dark:text-olive-400 [&_select]:text-[0.6875rem] [&_select]:max-w-52.5 max-mobile:flex-wrap">
+              <label className="compare-label text-[0.625rem] text-olive-600 flex gap-2 items-center dark:text-olive-400 [&_select]:text-[0.6875rem] [&_select]:max-w-52.5 max-mobile:flex-wrap">
                 Compare with
                 <select
                   value={compareId}
@@ -700,7 +700,7 @@ export function TeachingRoom({
                   </span>
                 </div>
                 {previous && (
-                  <p className="comparison flex items-center gap-2 text-[0.6875rem]! text-olive-500 dark:text-olive-400 max-mobile:flex-wrap">
+                  <p className="comparison flex items-center gap-2 text-[0.6875rem]! text-olive-600 dark:text-olive-400 max-mobile:flex-wrap">
                     Previously:{" "}
                     {previous.evaluation?.results.find(
                       (x) => x.conceptId === r.conceptId,
@@ -710,20 +710,20 @@ export function TeachingRoom({
                 )}
                 <p>{r.reason}</p>
                 {r.claimType === "unsupported" && (
-                  <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+                  <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
                     Not supported by these notes; this does not establish that
                     the claim is false.
                   </p>
                 )}
                 <div className="evidence-grid grid grid-cols-[1fr_1fr] gap-[1.5625rem] mt-5 [&_>_div]:bg-olive-100 [&_>_div]:rounded-md [&_>_div]:px-4.5 [&_>_div]:py-[0.9375rem] dark:[&_>_div]:bg-olive-800 [&_blockquote]:font-serif [&_blockquote]:text-[0.875rem] [&_blockquote]:leading-[1.7] [&_blockquote]:text-stone-500 [&_blockquote]:mt-[0.5625rem] [&_blockquote]:mb-0 [&_blockquote]:wrap-anywhere [&_blockquote]:whitespace-pre-wrap [&_blockquote]:mx-0 dark:[&_blockquote]:text-olive-400 [&_blockquote:before]:content-['“'] [&_blockquote:after]:content-['”'] [&_p]:mt-[0.5625rem] [&_p]:mb-0 [&_p]:mx-0 max-mobile:grid-cols-[1fr] max-mobile:gap-3 max-mobile:[&_blockquote]:text-[0.8125rem]">
                   <div>
-                    <span className="evidence-label text-[0.5rem] tracking-[0.075rem] text-olive-500 dark:text-olive-400">
+                    <span className="evidence-label text-[0.5rem] tracking-[0.075rem] text-olive-600 dark:text-olive-400">
                       IN YOUR WORDS
                     </span>
                     {r.userExcerpt ? (
                       <blockquote>{r.userExcerpt}</blockquote>
                     ) : (
-                      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+                      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
                         {session.preview
                           ? "This fixture does not quote or assess your writing."
                           : r.status === "Not demonstrated"
@@ -733,13 +733,13 @@ export function TeachingRoom({
                     )}
                   </div>
                   <div>
-                    <span className="evidence-label text-[0.5rem] tracking-[0.075rem] text-olive-500 dark:text-olive-400">
+                    <span className="evidence-label text-[0.5rem] tracking-[0.075rem] text-olive-600 dark:text-olive-400">
                       IN YOUR NOTES
                     </span>
                     {r.sourceExcerpt ? (
                       <blockquote>{r.sourceExcerpt}</blockquote>
                     ) : (
-                      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+                      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
                         Supporting evidence could not be verified.
                       </p>
                     )}
@@ -796,13 +796,13 @@ export function TeachingRoom({
                   ? `QUESTION ${session.messages.filter((m) => m.role === "student").length} OF UP TO 3`
                   : "01 / YOUR EXPLANATION"}
               </span>
-              <span className="saved-label text-[0.5625rem] text-olive-500 flex gap-[0.3125rem] items-center dark:text-olive-400 [&_.tiny-dot]:w-1 [&_.tiny-dot]:h-1 max-layout:text-[0.5rem] max-mobile:text-[0.5rem] max-mobile:max-w-25 max-mobile:text-right max-mobile:[&_.tiny-dot]:hidden">
+              <span className="saved-label text-[0.5625rem] text-olive-600 flex gap-[0.3125rem] items-center dark:text-olive-400 [&_.tiny-dot]:w-1 [&_.tiny-dot]:h-1 max-layout:text-[0.5rem] max-mobile:text-[0.5rem] max-mobile:max-w-25 max-mobile:text-right max-mobile:[&_.tiny-dot]:hidden">
                 <span className="tiny-dot h-1.5 w-1.5 inline-block rounded-full bg-olive-500 shrink-0 dark:bg-olive-400" />
                 Draft stays on this device
               </span>
             </div>
             {questions && session.messages.at(-1)?.role === "student" ? (
-              <div className="question-bubble bg-olive-100 border-l-[0.1875rem] border-solid border-l-olive-400 rounded-[0_0.375rem_0.375rem_0] mb-3 px-[1.1875rem] py-[1.0625rem] dark:bg-olive-800 [&_>_span]:text-[0.5rem] [&_>_span]:tracking-[0.075rem] [&_>_span]:text-olive-500 [&_>_span]:block [&_>_span]:mb-[0.5625rem] dark:[&_>_span]:text-olive-400 [&_h2]:text-[1.375rem] max-mobile:p-3.5 max-mobile:[&_h2]:text-[1.3125rem]">
+              <div className="question-bubble bg-olive-100 border-l-[0.1875rem] border-solid border-l-olive-400 rounded-[0_0.375rem_0.375rem_0] mb-3 px-[1.1875rem] py-[1.0625rem] dark:bg-olive-800 [&_>_span]:text-[0.5rem] [&_>_span]:tracking-[0.075rem] [&_>_span]:text-olive-600 [&_>_span]:block [&_>_span]:mb-[0.5625rem] dark:[&_>_span]:text-olive-400 [&_h2]:text-[1.375rem] max-mobile:p-3.5 max-mobile:[&_h2]:text-[1.3125rem]">
                 <span>PIP ASKS</span>
                 <h2>{session.messages.at(-1)!.text}</h2>
               </div>
@@ -840,7 +840,7 @@ export function TeachingRoom({
                   aria-describedby="writing-limits"
                 />
                 <div
-                  className="writing-limits flex justify-between gap-[0.9375rem] text-[0.5625rem] text-olive-500 pt-3 pb-5 px-0 dark:text-olive-400 max-mobile:text-[0.5rem] max-mobile:items-end max-mobile:[&_>_span:first-child]:max-w-40"
+                  className="writing-limits flex justify-between gap-[0.9375rem] text-[0.5625rem] text-olive-600 pt-3 pb-5 px-0 dark:text-olive-400 max-mobile:text-[0.5rem] max-mobile:items-end max-mobile:[&_>_span:first-child]:max-w-40"
                   id="writing-limits"
                 >
                   <span>
@@ -853,7 +853,7 @@ export function TeachingRoom({
                   </span>
                 </div>
                 <div className="writing-actions border-t-[0.0625rem] border-solid border-t-olive-200 flex items-center justify-between gap-4.5 pt-5 dark:border-t-olive-700 [&_.micro]:text-[0.625rem] [&_.micro]:max-w-[11.5625rem] [&_.micro]:leading-[1.6] [&_.button]:text-[0.75rem] [&_.button]:px-4 [&_.button]:py-2.5 max-layout:items-start max-layout:flex-col max-layout:gap-3 max-layout:[&_.micro]:max-w-none max-mobile:gap-3.5 max-mobile:[&_.button]:w-full max-mobile:[&_.micro]:text-[0.5625rem]">
-                  <span className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+                  <span className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
                     {questions
                       ? "Unsure is a useful place to start."
                       : "At least 20 characters. There’s no perfect wording."}
@@ -916,8 +916,8 @@ export function TeachingRoom({
               </div>
             )}
           </section>
-          <aside className="student-panel rounded-xl bg-taupe-100 text-center flex items-center flex-col px-[1.3125rem] py-[1.5625rem] dark:bg-olive-800 [&_.student]:w-[10.8125rem] [&_.student]:mt-[0.9375rem] [&_.student]:mb-[0.3125rem] [&_.student]:mx-0 [&_h2]:font-serif [&_h2]:text-[1.5625rem] [&_h2]:mb-3 [&_>_p]:text-[0.75rem] [&_>_p]:leading-[1.8] [&_>_p]:max-w-52.5 [&_>_p]:mb-5 [&_>_p]:text-olive-500 dark:[&_>_p]:text-olive-400 max-mobile:pr-[1.0625rem] max-mobile:pl-27 max-mobile:text-left max-mobile:block max-mobile:relative max-mobile:min-h-[6.9375rem] max-mobile:py-[0.8125rem] max-mobile:[&_>_.student]:absolute max-mobile:[&_>_.student]:w-22 max-mobile:[&_>_.student]:left-[0.5625rem] max-mobile:[&_>_.student]:top-2 max-mobile:[&_>_.student]:m-0 max-mobile:[&_h2]:text-[1.25rem] max-mobile:[&_h2]:mt-[0.4375rem] max-mobile:[&_h2]:mb-[0.3125rem] max-mobile:[&_h2]:mx-0 max-mobile:[&_>_p]:text-[0.625rem] max-mobile:[&_>_p]:leading-[1.65] max-mobile:[&_>_p]:max-w-none max-mobile:[&_>_p]:m-0">
-            <div className="student-presence flex items-center gap-1.5 text-[0.5rem] tracking-[0.06875rem] text-olive-500 dark:text-olive-400 max-mobile:text-[0.4375rem] max-mobile:tracking-[0.04375rem]">
+          <aside className="student-panel rounded-xl bg-taupe-100 text-center flex items-center flex-col px-[1.3125rem] py-[1.5625rem] dark:bg-olive-800 [&_.student]:w-[10.8125rem] [&_.student]:mt-[0.9375rem] [&_.student]:mb-[0.3125rem] [&_.student]:mx-0 [&_h2]:font-serif [&_h2]:text-[1.5625rem] [&_h2]:mb-3 [&_>_p]:text-[0.75rem] [&_>_p]:leading-[1.8] [&_>_p]:max-w-52.5 [&_>_p]:mb-5 [&_>_p]:text-olive-600 dark:[&_>_p]:text-olive-400 max-mobile:pr-[1.0625rem] max-mobile:pl-27 max-mobile:text-left max-mobile:block max-mobile:relative max-mobile:min-h-[6.9375rem] max-mobile:py-[0.8125rem] max-mobile:[&_>_.student]:absolute max-mobile:[&_>_.student]:w-22 max-mobile:[&_>_.student]:left-[0.5625rem] max-mobile:[&_>_.student]:top-2 max-mobile:[&_>_.student]:m-0 max-mobile:[&_h2]:text-[1.25rem] max-mobile:[&_h2]:mt-[0.4375rem] max-mobile:[&_h2]:mb-[0.3125rem] max-mobile:[&_h2]:mx-0 max-mobile:[&_>_p]:text-[0.625rem] max-mobile:[&_>_p]:leading-[1.65] max-mobile:[&_>_p]:max-w-none max-mobile:[&_>_p]:m-0">
+            <div className="student-presence flex items-center gap-1.5 text-[0.5rem] tracking-[0.06875rem] text-olive-600 dark:text-olive-400 max-mobile:text-[0.4375rem] max-mobile:tracking-[0.04375rem]">
               <span className="tiny-dot h-1.5 w-1.5 inline-block rounded-full bg-olive-500 shrink-0 dark:bg-olive-400" />
               {busy
                 ? "THINKING IT THROUGH"
@@ -943,10 +943,10 @@ export function TeachingRoom({
                   : "Teach me in your own words. I’ll ask if something doesn’t quite click."}
             </p>
             <div className="student-divider w-8 h-[0.0625rem] bg-olive-300 mb-[0.9375rem] dark:bg-olive-700 max-mobile:hidden" />
-            <span className="student-name text-[0.75rem] [&_>_span]:text-olive-500 [&_>_span]:text-[0.625rem] [&_>_span]:ml-1.5 dark:[&_>_span]:text-olive-400 max-mobile:hidden">
+            <span className="student-name text-[0.75rem] [&_>_span]:text-olive-600 [&_>_span]:text-[0.625rem] [&_>_span]:ml-1.5 dark:[&_>_span]:text-olive-400 max-mobile:hidden">
               Pip <span>your AI student</span>
             </span>
-            <div className="gentle-tip flex gap-[0.5625rem] mt-[1.6875rem] pt-[0.9375rem] pb-0 border-t-[0.0625rem] border-solid border-t-stone-200 text-olive-500 items-start text-left px-0 dark:border-t-olive-700 dark:text-olive-400 [&_p]:text-[0.625rem] [&_p]:leading-[1.7] [&_p]:text-olive-500 [&_p]:m-0 dark:[&_p]:text-olive-400 max-mobile:hidden">
+            <div className="gentle-tip flex gap-[0.5625rem] mt-[1.6875rem] pt-[0.9375rem] pb-0 border-t-[0.0625rem] border-solid border-t-stone-200 text-olive-600 items-start text-left px-0 dark:border-t-olive-700 dark:text-olive-400 [&_p]:text-[0.625rem] [&_p]:leading-[1.7] [&_p]:text-olive-600 [&_p]:m-0 dark:[&_p]:text-olive-400 max-mobile:hidden">
               <SproutIcon />
               <p>
                 {session.short_retry
@@ -972,7 +972,7 @@ export function TeachingRoom({
           ))}
         </details>
       )}
-      <div className="privacy-note flex justify-center items-start gap-[0.4375rem] text-olive-500 mt-6 mb-0 max-w-175 mx-auto dark:text-olive-400 [&_p]:text-[0.625rem] [&_p]:text-center [&_p]:m-0 max-mobile:[&_p]:text-[0.5625rem]">
+      <div className="privacy-note flex justify-center items-start gap-[0.4375rem] text-olive-600 mt-6 mb-0 max-w-175 mx-auto dark:text-olive-400 [&_p]:text-[0.625rem] [&_p]:text-center [&_p]:m-0 max-mobile:[&_p]:text-[0.5625rem]">
         <ShieldCheck className="size-[0.9375rem]" />
         <p>
           {session.preview

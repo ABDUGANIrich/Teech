@@ -195,7 +195,19 @@ export async function runAction(input: unknown) {
     p_hash: createHash("sha256").update(JSON.stringify(a)).digest("hex"),
   });
   dbError(be);
-  if (begin.cached) return begin.result;
+  if (begin.cached) {
+    const sessionId = begin.result?.session?.id;
+    if (!sessionId) return begin.result;
+    const { data, error } = await db
+      .from("sessions")
+      .select("data,owner")
+      .eq("id", sessionId)
+      .eq("owner", who.id)
+      .single();
+    dbError(error && error.code !== "PGRST116" ? error : null);
+    if (!data) return { error: "That attempt is no longer available." };
+    return { ...begin.result, session: data.data };
+  }
   let pending: Session | undefined;
   async function commit(result: unknown, mutation: unknown = null) {
     const { error } = await db.rpc("commit_operation", {
@@ -206,6 +218,14 @@ export async function runAction(input: unknown) {
     });
     dbError(error);
     return result;
+  }
+  async function checkpoint(session: Session) {
+    const { error } = await db.rpc("checkpoint_session_operation", {
+      p_actor: who.id,
+      p_key: a.key,
+      p_session: session,
+    });
+    dbError(error);
   }
   try {
     if (a.action === "extract")
@@ -360,6 +380,7 @@ export async function runAction(input: unknown) {
       const slot = `session:${s.id}:question:${s.question_calls}`;
       // Count failed question calls too: errors cannot bypass the hard three-call limit.
       pending = { ...s, question_calls: s.question_calls + 1 };
+      await checkpoint(pending);
       s = appendQuestion(
         s,
         await nextQuestion(s, { quota: who.quota, slot, deadline }),
@@ -368,6 +389,7 @@ export async function runAction(input: unknown) {
       if (s.messages.at(-1)?.role === "student")
         return await commit({ session: s }, { session: s });
     }
+    await checkpoint(s);
     const evaluation = await evaluate(s, {
       deadline,
       quota: who.quota,

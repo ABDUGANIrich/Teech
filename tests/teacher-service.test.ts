@@ -93,6 +93,7 @@ beforeAll(async () => {
     "002_anonymous_daily_pool",
     "003_personal_minute_limit",
     "004_teacher_mode",
+    "005_student_checkpoints",
   ])
     await db.exec(readFileSync(`supabase/migrations/${file}.sql`, "utf8"));
   m.query.mockImplementation((sql: string, args: unknown[]) =>

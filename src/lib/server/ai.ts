@@ -47,10 +47,10 @@ function remaining(deadline: number) {
 }
 export function allowedModel() {
   const model =
-    process.env.OPENROUTER_MODEL || "nvidia/nemotron-3-super-120b-a12b:free";
+    process.env.OPENROUTER_MODEL || "nvidia/nemotron-3.5-super-vl:free";
   const allowed = (
     process.env.OPENROUTER_ALLOWED_MODELS ||
-    "nvidia/nemotron-3-super-120b-a12b:free"
+    "nvidia/nemotron-3.5-super-vl:free"
   )
     .split(",")
     .map((s) => s.trim());

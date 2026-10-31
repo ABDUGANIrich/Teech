@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-export function PasswordForm() {
+import { authDestination } from "@/lib/auth-navigation";
+export function PasswordForm({ next = "/library" }: { next?: string }) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -31,7 +32,7 @@ export function PasswordForm() {
             const d = await response.json();
             if (!response.ok || d.error)
               throw new Error(d.error || "Could not update your password.");
-            router.push("/library");
+            router.push(authDestination(next));
             router.refresh();
           } catch (e) {
             setError(

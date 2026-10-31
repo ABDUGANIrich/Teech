@@ -234,13 +234,21 @@ test("account recovery requests are email-only and password updates validate con
   await page.getByLabel("Email address").fill("person@example.com");
   await page.getByRole("button", { name: "Send password-reset link" }).click();
   await expect(page.getByRole("status")).toContainText("If eligible");
-  expect(bodies[0]).toEqual({ mode: "recover", email: "person@example.com" });
+  expect(bodies[0]).toEqual({
+    mode: "recover",
+    email: "person@example.com",
+    next: "/library",
+  });
   await page
     .getByRole("button", { name: "Resend confirmation", exact: true })
     .click();
   await page.getByRole("button", { name: "Resend confirmation email" }).click();
   await expect.poll(() => bodies.length).toBe(2);
-  expect(bodies[1]).toEqual({ mode: "resend", email: "person@example.com" });
+  expect(bodies[1]).toEqual({
+    mode: "resend",
+    email: "person@example.com",
+    next: "/library",
+  });
   await page.goto(`${harness}/?view=password`);
   await page
     .getByLabel("New password", { exact: true })

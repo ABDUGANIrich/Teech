@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { removeLocal, writeLocal } from "@/lib/client";
+import { readLocal, removeLocal, writeLocal } from "@/lib/client";
 import { useLocalSnapshot, useBrowserReady } from "@/lib/browser-storage";
 import {
   actionRecovered,
@@ -75,7 +75,7 @@ export function LearningFields({
         value={input.notes}
         onChange={(e) => onChange({ ...input, notes: e.target.value })}
       />
-      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
         {input.notes.trim()
           ? "Notes-based learning: your notes set the content boundary. Missing coverage will be flagged."
           : "Topic-based learning: Sage can look up public web sources when needed. Add notes to study a specific document. AI-generated content is not independently verified."}
@@ -116,6 +116,7 @@ export function LearningSetup({
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [missingId, setMissingId] = useState<string | null>(null);
+  const [acceptedConflict, setAcceptedConflict] = useState(false);
   const missingCheckpoint = !!savedId && missingId === savedId;
   function change(v: LearningInput) {
     setInput(v);
@@ -124,13 +125,14 @@ export function LearningSetup({
         "Browser storage is unavailable. Copy your setup before leaving.",
       );
   }
-  function openLesson(id: string) {
-    removeLocal(key);
-    removeLocal(lessonKey);
+  function openLesson(id: string, submitted: LearningInput) {
+    if (JSON.stringify(readLocal(key, null)) === JSON.stringify(submitted))
+      removeLocal(key);
+    if (readLocal(lessonKey, null) === id) removeLocal(lessonKey);
     router.push(`/learn/${id}`);
   }
   async function create() {
-    if (locked.current || missingCheckpoint) return;
+    if (locked.current || missingCheckpoint || acceptedConflict) return;
     const parsed = learningInputSchema.safeParse(input);
     if (!parsed.success) {
       setError(
@@ -165,12 +167,16 @@ export function LearningSetup({
           "Browser storage is unavailable. Open the saved course before leaving.",
         );
       // A prior submission may have completed while its response was lost.
-      if (
-        lesson.accepted ||
-        (lesson.plan &&
-          JSON.stringify(lesson.input) === JSON.stringify(parsed.data))
-      ) {
-        openLesson(lesson.id);
+      const sameInput =
+        JSON.stringify(lesson.input) === JSON.stringify(parsed.data);
+      if (lesson.accepted && !sameInput) {
+        setAcceptedConflict(true);
+        throw new Error(
+          "The saved course already has an accepted outline for different inputs. Your new setup is retained. Start a new course with these inputs, or open the saved course.",
+        );
+      }
+      if (sameInput && (lesson.accepted || lesson.plan)) {
+        openLesson(lesson.id, parsed.data);
         return;
       }
       setBusy("planning");
@@ -187,7 +193,7 @@ export function LearningSetup({
       }
       if (!planned.learning)
         throw new Error("The course outline could not be loaded.");
-      openLesson(lesson.id);
+      openLesson(lesson.id, parsed.data);
     } catch (e) {
       if (
         !beforePlan &&
@@ -205,7 +211,7 @@ export function LearningSetup({
               input: parsed.data,
             })
           ) {
-            openLesson(beforePlan.id);
+            openLesson(beforePlan.id, parsed.data);
             return;
           }
         } catch {
@@ -248,7 +254,10 @@ export function LearningSetup({
           onChange={change}
           disabled={!!busy || !ready}
         />
-        <Button disabled={!!busy || !ready || missingCheckpoint} type="submit">
+        <Button
+          disabled={!!busy || !ready || missingCheckpoint || acceptedConflict}
+          type="submit"
+        >
           {busy === "saving"
             ? "Saving your setup…"
             : busy === "planning"
@@ -273,11 +282,12 @@ export function LearningSetup({
           {error}
         </p>
       )}
-      {missingCheckpoint && !busy && (
+      {(missingCheckpoint || acceptedConflict) && !busy && (
         <div className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
           <p>
-            The saved course is no longer available. Keep these inputs and start
-            a new course when ready.
+            {acceptedConflict
+              ? "These inputs differ from the accepted course. Start a separate course to use your new setup."
+              : "The saved course is no longer available. Keep these inputs and start a new course when ready."}
           </p>
           <Button
             variant="outline"
@@ -285,6 +295,7 @@ export function LearningSetup({
               removeLocal(lessonKey);
               setCreatedId(null);
               setMissingId(null);
+              setAcceptedConflict(false);
               setError("");
             }}
           >
@@ -300,7 +311,7 @@ export function LearningSetup({
         </p>
       )}
       {notice && <p role="status">{notice}</p>}
-      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
         Learn with Sage and Teach Pip share your AI allowance. Capacity is not
         reserved for a complete course.
       </p>

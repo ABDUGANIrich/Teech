@@ -30,7 +30,11 @@ createRoot(document.getElementById("root")!).render(
       TEST HARNESS · mocked API responses · no real account or database
     </p>
     {view === "auth" ? (
-      <AuthForm configured failed={false} />
+      <AuthForm
+        configured
+        failed={false}
+        next={new URLSearchParams(location.search).get("next") || undefined}
+      />
     ) : view === "password" ? (
       <PasswordForm />
     ) : view === "prefilled-setup" ? (

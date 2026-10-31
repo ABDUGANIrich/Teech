@@ -75,6 +75,12 @@ beforeEach(() => {
         const s = (args.p_mutation as { session?: Session } | null)?.session;
         if (s) m.rows.set("sessions", [{ id: s.id, owner: s.owner, data: s }]);
       }
+      if (name === "checkpoint_session_operation") {
+        const s = args.p_session as Session;
+        m.rows.set("sessions", [
+          { id: s.id, owner: s.owner, data: structuredClone(s) },
+        ]);
+      }
       return { data: null, error: null };
     });
 });
@@ -97,6 +103,56 @@ const action = (a: Record<string, unknown>) =>
     deletedSessionIds?: string[];
   }>;
 describe("server orchestration with deterministic AI and persistence doubles", () => {
+  it("replays a lost notes request using current owned state instead of an old snapshot", async () => {
+    const current = seed({
+      phase: "questions",
+      notes_revealed: true,
+      messages: [
+        { role: "user", text: "First explanation" },
+        { role: "student", text: "First question?" },
+        { role: "user", text: "Saved answer" },
+        { role: "student", text: "New question?" },
+      ],
+    });
+    const stale = { ...current, messages: current.messages.slice(0, 2) };
+    m.rpc.mockResolvedValueOnce({
+      data: { cached: true, result: { session: stale } },
+      error: null,
+    });
+    expect(
+      (await action({ action: "reveal", id: current.id })).session,
+    ).toEqual(current);
+    expect(m.question).not.toHaveBeenCalled();
+    expect(m.evaluation).not.toHaveBeenCalled();
+  });
+  it("checkpoints submitted writing and its question slot before calling the model", async () => {
+    const s = seed();
+    m.question.mockImplementation(async () => {
+      const saved = m.rows.get("sessions")![0].data as Session;
+      expect(saved.messages[0].text).toBe(
+        "A durable explanation of evaporation.",
+      );
+      expect(saved.question_calls).toBe(1);
+      return { question: null, conceptId: null };
+    });
+    m.evaluation.mockImplementation(async () => {
+      const saved = m.rows.get("sessions")![0].data as Session;
+      expect(saved.messages[0].text).toBe(
+        "A durable explanation of evaporation.",
+      );
+      expect(saved.question_calls).toBe(1);
+      return { results: [], strengths: [], revisit: [] };
+    });
+    expect(
+      (
+        await action({
+          action: "explain",
+          id: s.id,
+          text: "A durable explanation of evaporation.",
+        })
+      ).error,
+    ).toBeUndefined();
+  });
   it("rejects stale Student answers and typed finishes before any extra AI work", async () => {
     const s = seed({
       phase: "questions",

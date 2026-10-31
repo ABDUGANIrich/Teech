@@ -108,7 +108,7 @@ export function Landing() {
   return (
     <>
       <div className="mode-selector max-w-286 mx-auto pt-7 px-4 max-layout:px-8 max-mobile:px-[1.5625rem] max-mobile:pt-5">
-        <p className="text-center text-[0.5625rem] font-semibold tracking-[0.125rem] mb-3 text-olive-500 dark:text-olive-400">
+        <p className="text-center text-[0.5625rem] font-semibold tracking-[0.125rem] mb-3 text-olive-600 dark:text-olive-400">
           TODAY, I WANT TO…
         </p>
         <nav
@@ -145,7 +145,7 @@ export function Landing() {
                 );
               }}
               aria-current={mode === id ? "page" : undefined}
-              className={`inline-flex items-center justify-center gap-2 rounded-lg px-3 py-3 text-[0.8125rem] font-medium transition-colors max-phone:text-[0.6875rem] max-phone:px-2 ${mode === id ? "bg-white shadow-sm text-olive-800 dark:bg-neutral-800 dark:text-olive-200" : "text-olive-500 hover:bg-white/50 hover:text-olive-800 dark:text-olive-400 dark:hover:bg-neutral-800/50 dark:hover:text-olive-200"}`}
+              className={`inline-flex items-center justify-center gap-2 rounded-lg px-3 py-3 text-[0.8125rem] font-medium transition-colors max-phone:text-[0.75rem] max-phone:px-2 ${mode === id ? "bg-white shadow-sm text-olive-800 dark:bg-neutral-800 dark:text-olive-200" : "text-olive-600 hover:bg-white/50 hover:text-olive-800 dark:text-olive-400 dark:hover:bg-neutral-800/50 dark:hover:text-olive-200"}`}
             >
               <Icon aria-hidden="true" className="size-4 max-phone:size-3.5" />
               {label}
@@ -185,7 +185,7 @@ export function Landing() {
           </div>
           <p
             id="sample-note"
-            className="micro text-center text-[0.625rem] leading-[1.7] mt-3 mb-0 text-olive-500 dark:text-olive-400"
+            className="micro text-center text-[0.75rem] leading-[1.7] mt-3 mb-0 text-olive-600 dark:text-olive-400"
           >
             {content.sampleNote}
           </p>
@@ -223,7 +223,7 @@ export function Landing() {
             <div key={title} className="relative max-mobile:pl-11">
               <Icon
                 aria-hidden="true"
-                className="size-5 text-olive-500 mb-5 dark:text-olive-400 max-mobile:absolute max-mobile:left-0 max-mobile:top-0"
+                className="size-5 text-olive-600 mb-5 dark:text-olive-400 max-mobile:absolute max-mobile:left-0 max-mobile:top-0"
               />
               <span className="absolute right-0 top-0.5 text-[0.6875rem] text-stone-400 dark:text-olive-400">
                 0{index + 1}
@@ -238,7 +238,7 @@ export function Landing() {
             <div key={title} className="flex gap-3">
               <Icon
                 aria-hidden="true"
-                className="size-5 mt-0.5 text-olive-500 dark:text-olive-400"
+                className="size-5 mt-0.5 text-olive-600 dark:text-olive-400"
               />
               <div>
                 <h3 className="text-[0.875rem] mb-2">{title}</h3>
@@ -247,7 +247,7 @@ export function Landing() {
             </div>
           ))}
         </div>
-        <div className="honest-note mt-7 flex gap-2.5 items-start text-olive-500 dark:text-olive-400">
+        <div className="honest-note mt-7 flex gap-2.5 items-start text-olive-600 dark:text-olive-400">
           <Check aria-hidden="true" className="size-4 mt-0.5" />
           <p className="text-[0.6875rem] leading-[1.7] mb-0">
             {content.honestNote}

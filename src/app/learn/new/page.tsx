@@ -3,14 +3,20 @@ import { Shell } from "@/components/shell";
 import { LearningSetup } from "@/components/learning-setup";
 import { user } from "@/lib/server/db";
 import { readTopic } from "@/lib/server/service";
+import { signInPath } from "@/lib/auth-navigation";
 export default async function NewLesson({
   searchParams,
 }: {
   searchParams: Promise<{ topic?: string }>;
 }) {
   const u = await user();
-  if (!u) redirect("/signin");
   const { topic } = await searchParams;
+  if (!u)
+    redirect(
+      signInPath(
+        `/learn/new${topic ? `?${new URLSearchParams({ topic })}` : ""}`,
+      ),
+    );
   const selected = topic ? (await readTopic(topic)).topic : undefined;
   return (
     <Shell signedIn>

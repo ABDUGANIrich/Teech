@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     );
   try {
     const raw = await req.text();
-    if (raw.length > 2000)
+    if (raw.length > 5000)
       throw new AppError("This request is too large.", 413);
     return NextResponse.json(await authAction(JSON.parse(raw), origin), {
       headers,

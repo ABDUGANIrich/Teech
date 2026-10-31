@@ -69,7 +69,7 @@ function setup(
       return Response.json({
         data: [
           {
-            id: "nvidia/nemotron-3-super-120b-a12b:free",
+            id: "nvidia/nemotron-3.5-super-vl:free",
             pricing: { prompt: "0", completion: "0" },
             supported_parameters: [
               "structured_outputs",

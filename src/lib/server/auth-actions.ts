@@ -2,19 +2,23 @@ import "server-only";
 import { z } from "zod";
 import { AppError } from "../domain";
 import { authClient } from "./db";
+import { authDestination } from "../auth-navigation";
 const email = z.string().trim().email().max(254);
 const password = z.string().min(8).max(128);
+const next = z.string().max(2048).optional();
 const schema = z.discriminatedUnion("mode", [
-  z.object({ mode: z.literal("signin"), email, password }),
-  z.object({ mode: z.literal("signup"), email, password }),
-  z.object({ mode: z.literal("recover"), email }),
-  z.object({ mode: z.literal("resend"), email }),
+  z.object({ mode: z.literal("signin"), email, password, next }),
+  z.object({ mode: z.literal("signup"), email, password, next }),
+  z.object({ mode: z.literal("recover"), email, next }),
+  z.object({ mode: z.literal("resend"), email, next }),
   z.object({ mode: z.literal("update-password"), password }),
   z.object({ mode: z.literal("signout") }),
 ]);
 export async function authAction(input: unknown, origin: string) {
   const a = schema.parse(input);
   const c = await authClient();
+  const destination = authDestination("next" in a ? a.next : undefined);
+  const confirmUrl = `${origin}/auth/confirm?${new URLSearchParams({ next: destination })}`;
   if (a.mode === "signout") {
     const { error } = await c.auth.signOut();
     if (error) throw new AppError("Could not sign out. Try again.", 503);
@@ -39,12 +43,12 @@ export async function authAction(input: unknown, origin: string) {
     const { error } =
       a.mode === "recover"
         ? await c.auth.resetPasswordForEmail(a.email, {
-            redirectTo: `${origin}/auth/confirm?next=/reset-password`,
+            redirectTo: `${origin}/auth/confirm?${new URLSearchParams({ next: "/reset-password", ...(destination !== "/library" ? { returnTo: destination } : {}) })}`,
           })
         : await c.auth.resend({
             type: "signup",
             email: a.email,
-            options: { emailRedirectTo: `${origin}/auth/confirm` },
+            options: { emailRedirectTo: confirmUrl },
           });
     if (error)
       throw new AppError(
@@ -64,7 +68,7 @@ export async function authAction(input: unknown, origin: string) {
     a.mode === "signup"
       ? await c.auth.signUp({
           ...credentials,
-          options: { emailRedirectTo: `${origin}/auth/confirm` },
+          options: { emailRedirectTo: confirmUrl },
         })
       : await c.auth.signInWithPassword(credentials);
   if (error)

@@ -21,12 +21,12 @@ The library requests compact attempt records, loads only current checklist versi
 The auth form supports password-reset requests and confirmation-email resends. The reset page requires a verified session and checks password confirmation. With Supabase SSR, configure the **Reset password** email template to use the token-hash callback:
 
 ```html
-<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery"
+<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=recovery&amp;redirect_to={{ .RedirectTo | urlquery }}"
   >Reset password</a
 >
 ```
 
-Allow the production callback URL and `APP_URL/auth/confirm?next=/reset-password` in Supabase Redirect URLs, with explicit development equivalents when needed. The callback also supports PKCE codes and accepts only the fixed reset-page destination. Email delivery still needs working Supabase SMTP; a successful request does not establish that an email was delivered. These flows follow [Supabase's password recovery guidance](https://supabase.com/docs/guides/auth/passwords).
+Keep the supplied `RedirectTo` as a URL-encoded `redirect_to` parameter so the requested application destination survives email confirmation and password recovery. The fixed Site URL callback works with both the previous deployed app and the updated app, whether the supplied redirect has query parameters or not. The updated handler accepts nested callback destinations only from the configured app origin and `/auth/confirm` path. Allow callbacks on the exact production origin and `/auth/confirm` path, including their `next` and `returnTo` query parameters, with explicit development equivalents when needed. The callback also supports PKCE codes and permits only known application destinations; recovery always visits the password-reset form first. Email delivery still needs working Supabase SMTP; a successful request does not establish that an email was delivered. These flows follow [Supabase's password recovery guidance](https://supabase.com/docs/guides/auth/passwords).
 
 Quota admission and caps are unchanged. After a denied AI reservation, the server distinguishes personal daily, shared daily and rolling-minute exhaustion where diagnostics are available. Provider capacity errors are labeled separately. Diagnostic failures do not bypass admission.
 
@@ -79,7 +79,7 @@ V1 excludes voice, uploads/OCR, browsing, code execution, integrations, classroo
 
 ### Teacher verification
 
-Use the existing commands below. Teacher domain/provider tests use deterministic fixtures; teacher service tests execute **all four real migrations in embedded PostgreSQL** with deterministic AI doubles. They cover the complete notes-free path, durable pending answers, failed grading recovery, concurrent clicks, stale versions, key conflicts, bounded help/adaptation, assistance/reveal replay, private-table permissions, account isolation, shared/lifetime quotas, handoff atomicity and deletion. Provider tests exercise the real shared transport against mocked catalog/completion responses, including invalid quotations, schema repair, unknown item IDs, uncertainty, timeouts and narrow-source rejection.
+Use the existing commands below. Teacher domain/provider tests use deterministic fixtures; teacher service tests execute **all five real migrations in embedded PostgreSQL** with deterministic AI doubles. They cover the complete notes-free path, durable pending answers, failed grading recovery, concurrent clicks, stale versions, key conflicts, bounded help/adaptation, assistance/reveal replay, private-table permissions, account isolation, shared/lifetime quotas, handoff atomicity and deletion. Provider tests exercise the real shared transport against mocked catalog/completion responses, including invalid quotations, schema repair, unknown item IDs, uncertainty, timeouts and narrow-source rejection.
 
 Playwright runs the actual public fixed sample and personal components in the existing isolated Vite harness with intercepted APIs. These are **not live Auth/database/provider proof**. Use `npm run test:e2e -- --workers=4` on this Windows checkout. The installed Next development metadata loader has an apostrophe-path compilation issue when requesting `sitemap.xml`; crawler checks should use the production build (`npm run build`, then `npm start`) rather than that development endpoint. The production build is not affected in the verified run.
 
@@ -105,13 +105,13 @@ With no credentials, `/sample` is an explicitly labeled, browser-local **fixture
 
 ## Supabase setup
 
-1. Create a Supabase project. Run `supabase/migrations/001_teech.sql`, then `supabase/migrations/002_anonymous_daily_pool.sql`, then `supabase/migrations/003_personal_minute_limit.sql` in its SQL editor, or link the project and apply the migrations with `supabase db push`. For an existing installation, run only the new migration.
+1. Create a Supabase project. Run `supabase/migrations/001_teech.sql`, then `supabase/migrations/002_anonymous_daily_pool.sql`, then `supabase/migrations/003_personal_minute_limit.sql`, `supabase/migrations/004_teacher_mode.sql`, and `supabase/migrations/005_student_checkpoints.sql` in its SQL editor, or link the project and apply the migrations with `supabase db push`. For an existing installation, run only the new migration.
 2. Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (the project's publishable key or legacy anon key), and **server-only** `SUPABASE_SERVICE_ROLE_KEY`. Never prefix the service key with `NEXT_PUBLIC_`.
 3. In Authentication → Providers, enable email/password. Keep email confirmation enabled. Set the Site URL to your exact `APP_URL`, and allow `APP_URL/auth/confirm` in Redirect URLs, plus your explicit local-development equivalent. Avoid broad production wildcards.
 4. In the **Confirm signup** email template, use the server verification endpoint:
 
    ```html
-   <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email"
+   <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email&amp;redirect_to={{ .RedirectTo | urlquery }}"
      >Confirm your email</a
    >
    ```
@@ -125,7 +125,7 @@ The browser has SELECT-only access to owned topics, owned checklist versions, an
 
 ## OpenRouter setup
 
-Set `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and `OPENROUTER_ALLOWED_MODELS`. The default is `nvidia/nemotron-3-super-120b-a12b:free`, confirmed in the live official `/api/v1/models` catalog on **2026-10-13** with zero prompt/completion prices and `structured_outputs` support. Indexed web model pages disagreed with the live catalog, so the catalog was used. This is availability metadata, **not a successful inference test**.
+Set `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and `OPENROUTER_ALLOWED_MODELS`. The default is `nvidia/nemotron-3.5-super-vl:free`, confirmed in the live official `/api/v1/models` catalog on **2026-10-31** with zero prompt/completion prices, `structured_outputs`, native `tools` and `tool_choice` support, and one listed endpoint. This is availability metadata, **not a successful inference test**.
 
 The server checks the live model catalog (cached for five minutes), zero prices, and structured-output support before calls. Both the explicit allowlist and `:free` suffix are required. It sends `json_schema`, requires supporting provider parameters, caps prices at zero, and disables provider fallback and optional reasoning. The reasoning setting keeps the response budget available for structured feedback; see [OpenRouter reasoning controls](https://openrouter.ai/docs/guides/best-practices/reasoning-tokens). There is no paid-model fallback, no tools, and no model selection in the UI. If the default disappears, choose a currently available free structured-output model in the official catalog and explicitly update both model variables.
 
@@ -170,6 +170,10 @@ Deploy as a **Node Next.js application**, for example on Vercel or a Node host. 
 Do not deploy `tests/harness` as a separate public app. It is an isolated local Vite harness with mocked endpoints, not an authentication bypass or production route.
 
 For a small deployment, periodically remove stale anonymous sessions, operation caches, and usage events using the Supabase SQL editor. Retain usage events at least through the current UTC day and all active operations. Operations contain cached user output; do not retain them indefinitely. A suggested retention policy is 7 days for anonymous sessions, 30 days for completed operation results, and 7 days for usage events. No background worker is required by the MVP. Account deletion cascades personal topics and signed-in sessions. Remove completed operation caches for that `user:<id>` actor as part of account administration. Topic deletion also purges its completed session/topic request snapshots; unlinked extraction caches expire under the retention policy.
+
+## Student recovery update
+
+Apply `supabase/migrations/005_student_checkpoints.sql` after 004 before deploying this version. Pip checkpoints submitted writing and the consumed question slot before external AI work, retaining the operation lease until its final commit. Cached session operations return current owned state, so a recovered notes request cannot roll the UI back. Topic saves clear only the draft that was submitted, and an accepted course with different setup inputs requires an explicit new-course choice. Sign-in, email confirmation and password recovery preserve validated application destinations.
 
 ## Verification
 

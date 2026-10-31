@@ -10,7 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { Button } from "./ui/button";
-import { api, readLocal, writeLocal } from "@/lib/client";
+import { api, readLocal, removeLocal, writeLocal } from "@/lib/client";
 import {
   topicInputSchema,
   validateConcepts,
@@ -166,9 +166,9 @@ function TopicDraft({ edit, userId }: EditorProps) {
       });
       if (d.conflict && d.topic) setConflict(d.topic);
       if (d.error) throw new Error(d.error);
-      try {
-        localStorage.removeItem(key);
-      } catch {}
+      const submitted = { title, notes, concepts, version };
+      if (JSON.stringify(readLocal(key, null)) === JSON.stringify(submitted))
+        removeLocal(key);
       router.push("/library");
       router.refresh();
     } catch (e) {
@@ -304,10 +304,10 @@ function TopicDraft({ edit, userId }: EditorProps) {
                 saveDraft(title, e.target.value, concepts);
               }}
             />
-            <p className="micro right text-[0.6875rem] leading-[1.7] text-olive-500 text-right dark:text-olive-400">
+            <p className="micro right text-[0.6875rem] leading-[1.7] text-olive-600 text-right dark:text-olive-400">
               {notes.length.toLocaleString()} / 18,000 characters
             </p>
-            <p className="privacy-inline text-[0.6875rem] text-olive-500 mx-0 my-5 dark:text-olive-400">
+            <p className="privacy-inline text-[0.6875rem] text-olive-600 mx-0 my-5 dark:text-olive-400">
               Your notes and explanations are sent to OpenRouter and its AI
               provider. Avoid including private or sensitive information.
             </p>
@@ -359,7 +359,7 @@ function TopicDraft({ edit, userId }: EditorProps) {
                   </p>
                   <h2>Your concept checklist</h2>
                 </div>
-                <span className="quiet-badge text-[0.5625rem] tracking-[0.06875rem] text-olive-500 border-solid bg-olive-100 rounded-[0.3125rem] px-2 py-1 border-[0.0625rem] border-olive-300 dark:text-olive-400 dark:bg-olive-800 dark:border-olive-700">
+                <span className="quiet-badge text-[0.5625rem] tracking-[0.06875rem] text-olive-600 border-solid bg-olive-100 rounded-[0.3125rem] px-2 py-1 border-[0.0625rem] border-olive-300 dark:text-olive-400 dark:bg-olive-800 dark:border-olive-700">
                   {concepts.length} / 8 CONCEPTS
                 </span>
               </div>
@@ -370,7 +370,7 @@ function TopicDraft({ edit, userId }: EditorProps) {
               {concepts.map((c, i) => (
                 <fieldset
                   key={c.id}
-                  className="concept-edit border-solid rounded-lg pt-[0.9375rem] pb-6 min-w-0 bg-olive-100 mx-0 my-6 px-5.5 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_legend]:text-[0.625rem] [&_legend]:text-olive-500 [&_legend]:px-2 [&_legend]:py-0 dark:[&_legend]:text-olive-400 [&_.section-row]:mb-1.5 [&_.section-row_label]:m-0 [&_input]:mb-[0.9375rem] [&_input]:text-[0.8125rem] [&_textarea]:mb-[0.9375rem] [&_textarea]:text-[0.8125rem] [&_textarea:last-of-type]:m-0 max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem] max-mobile:pt-3 max-mobile:pb-5 max-mobile:px-[0.9375rem]"
+                  className="concept-edit border-solid rounded-lg pt-[0.9375rem] pb-6 min-w-0 bg-olive-100 mx-0 my-6 px-5.5 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_legend]:text-[0.625rem] [&_legend]:text-olive-600 [&_legend]:px-2 [&_legend]:py-0 dark:[&_legend]:text-olive-400 [&_.section-row]:mb-1.5 [&_.section-row_label]:m-0 [&_input]:mb-[0.9375rem] [&_input]:text-[0.8125rem] [&_textarea]:mb-[0.9375rem] [&_textarea]:text-[0.8125rem] [&_textarea:last-of-type]:m-0 max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem] max-mobile:pt-3 max-mobile:pb-5 max-mobile:px-[0.9375rem]"
                   disabled={busy}
                 >
                   <legend>Concept {i + 1}</legend>

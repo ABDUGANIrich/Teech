@@ -214,7 +214,7 @@ export function Library() {
               key={t.id}
               className="topic-row flex items-start gap-6 border-t-[0.0625rem] border-solid border-t-olive-300 px-0 py-6.5 dark:border-t-olive-700 max-mobile:gap-3.5 max-mobile:flex-wrap"
             >
-              <div className="topic-symbol bg-olive-200 text-olive-500 w-13 h-15 rounded-[0.4375rem] grid place-items-center shrink-0 dark:bg-olive-800 dark:text-olive-400 max-mobile:w-10 max-mobile:h-12">
+              <div className="topic-symbol bg-olive-200 text-olive-600 w-13 h-15 rounded-[0.4375rem] grid place-items-center shrink-0 dark:bg-olive-800 dark:text-olive-400 max-mobile:w-10 max-mobile:h-12">
                 <BookOpen className="size-6" />
               </div>
               <div className="topic-info flex-[1] min-w-0 [&_h2]:mt-[0.1875rem] [&_h2]:mb-2.5 [&_h2]:wrap-anywhere [&_h2]:mx-0 [&_p]:text-[0.6875rem] [&_p]:mb-[0.1875rem] max-mobile:[&_h2]:text-[1.375rem]">
@@ -235,7 +235,7 @@ export function Library() {
                         <Link
                           key={s.id}
                           href={`/teach/${s.id}`}
-                          className="attempt-link flex justify-between gap-[0.9375rem] text-[0.6875rem] text-olive-500 max-w-110 px-0 py-[0.4375rem] dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-[0.3125rem]"
+                          className="attempt-link flex justify-between gap-[0.9375rem] text-[0.6875rem] text-olive-600 max-w-110 px-0 py-[0.4375rem] dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-[0.3125rem]"
                         >
                           {new Date(s.created_at).toLocaleString()}
                           <span>
@@ -295,7 +295,7 @@ export function Library() {
               <Link
                 key={s.id}
                 href={`/teach/${s.id}`}
-                className="attempt-link flex justify-between gap-[0.9375rem] text-[0.6875rem] text-olive-500 max-w-110 px-0 py-[0.4375rem] dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-[0.3125rem]"
+                className="attempt-link flex justify-between gap-[0.9375rem] text-[0.6875rem] text-olive-600 max-w-110 px-0 py-[0.4375rem] dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-[0.3125rem]"
               >
                 <span>
                   {s.title} · {new Date(s.created_at).toLocaleString()}
@@ -346,7 +346,7 @@ export function Library() {
         </div>
       )}
       <div className="library-footer mt-7 flex items-center justify-between gap-[0.9375rem] [&_p]:m-0 max-mobile:items-start max-mobile:flex-col">
-        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
           Your courses, topics and attempts are saved to your account. Drafts
           also stay on this device.
         </p>

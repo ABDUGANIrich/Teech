@@ -17,6 +17,9 @@ beforeEach(async () => {
   await db.exec(
     readFileSync("supabase/migrations/003_personal_minute_limit.sql", "utf8"),
   );
+  await db.exec(
+    readFileSync("supabase/migrations/005_student_checkpoints.sql", "utf8"),
+  );
 });
 afterEach(async () => {
   await db.close();
@@ -142,6 +145,86 @@ describe("real SQL quotas and deduplication (embedded PostgreSQL)", () => {
   });
 });
 describe("database access boundaries", () => {
+  it("retains checkpointed writing after a crashed operation and restricts checkpoint ownership and source", async () => {
+    const id = randomUUID();
+    const key = randomUUID();
+    const owner = `user:${uid}`;
+    const original = {
+      id,
+      owner,
+      topic_id: null,
+      notes: "Immutable source",
+      messages: [],
+      phase: "explain",
+      question_calls: 0,
+    };
+    await db.query("insert into sessions(id,owner,data) values($1,$2,$3)", [
+      id,
+      owner,
+      JSON.stringify(original),
+    ]);
+    await db.query("select begin_operation($1,$2,$3,'checkpoint')", [
+      owner,
+      key,
+      `session:${id}`,
+    ]);
+    const saved = {
+      ...original,
+      phase: "questions",
+      question_calls: 1,
+      messages: [{ role: "user", text: "Saved before inference" }],
+    };
+    await db.query("select checkpoint_session_operation($1,$2,$3)", [
+      owner,
+      key,
+      JSON.stringify(saved),
+    ]);
+    await expect(
+      db.query("select checkpoint_session_operation($1,$2,$3)", [
+        owner,
+        key,
+        JSON.stringify({ ...saved, notes: "Changed source" }),
+      ]),
+    ).rejects.toThrow(/INVALID_CHECKPOINT/);
+    await expect(
+      db.query("select checkpoint_session_operation($1,$2,$3)", [
+        owner,
+        key,
+        JSON.stringify({ ...saved, owner: `user:${uid2}` }),
+      ]),
+    ).rejects.toThrow(/FORBIDDEN/);
+    await db.exec(
+      "update operations set created_at=now()-interval '5 minutes'",
+    );
+    await db.query("select begin_operation($1,$2,$3,'checkpoint')", [
+      owner,
+      key,
+      `session:${id}`,
+    ]);
+    expect(
+      (
+        await db.query<{ data: unknown }>(
+          "select data from sessions where id=$1",
+          [id],
+        )
+      ).rows[0].data,
+    ).toEqual(saved);
+    await expect(
+      db.query("select checkpoint_session_operation($1,$2,$3)", [
+        owner,
+        key,
+        JSON.stringify(saved),
+      ]),
+    ).rejects.toThrow(/REQUEST_NOT_ACTIVE/);
+    await db.exec("set role authenticated");
+    await expect(
+      db.query("select checkpoint_session_operation($1,$2,$3)", [
+        owner,
+        key,
+        JSON.stringify(saved),
+      ]),
+    ).rejects.toThrow(/permission/);
+  });
   it("RLS isolates topics, checklists, and sessions; browser writes and RPCs are forbidden", async () => {
     const topic = randomUUID();
     await db.query(

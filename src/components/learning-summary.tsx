@@ -70,7 +70,7 @@ export function LearningSummary({
           }{" "}
           unresolved or unattempted
         </p>
-        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
           Disputed and uncertain judgments are excluded from definitive
           conclusions. Correct choices indicate agreement with generated keys.
         </p>
@@ -178,7 +178,7 @@ export function LearningSummary({
         </section>
       )}
       {s.targetedUsed && (
-        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+        <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
           First-attempt results remain above.{" "}
           {s.targeted
             ? "The extra practice pair is saved separately."

@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Student } from "./student";
+import { authDestination } from "@/lib/auth-navigation";
 export function AuthForm({
   configured,
   failed,
+  next = "/library",
 }: {
   configured: boolean;
   failed: boolean;
+  next?: string;
 }) {
   const router = useRouter();
   const [mode, setMode] = useState<"signin" | "signup" | "recover" | "resend">(
@@ -37,6 +40,7 @@ export function AuthForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode,
+          next: authDestination(next),
           email: form.get("email"),
           ...(!emailOnly ? { password: form.get("password") } : {}),
         }),
@@ -49,7 +53,7 @@ export function AuthForm({
           "Check your email for a confirmation link, then return here to sign in. If no email arrives, check spam and the project’s email delivery configuration.",
         );
       else {
-        router.push("/library");
+        router.push(authDestination(next));
         router.refresh();
       }
     } catch (e) {
@@ -188,7 +192,7 @@ export function AuthForm({
           {mode === "resend" ? "Back to sign in" : "Resend confirmation"}
         </Button>
       </div>
-      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+      <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
         Email verification may be required before your first sign-in.
       </p>
     </div>

@@ -161,7 +161,7 @@ function PracticeItem({
         </form>
       ) : (
         <div>
-          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
             Original response (frozen)
           </p>
           <pre className="saved-answer whitespace-pre-wrap wrap-anywhere break-words rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800">
@@ -259,7 +259,7 @@ function PracticeItem({
         >
           <h3>Worked review</h3>
           <p>{a.solution}</p>
-          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-500 dark:text-olive-400">
+          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
             A revealed solution cannot count as independently solved.
           </p>
         </div>
