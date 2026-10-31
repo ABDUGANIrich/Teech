@@ -31,7 +31,7 @@ export function LearningFields({
   return (
     <fieldset
       disabled={disabled}
-      className="learning-fields min-w-0 mt-0 mb-5.5 mx-0 p-0 border-0 [&_label]:block [&_label]:mt-4.5 [&_label]:mb-1.5 [&_label]:font-semibold [&_input]:w-full [&_input]:min-w-0 [&_input]:border-solid [&_input]:rounded-lg [&_input]:bg-white [&_input]:text-olive-800 [&_input]:px-[0.8125rem] [&_input]:py-[0.6875rem] [&_input]:border-[0.0625rem] [&_input]:border-olive-300 dark:[&_input]:bg-neutral-800 dark:[&_input]:text-olive-200 dark:[&_input]:border-olive-700 [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:border-solid [&_textarea]:rounded-lg [&_textarea]:bg-white [&_textarea]:text-olive-800 [&_textarea]:px-[0.8125rem] [&_textarea]:py-[0.6875rem] [&_textarea]:border-[0.0625rem] [&_textarea]:border-olive-300 dark:[&_textarea]:bg-neutral-800 dark:[&_textarea]:text-olive-200 dark:[&_textarea]:border-olive-700 [&_select]:w-full [&_select]:min-w-0 [&_select]:border-solid [&_select]:rounded-lg [&_select]:bg-white [&_select]:text-olive-800 [&_select]:whitespace-normal [&_select]:mb-3.5 [&_select]:px-[0.8125rem] [&_select]:py-[0.6875rem] [&_select]:border-[0.0625rem] [&_select]:border-olive-300 dark:[&_select]:bg-neutral-800 dark:[&_select]:text-olive-200 dark:[&_select]:border-olive-700 [&_.micro]:mt-2.5 max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem] max-mobile:[&_select]:text-[1rem]"
+      className="learning-fields min-w-0 mt-0 mb-5.5 mx-0 p-0 border-0 [&_label]:block [&_label]:mt-4.5 [&_label]:mb-1.5 [&_label]:font-semibold [&_input]:w-full [&_input]:min-w-0 [&_input]:border-solid [&_input]:rounded-lg [&_input]:bg-white [&_input]:text-olive-800 [&_input]:px-3.25 [&_input]:py-2.75 [&_input]:border [&_input]:border-olive-300 dark:[&_input]:bg-neutral-800 dark:[&_input]:text-olive-200 dark:[&_input]:border-olive-700 [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:border-solid [&_textarea]:rounded-lg [&_textarea]:bg-white [&_textarea]:text-olive-800 [&_textarea]:px-3.25 [&_textarea]:py-2.75 [&_textarea]:border [&_textarea]:border-olive-300 dark:[&_textarea]:bg-neutral-800 dark:[&_textarea]:text-olive-200 dark:[&_textarea]:border-olive-700 [&_select]:w-full [&_select]:min-w-0 [&_select]:border-solid [&_select]:rounded-lg [&_select]:bg-white [&_select]:text-olive-800 [&_select]:whitespace-normal [&_select]:mb-3.5 [&_select]:px-3.25 [&_select]:py-2.75 [&_select]:border [&_select]:border-olive-300 dark:[&_select]:bg-neutral-800 dark:[&_select]:text-olive-200 dark:[&_select]:border-olive-700 [&_.micro]:mt-2.5 max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem] max-mobile:[&_select]:text-[1rem]"
     >
       <label htmlFor="learn-topic">Topic</label>
       <input
@@ -227,7 +227,7 @@ export function LearningSetup({
     }
   }
   return (
-    <div className="page learning-setup max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 [&_.button]:whitespace-normal [&_.button]:h-auto [&_.button]:min-h-10 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
+    <div className="page learning-setup max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 [&_.button]:whitespace-normal [&_.button]:h-auto [&_.button]:min-h-10 max-mobile:pt-6.25 max-mobile:pb-2.5 max-mobile:px-4.5">
       <Link
         href="/library"
         className="back-link inline-flex items-center gap-2 text-[0.6875rem] text-neutral-500 dark:text-olive-400"
@@ -276,7 +276,7 @@ export function LearningSetup({
       )}
       {error && (
         <p
-          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-3.75 border border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
           role="alert"
         >
           {error}

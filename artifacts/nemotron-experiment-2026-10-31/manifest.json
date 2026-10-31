@@ -1,0 +1,230 @@
+{
+  "createdAt": "2026-10-31T09:14:22.750Z",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "maxRequests": 180,
+  "admissionIntervalMs": 4500,
+  "concurrency": 2,
+  "initialAccountQuota": {
+    "used": 5,
+    "limit": 1000,
+    "remaining": 995
+  },
+  "metadata": {
+    "id": "nvidia/nemotron-3.5-super-vl:free",
+    "canonical_slug": "nvidia/nemotron-3.5-super-vl-20261015",
+    "hugging_face_id": "nvidia/NVIDIA-Nemotron-3.5-Super-VL",
+    "name": "NVIDIA: Nemotron 3.5 Super VL (free)",
+    "created": 1792076662,
+    "description": "NVIDIA Nemotron 3.5 Super VL is an open multimodal mixture-of-experts model from NVIDIA, with 12B active parameters out of 120B total. It takes text, images, documents, GUI screenshots, and video...",
+    "context_length": 1000000,
+    "architecture": {
+      "modality": "text+image+video->text",
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "tokenizer": "Other",
+      "instruct_type": null
+    },
+    "pricing": {
+      "prompt": "0",
+      "completion": "0"
+    },
+    "top_provider": {
+      "context_length": 1000000,
+      "max_completion_tokens": 131072,
+      "is_moderated": false
+    },
+    "per_request_limits": null,
+    "supported_parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "response_format",
+      "seed",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "default_parameters": {},
+    "supported_voices": null,
+    "knowledge_cutoff": null,
+    "expiration_date": null,
+    "links": {
+      "details": "/api/v1/models/nvidia/nemotron-3.5-super-vl-20261015/endpoints"
+    },
+    "endpoints": [
+      "/api/v1/chat/completions",
+      "/api/v1/completions",
+      "/api/v1/messages",
+      "/api/v1/responses"
+    ],
+    "benchmarks": {
+      "design_arena": [
+        {
+          "arena": "models",
+          "category": "3d",
+          "elo": 1119,
+          "win_rate": 28.9,
+          "rank": 84
+        },
+        {
+          "arena": "models",
+          "category": "codecategories",
+          "elo": 1151,
+          "win_rate": 33.2,
+          "rank": 86
+        },
+        {
+          "arena": "models",
+          "category": "gamedev",
+          "elo": 1106,
+          "win_rate": 29.4,
+          "rank": 95
+        },
+        {
+          "arena": "models",
+          "category": "uicomponent",
+          "elo": 1133,
+          "win_rate": 30.6,
+          "rank": 86
+        },
+        {
+          "arena": "models",
+          "category": "website",
+          "elo": 1168,
+          "win_rate": 35.3,
+          "rank": 83
+        }
+      ],
+      "artificial_analysis": {
+        "intelligence_index": 13.6,
+        "coding_index": null,
+        "agentic_index": null
+      }
+    },
+    "reasoning": {
+      "mandatory": false
+    }
+  },
+  "sourceHashes": {
+    "src/lib/server/ai.ts": "37814565f6e93210f440f1a7a30a809b05ffbefe6ae93a96193ab8de19e0a259",
+    "src/lib/server/teacher-ai.ts": "3dd94ed4822bea1eb7f047c55ac94e3f5321dc4a4f3899b2fc47a2a8b0471b7d",
+    "src/lib/server/teacher-research.ts": "69103c2697ee34c1ae3104a35bfdcd99f02b3befe02f68d32650256291d06d7e",
+    "src/lib/domain.ts": "90921f41f2ad9fffb1a63a9ce0296f76484d5b17bf49685914981ee6e90c06a4",
+    "src/lib/learning.ts": "b68d0b347988e6dcd3dfc8bb981f4f3cff7859c792d551da87242eee218bb1d1"
+  },
+  "configurations": [
+    {
+      "id": "t0.1-off",
+      "temperature": 0.1,
+      "effort": "off"
+    },
+    {
+      "id": "t0.1-low",
+      "temperature": 0.1,
+      "effort": "low"
+    },
+    {
+      "id": "t0.1-medium",
+      "temperature": 0.1,
+      "effort": "medium"
+    },
+    {
+      "id": "t0.1-high",
+      "temperature": 0.1,
+      "effort": "high"
+    },
+    {
+      "id": "t0.3-off",
+      "temperature": 0.3,
+      "effort": "off"
+    },
+    {
+      "id": "t0.3-low",
+      "temperature": 0.3,
+      "effort": "low"
+    },
+    {
+      "id": "t0.3-medium",
+      "temperature": 0.3,
+      "effort": "medium"
+    },
+    {
+      "id": "t0.3-high",
+      "temperature": 0.3,
+      "effort": "high"
+    },
+    {
+      "id": "t0.7-off",
+      "temperature": 0.7,
+      "effort": "off"
+    },
+    {
+      "id": "t0.7-low",
+      "temperature": 0.7,
+      "effort": "low"
+    },
+    {
+      "id": "t0.7-medium",
+      "temperature": 0.7,
+      "effort": "medium"
+    },
+    {
+      "id": "t0.7-high",
+      "temperature": 0.7,
+      "effort": "high"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "extract-injection",
+      "family": "extraction"
+    },
+    {
+      "id": "review-mixed",
+      "family": "evaluation"
+    },
+    {
+      "id": "unit-binary-search",
+      "family": "unit"
+    },
+    {
+      "id": "grade-correct-alternative",
+      "family": "grading"
+    },
+    {
+      "id": "grade-wrong-trace",
+      "family": "grading"
+    },
+    {
+      "id": "research-current-api",
+      "family": "tools"
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "question-omission",
+      "family": "question"
+    },
+    {
+      "id": "plan-insufficient-notes",
+      "family": "planning"
+    },
+    {
+      "id": "clarification-scope",
+      "family": "clarification"
+    },
+    {
+      "id": "review-unsupported",
+      "family": "evaluation"
+    }
+  ],
+  "methodology": "Real production prompts and validators. Fixed synthetic notes/answers, fixed Keenable evidence, no DB writes. No model judge. Deterministic checks are narrow rubric proxies, not a comprehensive accuracy score. Provider reasoning text is not stored. Existing output budgets/deadlines retained."
+}

@@ -18,7 +18,7 @@ const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const admin = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY, options);
 const users = [];
 const report = {
-  date: "2026-10-17",
+  date: new Date().toISOString(),
   origin,
   checks: {},
   providerCalls: 0,

@@ -107,7 +107,7 @@ export function Landing() {
   const content = modes[mode];
   return (
     <>
-      <div className="mode-selector max-w-286 mx-auto pt-7 px-4 max-layout:px-8 max-mobile:px-[1.5625rem] max-mobile:pt-5">
+      <div className="mode-selector max-w-286 mx-auto pt-7 px-4 max-layout:px-8 max-mobile:px-6.25 max-mobile:pt-5">
         <p className="text-center text-[0.5625rem] font-semibold tracking-[0.125rem] mb-3 text-olive-600 dark:text-olive-400">
           TODAY, I WANT TO…
         </p>
@@ -164,7 +164,7 @@ export function Landing() {
           >
             {content.title}
           </h1>
-          <div className="speech-bubble bg-white border border-olive-300 rounded-[0.875rem_0.875rem_0.875rem_0.1875rem] py-2 px-5 text-center font-serif text-[1.375rem] leading-[1.35] mt-3 -rotate-3 shadow-[0_0.25rem_0] shadow-olive-200 z-[1] dark:bg-neutral-800 dark:shadow-neutral-900 dark:border-olive-700 max-phone:mt-2 max-phone:text-[1.125rem]">
+          <div className="speech-bubble bg-white border border-olive-300 rounded-[0.875rem_0.875rem_0.875rem_0.1875rem] py-2 px-5 text-center font-serif text-[1.375rem] leading-[1.35] mt-3 -rotate-3 shadow-[0_0.25rem_0] shadow-olive-200 z-1 dark:bg-neutral-800 dark:shadow-neutral-900 dark:border-olive-700 max-phone:mt-2 max-phone:text-[1.125rem]">
             {content.quote}
           </div>
           {mode === "learn" ? <Teacher /> : <Student state="curious" />}
@@ -205,7 +205,7 @@ export function Landing() {
       </section>
       <section
         aria-labelledby="how-title"
-        className="how-section max-w-286 border-t border-olive-300 pt-8 mx-auto px-4 dark:border-olive-700 max-layout:mx-8 max-layout:px-0 max-mobile:mx-[1.5625rem]"
+        className="how-section max-w-286 border-t border-olive-300 pt-8 mx-auto px-4 dark:border-olive-700 max-layout:mx-8 max-layout:px-0 max-mobile:mx-6.25"
       >
         <p className="eyebrow text-[0.5625rem] tracking-[0.10625rem] font-semibold text-stone-500 mb-3 dark:text-olive-400">
           {mode === "learn"

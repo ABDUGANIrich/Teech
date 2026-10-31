@@ -1,7 +1,7 @@
 export function Teacher({ small = false }: { small?: boolean }) {
   return (
     <div
-      className={`teacher max-w-full shrink-0 [&_svg]:w-full [&_svg]:h-auto [&_svg]:block ${small ? "w-[6.5625rem]" : "w-50"}`}
+      className={`teacher max-w-full shrink-0 [&_svg]:w-full [&_svg]:h-auto [&_svg]:block ${small ? "w-26.25" : "w-50"}`}
       role="img"
       aria-label="Sage, your AI teacher, a friendly owl with glasses"
     >

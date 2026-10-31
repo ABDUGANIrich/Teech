@@ -9,7 +9,7 @@ export function Student({
 }) {
   return (
     <div
-      className={`student w-50 max-w-full shrink-0 [&_svg]:w-full [&_svg]:h-auto [&_svg]:block [&.student-small]:w-[6.5625rem] [&.student-thinking]:animate-[sway_2.5s_ease-in-out_infinite] student-${state} ${small ? "student-small" : ""}`}
+      className={`student w-50 max-w-full shrink-0 [&_svg]:w-full [&_svg]:h-auto [&_svg]:block [&.student-small]:w-26.25 [&.student-thinking]:animate-[sway_2.5s_ease-in-out_infinite] student-${state} ${small ? "student-small" : ""}`}
       role="img"
       aria-label={`Pip, your AI ${roleName}, is ${state}`}
     >

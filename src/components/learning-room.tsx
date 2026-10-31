@@ -28,7 +28,7 @@ import { z } from "zod";
 
 export function LessonBlocks({ blocks }: { blocks: Unit["explanation"] }) {
   return (
-    <div className="lesson-blocks text-[1rem] leading-[1.8] wrap-anywhere [&_p]:text-olive-800 [&_p]:whitespace-pre-wrap dark:[&_p]:text-olive-200 [&_figure]:mx-0 [&_figure]:my-5.5 [&_figcaption]:text-[0.75rem] [&_figcaption]:text-stone-500 dark:[&_figcaption]:text-olive-400 [&_pre]:whitespace-pre-wrap [&_pre]:wrap-anywhere [&_pre]:break-words [&_pre]:rounded-lg [&_pre]:bg-taupe-100 [&_pre]:text-[0.875rem] [&_pre]:leading-[1.7] [&_pre]:font-mono [&_pre]:max-w-full [&_pre]:p-4 dark:[&_pre]:bg-olive-800">
+    <div className="lesson-blocks text-[1rem] leading-[1.8] wrap-anywhere [&_p]:text-olive-800 [&_p]:whitespace-pre-wrap dark:[&_p]:text-olive-200 [&_figure]:mx-0 [&_figure]:my-5.5 [&_figcaption]:text-[0.75rem] [&_figcaption]:text-stone-500 dark:[&_figcaption]:text-olive-400 [&_pre]:whitespace-pre-wrap [&_pre]:wrap-anywhere [&_pre]:rounded-lg [&_pre]:bg-taupe-100 [&_pre]:text-[0.875rem] [&_pre]:leading-[1.7] [&_pre]:font-mono [&_pre]:max-w-full [&_pre]:p-4 dark:[&_pre]:bg-olive-800">
       {blocks.map((b, i) =>
         b.kind === "code" ? (
           <figure key={i}>
@@ -39,7 +39,7 @@ export function LessonBlocks({ blocks }: { blocks: Unit["explanation"] }) {
           </figure>
         ) : b.kind === "equation" ? (
           <pre
-            className="lesson-equation whitespace-pre-wrap wrap-anywhere break-words rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800"
+            className="lesson-equation whitespace-pre-wrap wrap-anywhere rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800"
             key={i}
             aria-label={`Equation: ${b.text}`}
           >
@@ -87,7 +87,7 @@ function UnitPreparation({
     void start();
   }, [busy, exhausted, retryRequired]);
   return (
-    <div className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
+    <div className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
       <p role="status">
         {exhausted
           ? "Your saved course is available, but this unit needs more AI allowance to prepare."
@@ -324,11 +324,11 @@ export function LearningRoom({
   }
   if (!session)
     return (
-      <div className="page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
+      <div className="page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-6.25 max-mobile:pb-2.5 max-mobile:px-4.5">
         <h1>Learn with Sage.</h1>
         {error ? (
           <div
-            className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+            className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-3.75 border border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
             role="alert"
           >
             {error}
@@ -347,7 +347,7 @@ export function LearningRoom({
   const unitTitle =
     s.active === 3 ? "Focused practice" : s.plan?.units[s.active]?.title;
   return (
-    <div className="page learning-page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 [&_blockquote]:border-l-[0.125rem] [&_blockquote]:border-solid [&_blockquote]:border-l-olive-300 [&_blockquote]:pl-4 [&_blockquote]:whitespace-pre-wrap [&_blockquote]:wrap-anywhere [&_blockquote]:mx-0 [&_blockquote]:my-4 dark:[&_blockquote]:border-l-olive-700 [&_.button]:whitespace-normal [&_.button]:h-auto [&_.button]:min-h-10 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
+    <div className="page learning-page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 [&_blockquote]:border-l-2 [&_blockquote]:border-solid [&_blockquote]:border-l-olive-300 [&_blockquote]:pl-4 [&_blockquote]:whitespace-pre-wrap [&_blockquote]:wrap-anywhere [&_blockquote]:mx-0 [&_blockquote]:my-4 dark:[&_blockquote]:border-l-olive-700 [&_.button]:whitespace-normal [&_.button]:h-auto [&_.button]:min-h-10 max-mobile:pt-6.25 max-mobile:pb-2.5 max-mobile:px-4.5">
       <div className="learning-topbar flex items-center gap-3.5 flex-wrap justify-between mb-7">
         <Link
           href={sample ? "/" : "/library"}
@@ -360,8 +360,8 @@ export function LearningRoom({
         </span>
       </div>
       {sample && (
-        <div className="preview-banner teacher-preview border-solid bg-olive-100 rounded-[0.4375rem] flex gap-2.5 items-center mb-7 justify-between px-4 py-3 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_p]:text-[0.6875rem] [&_p]:leading-[1.65] [&_p]:text-stone-500 [&_p]:m-0 dark:[&_p]:text-olive-400 [&_strong]:font-semibold [&_a]:underline max-mobile:flex-col max-mobile:items-stretch max-mobile:mb-6 max-mobile:px-3 max-mobile:py-[0.6875rem] max-mobile:[&_p]:text-[0.625rem]">
-          <div className="teacher-preview-copy flex-[1] min-w-0">
+        <div className="preview-banner teacher-preview border-solid bg-olive-100 rounded-[0.4375rem] flex gap-2.5 items-center mb-7 justify-between px-4 py-3 border border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_p]:text-[0.6875rem] [&_p]:leading-[1.65] [&_p]:text-stone-500 [&_p]:m-0 dark:[&_p]:text-olive-400 [&_strong]:font-semibold [&_a]:underline max-mobile:flex-col max-mobile:items-stretch max-mobile:mb-6 max-mobile:px-3 max-mobile:py-2.75 max-mobile:[&_p]:text-[0.625rem]">
+          <div className="teacher-preview-copy flex-1 min-w-0">
             <strong>Sage sample · fixed content</strong>
             <p>
               No credentials or AI calls. Open-text feedback is illustrative,
@@ -422,7 +422,7 @@ export function LearningRoom({
       )}
       {error && (
         <div
-          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-3.75 border border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
           role="alert"
         >
           {error}
@@ -450,7 +450,7 @@ export function LearningRoom({
         />
       ) : (
         <div className="learning-layout grid grid-cols-[14.6875rem_minmax(0,1fr)] gap-10.5 mt-8.5 items-start max-lesson:grid-cols-[minmax(0,1fr)] max-lesson:gap-6">
-          <aside className="learning-outline min-w-0 sticky top-5 border-solid rounded-xl text-[0.8125rem] p-4.5 border-[0.0625rem] border-olive-300 dark:border-olive-700 [&_summary]:font-semibold [&_summary]:cursor-pointer [&_ol]:pl-4.5 [&_li]:mx-0 [&_li]:my-4.5 [&_li[aria-current]]:text-olive-600 [&_li[aria-current]]:font-bold dark:[&_li[aria-current]]:text-olive-400 [&_.button]:mt-[0.4375rem] [&_.button]:whitespace-normal [&_.button]:text-left max-lesson:static max-lesson:[&_ol]:flex max-lesson:[&_ol]:flex-wrap max-lesson:[&_ol]:gap-3 max-lesson:[&_ol]:list-none max-lesson:[&_ol]:p-0 max-lesson:[&_li]:flex-[1_1_10rem] max-lesson:[&_li]:m-0">
+          <aside className="learning-outline min-w-0 sticky top-5 border-solid rounded-xl text-[0.8125rem] p-4.5 border border-olive-300 dark:border-olive-700 [&_summary]:font-semibold [&_summary]:cursor-pointer [&_ol]:pl-4.5 [&_li]:mx-0 [&_li]:my-4.5 [&_li[aria-current]]:text-olive-600 [&_li[aria-current]]:font-bold dark:[&_li[aria-current]]:text-olive-400 [&_.button]:mt-1.75 [&_.button]:whitespace-normal [&_.button]:text-left max-lesson:static max-lesson:[&_ol]:flex max-lesson:[&_ol]:flex-wrap max-lesson:[&_ol]:gap-3 max-lesson:[&_ol]:list-none max-lesson:[&_ol]:p-0 max-lesson:[&_li]:flex-[1_1_10rem] max-lesson:[&_li]:m-0">
             <details open>
               <summary>
                 Course outline · {s.completed.length}/{s.plan!.units.length}{" "}
@@ -535,7 +535,7 @@ export function LearningRoom({
                     </p>
                     <LessonBlocks blocks={u.content.explanation} />
                     {!!u.content.definitions.length && (
-                      <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
+                      <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
                         <h3>Definitions to keep nearby</h3>
                         <ul>
                           {u.content.definitions.map((d) => (
@@ -544,7 +544,7 @@ export function LearningRoom({
                         </ul>
                       </section>
                     )}
-                    <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
+                    <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
                       <h3>A worked example</h3>
                       <LessonBlocks blocks={u.content.workedExample} />
                     </section>
@@ -568,7 +568,7 @@ export function LearningRoom({
                     )}
                     {u.clarifications.map((c, i) => (
                       <section
-                        className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
+                        className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
                         key={i}
                       >
                         <h3>{c.question}</h3>
@@ -578,7 +578,7 @@ export function LearningRoom({
                         ))}
                       </section>
                     ))}
-                    <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
+                    <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
                       <h3>A little help with this step</h3>
                       <p>
                         {2 - s.helpUsed} help requests remain for the whole
@@ -648,7 +648,7 @@ export function LearningRoom({
           </Button>
           {deleting && (
             <div
-              className="confirm-box bg-taupe-100 border-solid rounded-[0.5625rem] flex items-center gap-3.5 mt-5 p-5 border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:border-olive-600 [&_>_div]:flex-[1] [&_h2]:text-[1.1875rem] [&_p]:text-[0.75rem] [&_p]:m-0 max-mobile:flex-wrap max-mobile:[&_>_div]:flex-[1_1_100%]"
+              className="confirm-box bg-taupe-100 border-solid rounded-[0.5625rem] flex items-center gap-3.5 mt-5 p-5 border border-taupe-300 dark:bg-olive-800 dark:border-olive-600 [&_>_div]:flex-1 [&_h2]:text-[1.1875rem] [&_p]:text-[0.75rem] [&_p]:m-0 max-mobile:flex-wrap max-mobile:[&_>_div]:flex-[1_1_100%]"
               role="alert"
             >
               <p>
@@ -710,7 +710,7 @@ function PlanSetup({
         </p>
       )}
       {s.plan && (
-        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
+        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
           <h2>Your course outline</h2>
           <p>
             <strong>Interpretation:</strong> {s.plan.interpretation}
@@ -760,7 +760,7 @@ function PlanSetup({
         </section>
       )}
       {!sample && (
-        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-[1.5625rem] border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-[0.8125rem] [&_>_textarea]:py-[0.6875rem] [&_>_textarea]:border-[0.0625rem] [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-[0.8125rem] [&_>_select]:py-[0.6875rem] [&_>_select]:border-[0.0625rem] [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
+        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
           <h2>
             {s.plan
               ? "Correct the interpretation or scope"

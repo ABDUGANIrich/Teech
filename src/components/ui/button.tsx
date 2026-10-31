@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 const buttonVariants = cva(
-  "button inline-flex items-center justify-center gap-[0.6875rem] whitespace-normal min-h-11.5 px-[1.3125rem] py-[0.6875rem] rounded-[0.4375rem] border-[0.0625rem] border-solid border-transparent text-[0.8125rem] font-medium transition-[background,transform] duration-180 ease-[ease] [&:active:not(:disabled)]:[transform:translateY(0.0625rem)]",
+  "button inline-flex items-center justify-center gap-2.75 whitespace-normal min-h-11.5 px-5.25 py-2.75 rounded-1.75 border border-solid border-transparent text-[0.8125rem] font-medium transition-[background,transform] duration-180 ease-linear [&:active:not(:disabled)]:[transform:translateY(0.0625rem)]",
   {
     variants: {
       variant: {

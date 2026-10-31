@@ -21,7 +21,8 @@ The library requests compact attempt records, loads only current checklist versi
 The auth form supports password-reset requests and confirmation-email resends. The reset page requires a verified session and checks password confirmation. With Supabase SSR, configure the **Reset password** email template to use the token-hash callback:
 
 ```html
-<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=recovery&amp;redirect_to={{ .RedirectTo | urlquery }}"
+<a
+  href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=recovery&amp;redirect_to={{ .RedirectTo | urlquery }}"
   >Reset password</a
 >
 ```
@@ -101,6 +102,22 @@ Development uses Webpack because Turbopack repeatedly reloaded the live sample o
 
 PowerShell: `Copy-Item .env.example .env.local`. Open http://127.0.0.1:3000. If using that origin, set `APP_URL=http://127.0.0.1:3000`; if using localhost, use `APP_URL=http://localhost:3000`. The mutation origin must match exactly.
 
+### Local and production environment settings
+
+`.env.local` is your local configuration. Both `.gitignore` and `.vercelignore` exclude it, so a normal Git or Vercel CLI deployment does not upload it. Vercel injects the separate values saved under the Teech project's **Production** environment. Updating `.env.local` does not update those cloud values.
+
+| Setting                     | Local `.env.local`                  | Vercel Production                   |
+| --------------------------- | ----------------------------------- | ----------------------------------- |
+| `APP_URL`                   | `http://127.0.0.1:3000`             | `https://teech-nu.vercel.app`       |
+| `OPENROUTER_MODEL`          | `nvidia/nemotron-3.5-super-vl:free` | `nvidia/nemotron-3.5-super-vl:free` |
+| `OPENROUTER_ALLOWED_MODELS` | `nvidia/nemotron-3.5-super-vl:free` | `nvidia/nemotron-3.5-super-vl:free` |
+
+Configure the API keys, Supabase settings, anonymous-session secret and quota values separately in each environment that needs them. Keep provider keys and `SUPABASE_SERVICE_ROLE_KEY` server-only. The Supabase project can be the same for local development and production; a separate development project is preferable when testing changes to real data.
+
+Vercel's **Development** environment currently has no variables; this checkout uses the manually configured `.env.local`. Do not overwrite it with an unqualified `vercel env pull`, which defaults to Development. Production Secret values cannot be downloaded: a production pull contains `[SENSITIVE]` placeholders, which must never replace working local credentials.
+
+For a normal local `next build`, Next.js can still load `.env.local`; seeing `Environments: .env.local` in that build output describes your local build, not the cloud deployment. Existing process environment variables take priority over Next.js env files. For local production-server testing, set `APP_URL` to the exact local origin used by that server. Vercel configuration changes take effect on the next deployment; saving environment variables does not deploy the app or change the currently running deployment.
+
 With no credentials, `/sample` is an explicitly labeled, browser-local **fixture preview**. Its fixed questions and example statuses do not evaluate the visitor's writing. It supports draft recovery, notes, three questions, unsure answers, early finish, review, retry, and status comparison. Personal routes require a real Supabase account; they do not silently use browser storage as a database.
 
 ## Supabase setup
@@ -111,7 +128,8 @@ With no credentials, `/sample` is an explicitly labeled, browser-local **fixture
 4. In the **Confirm signup** email template, use the server verification endpoint:
 
    ```html
-   <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email&amp;redirect_to={{ .RedirectTo | urlquery }}"
+   <a
+     href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email&amp;redirect_to={{ .RedirectTo | urlquery }}"
      >Confirm your email</a
    >
    ```

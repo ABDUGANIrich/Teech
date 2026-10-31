@@ -67,7 +67,7 @@ export function AuthForm({
     }
   }
   return (
-    <div className="auth-page max-w-115 mt-10 mb-17.5 text-center mx-auto px-6 py-0 [&_>_.student]:mt-0 [&_>_.student]:mb-2.5 [&_>_.student]:mx-auto [&_>_.eyebrow]:justify-center [&_>_.eyebrow]:text-[0.5625rem] [&_>_.eyebrow]:mb-3 [&_h1]:text-[2.4375rem] [&_h1]:mb-3.5 [&_>_p]:text-[0.8125rem] [&_form]:text-left [&_form]:mt-7 [&_form]:mb-3 [&_form]:mx-0 [&_form_input]:mb-5 [&_form_.button]:w-full [&_form_.button]:mt-[0.3125rem] [&_.preview-banner]:text-left [&_.preview-banner]:mt-[1.4375rem] [&_>_.micro]:text-[0.625rem] max-mobile:mt-7 max-mobile:[&_h1]:text-[2.1875rem] max-mobile:[&_input]:text-[1rem]">
+    <div className="auth-page max-w-115 mt-10 mb-17.5 text-center mx-auto px-6 py-0 [&_>_.student]:mt-0 [&_>_.student]:mb-2.5 [&_>_.student]:mx-auto [&_>_.eyebrow]:justify-center [&_>_.eyebrow]:text-[0.5625rem] [&_>_.eyebrow]:mb-3 [&_h1]:text-[2.4375rem] [&_h1]:mb-3.5 [&_>_p]:text-[0.8125rem] [&_form]:text-left [&_form]:mt-7 [&_form]:mb-3 [&_form]:mx-0 [&_form_input]:mb-5 [&_form_.button]:w-full [&_form_.button]:mt-1.25 [&_.preview-banner]:text-left [&_.preview-banner]:mt-5.75 [&_>_.micro]:text-[0.625rem] max-mobile:mt-7 max-mobile:[&_h1]:text-[2.1875rem] max-mobile:[&_input]:text-[1rem]">
       <Student small />
       <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
         YOUR IDEAS DESERVE A HOME
@@ -89,7 +89,7 @@ export function AuthForm({
             : "Sign in to pick up where you left off."}
       </p>
       {!configured && (
-        <div className="preview-banner border-solid bg-olive-100 rounded-[0.4375rem] flex gap-2.5 items-start mb-7 px-4 py-3 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_p]:text-[0.6875rem] [&_p]:leading-[1.65] [&_p]:text-stone-500 [&_p]:m-0 dark:[&_p]:text-olive-400 [&_strong]:font-semibold [&_a]:underline max-mobile:mb-6 max-mobile:px-3 max-mobile:py-[0.6875rem] max-mobile:[&_p]:text-[0.625rem]">
+        <div className="preview-banner border-solid bg-olive-100 rounded-[0.4375rem] flex gap-2.5 items-start mb-7 px-4 py-3 border border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_p]:text-[0.6875rem] [&_p]:leading-[1.65] [&_p]:text-stone-500 [&_p]:m-0 dark:[&_p]:text-olive-400 [&_strong]:font-semibold [&_a]:underline max-mobile:mb-6 max-mobile:px-3 max-mobile:py-2.75 max-mobile:[&_p]:text-[0.625rem]">
           <p>
             <strong>Accounts aren’t configured yet.</strong> Connect Supabase
             and apply the migration in the README to enable sign-in and saving.{" "}
@@ -141,7 +141,7 @@ export function AuthForm({
       </form>
       {error && (
         <div
-          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-3.75 border border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
           role="alert"
         >
           {error}

@@ -137,7 +137,7 @@ export function Library() {
     }
   }
   return (
-    <div className="page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
+    <div className="page max-w-275 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-6.25 max-mobile:pb-2.5 max-mobile:px-4.5">
       <div className="page-heading flex items-center justify-between gap-6 mt-5 mb-9 mx-0 [&_.eyebrow]:text-[0.5625rem] [&_.eyebrow]:mb-3.5 [&_h1]:mb-3.5 [&_p:last-child]:text-[0.8125rem] [&_p:last-child]:mb-0 max-mobile:mt-3.5 max-mobile:items-start max-mobile:flex-col max-mobile:gap-5.5 max-mobile:[&_h1]:text-[2.25rem] max-mobile:[&_.eyebrow]:text-[0.5rem] max-mobile:[&_.eyebrow]:tracking-[0.0625rem] max-mobile:[&_>_p]:text-[0.75rem]">
         <div>
           <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
@@ -152,7 +152,7 @@ export function Library() {
           </Button>
           <Button asChild>
             <Link href="/new">
-              <Plus className="size-[1.0625rem]" />
+              <Plus className="size-4.25" />
               Teach Pip
             </Link>
           </Button>
@@ -160,7 +160,7 @@ export function Library() {
       </div>
       {error && (
         <div
-          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+          className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-3.75 border border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
           role="alert"
         >
           {error}
@@ -173,7 +173,7 @@ export function Library() {
           </Button>
         </div>
       )}
-      <div className="mode-choices flex items-stretch gap-3.5 flex-wrap mx-0 my-5.5 [&_>_p]:flex-[1_1_12.5rem] [&_>_p]:border-solid [&_>_p]:rounded-xl [&_>_p]:p-4.5 [&_>_p]:border-[0.0625rem] [&_>_p]:border-olive-300 dark:[&_>_p]:border-olive-700">
+      <div className="mode-choices flex items-stretch gap-3.5 flex-wrap mx-0 my-5.5 [&_>_p]:flex-[1_1_12.5rem] [&_>_p]:border-solid [&_>_p]:rounded-xl [&_>_p]:p-4.5 [&_>_p]:border [&_>_p]:border-olive-300 dark:[&_>_p]:border-olive-700">
         <p>
           <strong>Learn with Sage</strong>
           <br />
@@ -196,7 +196,7 @@ export function Library() {
           Opening your library…
         </p>
       ) : topics.length === 0 ? (
-        <section className="empty-state text-center pt-[2.8125rem] pb-[4.0625rem] border-dashed rounded-xl bg-olive-100 flex items-center flex-col px-5 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_h2]:font-serif [&_h2]:text-[1.75rem] [&_h2]:mt-[0.9375rem] [&_>_p]:text-[0.8125rem] [&_>_p]:mb-6.5 max-mobile:pt-[1.5625rem] max-mobile:pb-[2.1875rem] max-mobile:px-5 max-mobile:[&_h2]:text-[1.625rem]">
+        <section className="empty-state text-center pt-11.25 pb-16.25 border-dashed rounded-xl bg-olive-100 flex items-center flex-col px-5 border border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_h2]:font-serif [&_h2]:text-[1.75rem] [&_h2]:mt-3.75 [&_>_p]:text-[0.8125rem] [&_>_p]:mb-6.5 max-mobile:pt-6.25 max-mobile:pb-8.75 max-mobile:px-5 max-mobile:[&_h2]:text-[1.625rem]">
           <Student small />
           <h2>A little room for your next big idea.</h2>
           <p>Start with a page of notes. We’ll turn it into a conversation.</p>
@@ -212,12 +212,12 @@ export function Library() {
           {topics.map((t) => (
             <article
               key={t.id}
-              className="topic-row flex items-start gap-6 border-t-[0.0625rem] border-solid border-t-olive-300 px-0 py-6.5 dark:border-t-olive-700 max-mobile:gap-3.5 max-mobile:flex-wrap"
+              className="topic-row flex items-start gap-6 border-t border-solid border-t-olive-300 px-0 py-6.5 dark:border-t-olive-700 max-mobile:gap-3.5 max-mobile:flex-wrap"
             >
               <div className="topic-symbol bg-olive-200 text-olive-600 w-13 h-15 rounded-[0.4375rem] grid place-items-center shrink-0 dark:bg-olive-800 dark:text-olive-400 max-mobile:w-10 max-mobile:h-12">
                 <BookOpen className="size-6" />
               </div>
-              <div className="topic-info flex-[1] min-w-0 [&_h2]:mt-[0.1875rem] [&_h2]:mb-2.5 [&_h2]:wrap-anywhere [&_h2]:mx-0 [&_p]:text-[0.6875rem] [&_p]:mb-[0.1875rem] max-mobile:[&_h2]:text-[1.375rem]">
+              <div className="topic-info flex-1 min-w-0 [&_h2]:mt-0.75 [&_h2]:mb-2.5 [&_h2]:wrap-anywhere [&_h2]:mx-0 [&_p]:text-[0.6875rem] [&_p]:mb-0.75 max-mobile:[&_h2]:text-[1.375rem]">
                 <h2>{t.title}</h2>
                 <p>
                   {t.concepts.length} concepts · Checklist v{t.version}
@@ -235,7 +235,7 @@ export function Library() {
                         <Link
                           key={s.id}
                           href={`/teach/${s.id}`}
-                          className="attempt-link flex justify-between gap-[0.9375rem] text-[0.6875rem] text-olive-600 max-w-110 px-0 py-[0.4375rem] dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-[0.3125rem]"
+                          className="attempt-link flex justify-between gap-3.75 text-[0.6875rem] text-olive-600 max-w-110 px-0 py-1.75 dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-1.25"
                         >
                           {new Date(s.created_at).toLocaleString()}
                           <span>
@@ -295,7 +295,7 @@ export function Library() {
               <Link
                 key={s.id}
                 href={`/teach/${s.id}`}
-                className="attempt-link flex justify-between gap-[0.9375rem] text-[0.6875rem] text-olive-600 max-w-110 px-0 py-[0.4375rem] dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-[0.3125rem]"
+                className="attempt-link flex justify-between gap-3.75 text-[0.6875rem] text-olive-600 max-w-110 px-0 py-1.75 dark:text-olive-400 [&_span]:flex [&_span]:items-center [&_span]:gap-1.25"
               >
                 <span>
                   {s.title} · {new Date(s.created_at).toLocaleString()}
@@ -319,7 +319,7 @@ export function Library() {
       )}
       {deleting && (
         <div
-          className="confirm-box bg-taupe-100 border-solid rounded-[0.5625rem] flex items-center gap-3.5 mt-5 p-5 border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:border-olive-600 [&_>_div]:flex-[1] [&_h2]:text-[1.1875rem] [&_p]:text-[0.75rem] [&_p]:m-0 max-mobile:flex-wrap max-mobile:[&_>_div]:flex-[1_1_100%]"
+          className="confirm-box bg-taupe-100 border-solid rounded-[0.5625rem] flex items-center gap-3.5 mt-5 p-5 border border-taupe-300 dark:bg-olive-800 dark:border-olive-600 [&_>_div]:flex-1 [&_h2]:text-[1.1875rem] [&_p]:text-[0.75rem] [&_p]:m-0 max-mobile:flex-wrap max-mobile:[&_>_div]:flex-[1_1_100%]"
           role="alert"
         >
           <div>
@@ -340,12 +340,12 @@ export function Library() {
             onClick={() => setDeleting(null)}
             disabled={busy}
           >
-            <X className="size-[0.9375rem]" />
+            <X className="size-3.75" />
             Keep it
           </Button>
         </div>
       )}
-      <div className="library-footer mt-7 flex items-center justify-between gap-[0.9375rem] [&_p]:m-0 max-mobile:items-start max-mobile:flex-col">
+      <div className="library-footer mt-7 flex items-center justify-between gap-3.75 [&_p]:m-0 max-mobile:items-start max-mobile:flex-col">
         <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
           Your courses, topics and attempts are saved to your account. Drafts
           also stay on this device.

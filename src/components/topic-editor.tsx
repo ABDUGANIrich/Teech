@@ -181,12 +181,12 @@ function TopicDraft({ edit, userId }: EditorProps) {
     }
   }
   return (
-    <div className="page editor max-w-210 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-[1.5625rem] max-mobile:pb-2.5 max-mobile:px-4.5">
+    <div className="page editor max-w-210 pt-11 pb-3 min-h-[65vh] mx-auto my-0 px-6 max-mobile:pt-6.25 max-mobile:pb-2.5 max-mobile:px-4.5">
       <Link
         href="/library"
         className="back-link inline-flex items-center gap-2 text-[0.6875rem] text-neutral-500 dark:text-olive-400"
       >
-        <ArrowLeft className="size-[0.9375rem]" />
+        <ArrowLeft className="size-3.75" />
         My library
       </Link>
       <div className="page-heading flex items-center justify-between gap-6 mt-5 mb-9 mx-0 [&_.eyebrow]:text-[0.5625rem] [&_.eyebrow]:mb-3.5 [&_h1]:mb-3.5 [&_p:last-child]:text-[0.8125rem] [&_p:last-child]:mb-0 max-mobile:mt-3.5 max-mobile:items-start max-mobile:flex-col max-mobile:gap-5.5 max-mobile:[&_h1]:text-[2.25rem] max-mobile:[&_.eyebrow]:text-[0.5rem] max-mobile:[&_.eyebrow]:tracking-[0.0625rem] max-mobile:[&_>_p]:text-[0.75rem]">
@@ -274,7 +274,7 @@ function TopicDraft({ edit, userId }: EditorProps) {
         <p role="status">Opening your draft…</p>
       ) : (
         <>
-          <div className="editor-fields bg-white border-solid rounded-[0.625rem] p-6.5 border-[0.0625rem] border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_input]:mb-[1.5625rem] [&_>_textarea]:text-[0.8125rem] [&_>_textarea]:leading-[1.8] max-mobile:px-4 max-mobile:py-5 max-mobile:[&_label_>_span]:float-none max-mobile:[&_label_>_span]:block max-mobile:[&_label_>_span]:mt-[0.3125rem] max-mobile:[&_label_>_span]:text-[0.5625rem] max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem]">
+          <div className="editor-fields bg-white border-solid rounded-[0.625rem] p-6.5 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_input]:mb-6.25 [&_>_textarea]:text-[0.8125rem] [&_>_textarea]:leading-[1.8] max-mobile:px-4 max-mobile:py-5 max-mobile:[&_label_>_span]:float-none max-mobile:[&_label_>_span]:block max-mobile:[&_label_>_span]:mt-1.25 max-mobile:[&_label_>_span]:text-[0.5625rem] max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem]">
             <label htmlFor="topic-title">
               Give your topic a name<span>Up to 100 characters</span>
             </label>
@@ -352,14 +352,14 @@ function TopicDraft({ edit, userId }: EditorProps) {
           </div>
           {concepts.length > 0 && (
             <section className="checklist-editor mt-9.5 [&_>_p]:text-[0.75rem] max-mobile:[&_>_.section-row:last-child_.button]:text-[0.6875rem] max-mobile:[&_>_.section-row:last-child_.button]:px-3.5 max-mobile:[&_>_.section-row:last-child_.button]:py-2.5">
-              <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-[0.5625rem] max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
+              <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-2.25 max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
                 <div>
                   <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
                     MAKE THIS YOURS
                   </p>
                   <h2>Your concept checklist</h2>
                 </div>
-                <span className="quiet-badge text-[0.5625rem] tracking-[0.06875rem] text-olive-600 border-solid bg-olive-100 rounded-[0.3125rem] px-2 py-1 border-[0.0625rem] border-olive-300 dark:text-olive-400 dark:bg-olive-800 dark:border-olive-700">
+                <span className="quiet-badge text-[0.5625rem] tracking-[0.06875rem] text-olive-600 border-solid bg-olive-100 rounded-[0.3125rem] px-2 py-1 border border-olive-300 dark:text-olive-400 dark:bg-olive-800 dark:border-olive-700">
                   {concepts.length} / 8 CONCEPTS
                 </span>
               </div>
@@ -370,11 +370,11 @@ function TopicDraft({ edit, userId }: EditorProps) {
               {concepts.map((c, i) => (
                 <fieldset
                   key={c.id}
-                  className="concept-edit border-solid rounded-lg pt-[0.9375rem] pb-6 min-w-0 bg-olive-100 mx-0 my-6 px-5.5 border-[0.0625rem] border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_legend]:text-[0.625rem] [&_legend]:text-olive-600 [&_legend]:px-2 [&_legend]:py-0 dark:[&_legend]:text-olive-400 [&_.section-row]:mb-1.5 [&_.section-row_label]:m-0 [&_input]:mb-[0.9375rem] [&_input]:text-[0.8125rem] [&_textarea]:mb-[0.9375rem] [&_textarea]:text-[0.8125rem] [&_textarea:last-of-type]:m-0 max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem] max-mobile:pt-3 max-mobile:pb-5 max-mobile:px-[0.9375rem]"
+                  className="concept-edit border-solid rounded-lg pt-3.75 pb-6 min-w-0 bg-olive-100 mx-0 my-6 px-5.5 border border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_legend]:text-[0.625rem] [&_legend]:text-olive-600 [&_legend]:px-2 [&_legend]:py-0 dark:[&_legend]:text-olive-400 [&_.section-row]:mb-1.5 [&_.section-row_label]:m-0 [&_input]:mb-3.75 [&_input]:text-[0.8125rem] [&_textarea]:mb-3.75 [&_textarea]:text-[0.8125rem] [&_textarea:last-of-type]:m-0 max-mobile:[&_input]:text-[1rem] max-mobile:[&_textarea]:text-[1rem] max-mobile:pt-3 max-mobile:pb-5 max-mobile:px-3.75"
                   disabled={busy}
                 >
                   <legend>Concept {i + 1}</legend>
-                  <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-[0.5625rem] max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
+                  <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-2.25 max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
                     <label htmlFor={`c-${i}`}>Concept title</label>
                     <Button
                       variant="ghost"
@@ -387,7 +387,7 @@ function TopicDraft({ edit, userId }: EditorProps) {
                         saveDraft(title, notes, next);
                       }}
                     >
-                      <Trash2 className="size-[0.9375rem]" />
+                      <Trash2 className="size-3.75" />
                     </Button>
                   </div>
                   <input
@@ -421,13 +421,13 @@ function TopicDraft({ edit, userId }: EditorProps) {
                     }
                   />
                   {(!c.excerpt || !notes.includes(c.excerpt)) && (
-                    <p className="field-error text-[0.6875rem] text-amber-800 mt-[0.5625rem] mb-0 mx-0 dark:text-red-300">
+                    <p className="field-error text-[0.6875rem] text-amber-800 mt-2.25 mb-0 mx-0 dark:text-red-300">
                       Copy an exact passage from the notes above.
                     </p>
                   )}
                 </fieldset>
               ))}
-              <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-[0.5625rem] max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
+              <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-2.25 max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
                 <Button
                   variant="outline"
                   disabled={concepts.length >= 8 || busy}
@@ -460,7 +460,7 @@ function TopicDraft({ edit, userId }: EditorProps) {
           )}
           {error && (
             <div
-              className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-[0.9375rem] border-[0.0625rem] border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
+              className="error-box bg-rose-50 border-solid rounded-lg text-[0.75rem] text-yellow-800 wrap-anywhere mx-0 my-4.5 px-4.5 py-3.75 border border-taupe-300 dark:bg-olive-800 dark:text-red-300 dark:border-olive-600"
               role="alert"
             >
               {error}

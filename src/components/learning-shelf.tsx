@@ -69,10 +69,10 @@ export function LearningShelf() {
       )}
       {lessons.map((s) => (
         <article
-          className="topic-row flex items-start gap-6 border-t-[0.0625rem] border-solid border-t-olive-300 px-0 py-6.5 dark:border-t-olive-700 max-mobile:gap-3.5 max-mobile:flex-wrap"
+          className="topic-row flex items-start gap-6 border-t border-solid border-t-olive-300 px-0 py-6.5 dark:border-t-olive-700 max-mobile:gap-3.5 max-mobile:flex-wrap"
           key={s.id}
         >
-          <div className="topic-info flex-[1] min-w-0 [&_h2]:mt-[0.1875rem] [&_h2]:mb-2.5 [&_h2]:wrap-anywhere [&_h2]:mx-0 [&_p]:text-[0.6875rem] [&_p]:mb-[0.1875rem] max-mobile:[&_h2]:text-[1.375rem]">
+          <div className="topic-info flex-1 min-w-0 [&_h2]:mt-0.75 [&_h2]:mb-2.5 [&_h2]:wrap-anywhere [&_h2]:mx-0 [&_p]:text-[0.6875rem] [&_p]:mb-0.75 max-mobile:[&_h2]:text-[1.375rem]">
             <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
               SAGE
             </p>

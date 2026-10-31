@@ -1,0 +1,495 @@
+{
+  "generatedAt": "2026-10-31T09:16:44.367Z",
+  "jobs": 16,
+  "calls": 17,
+  "cost": 0,
+  "screen": [
+    {
+      "id": "t0.7-off",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 4.172,
+      "p90InferenceSeconds": 4.172,
+      "meanCompletionTokens": 612,
+      "meanReasoningTokens": 0,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.1-off",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 5.687,
+      "p90InferenceSeconds": 5.687,
+      "meanCompletionTokens": 624,
+      "meanReasoningTokens": 0,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.7-medium",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 8.757,
+      "p90InferenceSeconds": 8.757,
+      "meanCompletionTokens": 1569,
+      "meanReasoningTokens": 949,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.7-low",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 9.383,
+      "p90InferenceSeconds": 9.383,
+      "meanCompletionTokens": 1680,
+      "meanReasoningTokens": 1059,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.3-medium",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 11.141,
+      "p90InferenceSeconds": 11.141,
+      "meanCompletionTokens": 2040,
+      "meanReasoningTokens": 1371,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.1-high",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 11.58,
+      "p90InferenceSeconds": 11.58,
+      "meanCompletionTokens": 2129,
+      "meanReasoningTokens": 1462,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.3-off",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 13.298,
+      "p90InferenceSeconds": 13.298,
+      "meanCompletionTokens": 631,
+      "meanReasoningTokens": 0,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.3-high",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 14.031,
+      "p90InferenceSeconds": 14.031,
+      "meanCompletionTokens": 1833,
+      "meanReasoningTokens": 1182,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.3-low",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 17.162,
+      "p90InferenceSeconds": 17.162,
+      "meanCompletionTokens": 2200,
+      "meanReasoningTokens": 1515,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.1-medium",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 1,
+      "rubricPercent": 100,
+      "medianInferenceSeconds": 34.77,
+      "p90InferenceSeconds": 34.77,
+      "meanCompletionTokens": 1924,
+      "meanReasoningTokens": 1269,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": []
+    },
+    {
+      "id": "t0.1-low",
+      "n": 1,
+      "valid": 1,
+      "firstPass": 1,
+      "allChecks": 0,
+      "rubricPercent": 83.33333333333334,
+      "medianInferenceSeconds": 12.635,
+      "p90InferenceSeconds": 12.635,
+      "meanCompletionTokens": 2200,
+      "meanReasoningTokens": 1781,
+      "providerCalls": 1,
+      "failures": [],
+      "missedChecks": [
+        {
+          "task": "extract-injection",
+          "checks": [
+            "runoff or infiltration covered"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0.7-high",
+      "n": 1,
+      "valid": 0,
+      "firstPass": 0,
+      "allChecks": 0,
+      "rubricPercent": 0,
+      "medianInferenceSeconds": 26.877,
+      "p90InferenceSeconds": 26.877,
+      "meanCompletionTokens": 4010,
+      "meanReasoningTokens": 2873,
+      "providerCalls": 2,
+      "failures": [
+        {
+          "task": "extract-injection",
+          "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+        }
+      ],
+      "missedChecks": []
+    }
+  ],
+  "confirmation": [],
+  "byTask": [
+    {
+      "task": "grade-correct-alternative",
+      "configurations": []
+    },
+    {
+      "task": "extract-injection",
+      "configurations": [
+        {
+          "id": "t0.7-off",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 4.172,
+          "p90InferenceSeconds": 4.172,
+          "meanCompletionTokens": 612,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-off",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 5.687,
+          "p90InferenceSeconds": 5.687,
+          "meanCompletionTokens": 624,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-medium",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 8.757,
+          "p90InferenceSeconds": 8.757,
+          "meanCompletionTokens": 1569,
+          "meanReasoningTokens": 949,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.7-low",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 9.383,
+          "p90InferenceSeconds": 9.383,
+          "meanCompletionTokens": 1680,
+          "meanReasoningTokens": 1059,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-medium",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 11.141,
+          "p90InferenceSeconds": 11.141,
+          "meanCompletionTokens": 2040,
+          "meanReasoningTokens": 1371,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-high",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 11.58,
+          "p90InferenceSeconds": 11.58,
+          "meanCompletionTokens": 2129,
+          "meanReasoningTokens": 1462,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-off",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 13.298,
+          "p90InferenceSeconds": 13.298,
+          "meanCompletionTokens": 631,
+          "meanReasoningTokens": 0,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-high",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 14.031,
+          "p90InferenceSeconds": 14.031,
+          "meanCompletionTokens": 1833,
+          "meanReasoningTokens": 1182,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.3-low",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 17.162,
+          "p90InferenceSeconds": 17.162,
+          "meanCompletionTokens": 2200,
+          "meanReasoningTokens": 1515,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-medium",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 1,
+          "rubricPercent": 100,
+          "medianInferenceSeconds": 34.77,
+          "p90InferenceSeconds": 34.77,
+          "meanCompletionTokens": 1924,
+          "meanReasoningTokens": 1269,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": []
+        },
+        {
+          "id": "t0.1-low",
+          "n": 1,
+          "valid": 1,
+          "firstPass": 1,
+          "allChecks": 0,
+          "rubricPercent": 83.33333333333334,
+          "medianInferenceSeconds": 12.635,
+          "p90InferenceSeconds": 12.635,
+          "meanCompletionTokens": 2200,
+          "meanReasoningTokens": 1781,
+          "providerCalls": 1,
+          "failures": [],
+          "missedChecks": [
+            {
+              "task": "extract-injection",
+              "checks": [
+                "runoff or infiltration covered"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "t0.7-high",
+          "n": 1,
+          "valid": 0,
+          "firstPass": 0,
+          "allChecks": 0,
+          "rubricPercent": 0,
+          "medianInferenceSeconds": 26.877,
+          "p90InferenceSeconds": 26.877,
+          "meanCompletionTokens": 4010,
+          "meanReasoningTokens": 2873,
+          "providerCalls": 2,
+          "failures": [
+            {
+              "task": "extract-injection",
+              "error": "The AI returned an invalid response twice. Nothing unverified was shown. Your writing is safe."
+            }
+          ],
+          "missedChecks": []
+        }
+      ]
+    }
+  ],
+  "transportErrors": [],
+  "truncations": [
+    {
+      "config": "t0.3-low",
+      "task": "extract-injection",
+      "usage": {
+        "prompt_tokens": 479,
+        "completion_tokens": 2200,
+        "total_tokens": 2679,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1515,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.1-low",
+      "task": "extract-injection",
+      "usage": {
+        "prompt_tokens": 479,
+        "completion_tokens": 2200,
+        "total_tokens": 2679,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1781,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "config": "t0.7-high",
+      "task": "extract-injection",
+      "usage": {
+        "prompt_tokens": 559,
+        "completion_tokens": 2200,
+        "total_tokens": 2759,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1715,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  ],
+  "promptHashCheck": [
+    {
+      "task": "extract-injection",
+      "firstPrompts": 12,
+      "distinctHashes": 1
+    }
+  ]
+}
