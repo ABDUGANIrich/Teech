@@ -1,3 +1,4 @@
+import { expectReadableText } from "./helpers/readability";
 import { test, expect } from "@playwright/test";
 import {
   newTeacherSample,
@@ -273,3 +274,65 @@ test("Teacher banner stacks readable text and actions at narrow widths", async (
     path: `artifacts/fixed-teacher-banner-${info.project.name}.png`,
   });
 });
+
+test(
+  "Pip is offered only after completion and leaving it for later creates no teaching state",
+  { tag: "@mobile" },
+  async ({ page }, info) => {
+    let s = newTeacherSample();
+    for (const action of ["accept", "generate", "practice", "next"])
+      s = sampleTeacherAction(s, { action });
+    const complete = structuredClone(s);
+    s.completed = [];
+    const writes: string[] = [];
+    await page.route("**/api/learn**", (route) => {
+      if (route.request().method() === "POST") {
+        const body = route.request().postDataJSON();
+        writes.push(body.action);
+        s = sampleTeacherAction(s, body);
+      }
+      return route.fulfill({ json: { learning: s } });
+    });
+    const url = `${harness}/?view=learning-room`;
+    await page.goto(url);
+    await expect(
+      page.getByRole("heading", { name: "Your course review." }),
+    ).toBeVisible();
+    const continuation = page.getByRole("region", {
+      name: "Teach what you learned to Pip.",
+    });
+    await expect(continuation).toHaveCount(0);
+    s = complete;
+    await page.reload();
+    await expect(continuation).toBeVisible();
+    await expect(continuation).toContainText(
+      "your course stays saved either way",
+    );
+    await expectReadableText(continuation.locator("p"));
+    await continuation.screenshot({
+      path: `artifacts/pip-optional-${info.project.name}.png`,
+    });
+    expect(s.handoff).toBeNull();
+    expect(writes).toEqual([]);
+    await continuation
+      .getByRole("link", { name: "Not now · return to library" })
+      .click();
+    await expect(page).toHaveURL(`${harness}/library`);
+    await page.goto(url);
+    await expect(continuation).toBeVisible();
+    expect(writes).toEqual([]);
+    await continuation
+      .getByRole("button", { name: "Preview teaching source" })
+      .click();
+    await expect(
+      continuation.getByText("Immutable source preview", { exact: true }),
+    ).toBeVisible();
+    expect(writes).toEqual(["handoff_prepare"]);
+    await page.reload();
+    await expect(
+      continuation.getByText("Immutable source preview", { exact: true }),
+    ).toBeVisible();
+    expect(writes).toEqual(["handoff_prepare"]);
+    expect(s.teachingId).toBeNull();
+  },
+);

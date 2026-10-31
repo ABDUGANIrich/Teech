@@ -121,7 +121,7 @@ test(
 );
 
 test(
-  "mode controls and the sample note meet normal-text contrast in light and dark themes",
+  "direct Pip access and the optional continuation meet normal-text contrast in light and dark themes",
   { tag: "@mobile" },
   async ({ page }) => {
     for (const theme of ["light", "dark"] as const) {
@@ -129,12 +129,12 @@ test(
       await page.goto("/");
       await expect(page.locator("html")).toHaveClass(new RegExp(theme));
       await expect(page.locator("#sample-note")).toHaveCount(1);
-      await expect(page.locator('nav[aria-label="Study mode"] a')).toHaveCount(
-        2,
-      );
+      await expect(
+        page.locator('nav[aria-label="Other ways to study"] a'),
+      ).toHaveCount(1);
       await expectReadableText(
         page.locator(
-          '#sample-note, .mode-selector p, nav[aria-label="Study mode"] a',
+          '#sample-note, aside[aria-labelledby="after-sage-title"] p, nav[aria-label="Other ways to study"] a',
         ),
       );
     }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { FeedbackPoints } from "./result-content";
+import { Student } from "./student";
 import {
   allUnits,
   classification,
@@ -76,6 +77,64 @@ export function LearningSummary({
           conclusions. Correct choices indicate agreement with generated keys.
         </p>
       </div>
+      {eligible(s) && (
+        <section
+          aria-labelledby="pip-continuation-title"
+          className="pip-continuation my-6 rounded-xl border border-olive-300 bg-taupe-100 p-6 dark:border-olive-700 dark:bg-olive-800 max-mobile:p-4.5"
+        >
+          <div className="flex items-center gap-5 max-phone:items-start max-phone:gap-3">
+            <div aria-hidden="true" className="max-phone:hidden">
+              <Student small state="curious" />
+            </div>
+            <div className="min-w-0">
+              <p className="eyebrow text-[0.625rem] tracking-[0.1rem] font-semibold text-olive-600 dark:text-olive-400">
+                AFTER SAGE · OPTIONAL
+              </p>
+              <h3 id="pip-continuation-title">
+                Teach what you learned to Pip.
+              </h3>
+              <p className="text-olive-800 dark:text-olive-200">
+                Your Sage course is complete. If you’d like another way to
+                practice, explain it in your own words to Pip, your curious AI
+                student. Answer follow-up questions, then review what to
+                revisit.
+              </p>
+              <p className="text-[0.75rem] text-olive-600 dark:text-olive-400">
+                We’ll use the instruction you studied, leaving out assessment
+                answers and your responses. You can review the source and edit
+                the checklist before starting. Teaching is optional; your course
+                stays saved either way.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-4">
+            {!s.handoff && (
+              <Button
+                disabled={busy}
+                onClick={() => void act("handoff_prepare")}
+              >
+                Preview teaching source
+              </Button>
+            )}
+            <Link
+              href={sample ? "/" : "/library"}
+              className="text-link text-[0.75rem] underline underline-offset-4"
+            >
+              {sample ? "Finish sample for now" : "Not now · return to library"}
+            </Link>
+          </div>
+          {s.handoff && (
+            <Handoff
+              userId={userId}
+              key={`${s.id}:${s.handoff.concepts ? "checklist" : "source"}`}
+              session={s}
+              busy={busy}
+              act={act}
+              sample={sample}
+            />
+          )}
+        </section>
+      )}
       {objectives.map((o) => (
         <div
           className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
@@ -146,6 +205,13 @@ export function LearningSummary({
           ))}
         </div>
       ))}
+      {!eligible(s) && (
+        <p className="text-[0.75rem] text-olive-600 dark:text-olive-400">
+          After the remaining units, you can optionally teach this course to
+          Pip. You can leave unanswered questions and continue when you’re
+          ready.
+        </p>
+      )}
       {!sample && !s.targetedUsed && (
         <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
           <h3>One focused practice pair</h3>
@@ -196,36 +262,6 @@ export function LearningSummary({
         >
           Retry this focused practice request · uses AI allowance
         </Button>
-      )}
-      {eligible(s) ? (
-        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
-          <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
-            NEXT: TEACH PIP
-          </p>
-          <h3>Teach this to Pip.</h3>
-          <p>
-            Preview a source made from the instruction you studied. Assessment
-            answers, rubrics and your responses are excluded.
-          </p>
-          <Button disabled={busy} onClick={() => void act("handoff_prepare")}>
-            Preview teaching source
-          </Button>
-          {s.handoff && (
-            <Handoff
-              userId={userId}
-              key={`${s.id}:${s.handoff.concepts ? "checklist" : "source"}`}
-              session={s}
-              busy={busy}
-              act={act}
-              sample={sample}
-            />
-          )}
-        </section>
-      ) : (
-        <p className="notice rounded-md bg-olive-100 text-olive-600 text-[0.75rem] px-4 py-3 dark:bg-olive-800 dark:text-olive-400">
-          Complete every course unit to prepare a source for Teach Pip.
-          Unanswered questions do not block completion.
-        </p>
       )}
     </section>
   );
@@ -287,7 +323,7 @@ function Handoff({
         independent proof of its own correctness. That provenance carries into
         the topic and review.
       </p>
-      <details open>
+      <details open={!h.concepts && !h.done}>
         <summary>Immutable source preview</summary>
         <pre className="saved-answer whitespace-pre-wrap wrap-anywhere rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800">
           {h.source}

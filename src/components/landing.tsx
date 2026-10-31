@@ -40,7 +40,7 @@ const modes = {
       {
         icon: Sprout,
         title: "Find your next step",
-        text: "Work through feedback and hints, or try fresh practice for an unresolved idea. Your library keeps the course ready to revisit.",
+        text: "Work through feedback and hints, or revisit an unresolved idea. Finish with your course review, then choose whether to teach what you learned to Pip.",
       },
     ],
     features: [
@@ -107,52 +107,6 @@ export function Landing() {
   const content = modes[mode];
   return (
     <>
-      <div className="mode-selector max-w-286 mx-auto pt-7 px-4 max-layout:px-8 max-mobile:px-6.25 max-mobile:pt-5">
-        <p className="text-center text-[0.5625rem] font-semibold tracking-[0.125rem] mb-3 text-olive-600 dark:text-olive-400">
-          TODAY, I WANT TO…
-        </p>
-        <nav
-          aria-label="Study mode"
-          className="grid grid-cols-2 max-w-110 mx-auto rounded-xl border border-olive-300 bg-taupe-100 p-1.5 gap-1.5 dark:border-olive-700 dark:bg-olive-800"
-        >
-          {(
-            [
-              { id: "learn", label: "Learn with Sage", icon: BookOpen },
-              { id: "teach", label: "Teach Pip", icon: MessageCircle },
-            ] as const
-          ).map(({ id, label, icon: Icon }) => (
-            <a
-              key={id}
-              href={`/?mode=${id}`}
-              onClick={(event) => {
-                if (
-                  event.defaultPrevented ||
-                  event.button !== 0 ||
-                  event.metaKey ||
-                  event.ctrlKey ||
-                  event.shiftKey ||
-                  event.altKey
-                )
-                  return;
-                event.preventDefault();
-                if (id === mode) return;
-                const url = new URL(window.location.href);
-                url.searchParams.set("mode", id);
-                window.history.pushState(
-                  null,
-                  "",
-                  `${url.pathname}${url.search}${url.hash}`,
-                );
-              }}
-              aria-current={mode === id ? "page" : undefined}
-              className={`inline-flex items-center justify-center gap-2 rounded-lg px-3 py-3 text-[0.8125rem] font-medium transition-colors max-phone:text-[0.75rem] max-phone:px-2 ${mode === id ? "bg-white shadow-sm text-olive-800 dark:bg-neutral-800 dark:text-olive-200" : "text-olive-600 hover:bg-white/50 hover:text-olive-800 dark:text-olive-400 dark:hover:bg-neutral-800/50 dark:hover:text-olive-200"}`}
-            >
-              <Icon aria-hidden="true" className="size-4 max-phone:size-3.5" />
-              {label}
-            </a>
-          ))}
-        </nav>
-      </div>
       <section
         aria-labelledby="landing-title"
         className="landing max-w-286 mx-auto px-6 pt-6 pb-10 max-mobile:px-5 max-mobile:pt-5 max-mobile:pb-8"
@@ -203,6 +157,39 @@ export function Landing() {
           </span>
         </div>
       </section>
+      <nav
+        aria-label="Other ways to study"
+        className="max-w-130 mx-auto px-6 pb-8 text-center text-[0.75rem] text-olive-600 dark:text-olive-400"
+      >
+        {mode === "learn"
+          ? "Already have something to explain? "
+          : "Want to learn it first? "}
+        <a
+          href={`/?mode=${mode === "learn" ? "teach" : "learn"}`}
+          className="underline underline-offset-4 inline-flex min-h-11 items-center"
+          onClick={(event) => {
+            if (
+              event.defaultPrevented ||
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
+            event.preventDefault();
+            const url = new URL(window.location.href);
+            url.searchParams.set("mode", mode === "learn" ? "teach" : "learn");
+            window.history.pushState(
+              null,
+              "",
+              `${url.pathname}${url.search}${url.hash}`,
+            );
+          }}
+        >
+          {mode === "learn" ? "Teach Pip directly" : "Learn with Sage"}
+        </a>
+      </nav>
       <section
         aria-labelledby="how-title"
         className="how-section max-w-286 border-t border-olive-300 pt-8 mx-auto px-4 dark:border-olive-700 max-layout:mx-8 max-layout:px-0 max-mobile:mx-6.25"
@@ -233,6 +220,30 @@ export function Landing() {
             </div>
           ))}
         </div>
+        {mode === "learn" && (
+          <aside
+            aria-labelledby="after-sage-title"
+            className="mt-8 flex items-center gap-6 rounded-xl border border-olive-300 bg-taupe-100 p-6 dark:border-olive-700 dark:bg-olive-800 max-mobile:gap-4 max-mobile:p-4"
+          >
+            <div aria-hidden="true" className="max-phone:hidden">
+              <Student small state="curious" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[0.625rem] tracking-[0.1rem] font-semibold text-olive-600 dark:text-olive-400">
+                AFTER SAGE · OPTIONAL
+              </p>
+              <h3 id="after-sage-title" className="text-[1.125rem]">
+                Keep going with Pip, if you like.
+              </h3>
+              <p className="text-[0.8125rem] leading-[1.8] mb-0 text-olive-800 dark:text-olive-200">
+                Once your course is complete, you can teach it back to Pip, your
+                curious AI student. Review a source built from what you studied,
+                explain it in your own words, and answer follow-up questions. Or
+                finish with Sage and return another time.
+              </p>
+            </div>
+          </aside>
+        )}
         <div className="mt-9 grid grid-cols-2 gap-7 border-t border-olive-300 pt-6 dark:border-olive-700 max-mobile:grid-cols-1 max-mobile:gap-5">
           {content.features.map(({ icon: Icon, title, text }) => (
             <div key={title} className="flex gap-3">

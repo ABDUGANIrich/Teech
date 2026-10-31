@@ -180,9 +180,10 @@ export function Library() {
           Start with a topic. Learn it step by step.
         </p>
         <p>
-          <strong>Teach Pip</strong>
+          <strong>Continue with Pip · optional</strong>
           <br />
-          Explain what you know. Find the gaps.
+          After a Sage course, teach it back from your course review. Or start
+          directly with your own notes.
         </p>
       </div>
       <LearningShelf />

@@ -260,6 +260,16 @@ test(
     await expect(
       page.getByText("0 independent correct · 2 assisted", { exact: false }),
     ).toBeVisible();
+    const continuation = page.getByRole("region", {
+      name: "Teach what you learned to Pip.",
+    });
+    await expect(continuation).toContainText("AFTER SAGE · OPTIONAL");
+    await expect(
+      continuation.getByRole("link", { name: "Finish sample for now" }),
+    ).toHaveAttribute("href", "/");
+    await expect(
+      page.getByText("Immutable source preview", { exact: true }),
+    ).toHaveCount(0);
     await page.getByRole("button", { name: "Preview teaching source" }).click();
     await page.getByRole("button", { name: "Extract checklist" }).click();
     await expect(
