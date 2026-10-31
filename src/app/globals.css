@@ -168,3 +168,485 @@
     transform: rotate(2deg);
   }
 }
+
+@layer components {
+  /* A shared reading rhythm for Sage's instruction and Pip's feedback. */
+  .teech-prose {
+    @apply min-w-0 text-[1rem] leading-[1.85] text-olive-800 wrap-anywhere dark:text-olive-200;
+  }
+  .teech-prose p {
+    @apply my-0 text-inherit;
+    white-space: pre-line;
+  }
+  .teech-prose > * + *,
+  .teech-prose > * + p {
+    margin-top: 1.15em;
+  }
+  .teech-prose h3,
+  .teech-prose h4 {
+    @apply mb-3 mt-8 font-semibold leading-snug tracking-tight;
+  }
+  .teech-prose h3 {
+    @apply text-[1.1875rem];
+  }
+  .teech-prose h4 {
+    @apply text-[1.0625rem];
+  }
+  .teech-prose > :first-child {
+    margin-top: 0;
+  }
+  .teech-prose > :last-child {
+    margin-bottom: 0;
+  }
+  .teech-prose strong {
+    @apply font-semibold;
+  }
+  .teech-prose ul,
+  .teech-prose ol,
+  .course-plan ul {
+    @apply pl-6;
+  }
+  .teech-prose ul,
+  .course-plan ul {
+    list-style: disc;
+  }
+  .teech-prose ol {
+    list-style: decimal;
+  }
+  .teech-prose li,
+  .course-plan ul li {
+    @apply pl-1.5 my-2.5;
+  }
+  .teech-prose li::marker,
+  .course-plan li::marker {
+    @apply text-olive-600 dark:text-olive-400;
+  }
+  .teech-prose li > ul,
+  .teech-prose li > ol {
+    @apply my-2;
+  }
+  .teech-prose li > p + p {
+    @apply mt-3;
+  }
+  .teech-prose a {
+    @apply text-emerald-800 underline underline-offset-4 dark:text-emerald-300;
+  }
+  .teech-prose :not(pre) > code {
+    @apply rounded border border-olive-200 bg-olive-100 px-1.25 py-0.5 font-mono text-[0.875em] dark:border-olive-700 dark:bg-olive-800;
+  }
+  .teech-prose hr {
+    @apply my-7 border-0 border-t border-olive-200 dark:border-olive-700;
+  }
+  .teech-prose blockquote {
+    @apply border-l-2 border-olive-400 pl-5 text-stone-600 dark:text-olive-300;
+  }
+  .result-code,
+  .result-equation {
+    @apply mx-0 my-6 min-w-0 overflow-hidden rounded-xl border border-olive-200 bg-white dark:border-olive-700 dark:bg-mist-950;
+  }
+  .result-code figcaption,
+  .result-equation figcaption {
+    @apply flex flex-wrap items-center justify-between gap-2 border-b border-olive-200 bg-olive-50 px-4 py-2.5 text-[0.6875rem] font-medium leading-normal text-stone-500 dark:border-olive-700 dark:bg-olive-800 dark:text-olive-300;
+  }
+  .result-code button {
+    @apply inline-flex min-h-7 items-center gap-1.5 rounded px-1.5 hover:bg-olive-200 dark:hover:bg-olive-700;
+  }
+  .result-code pre,
+  .result-equation pre {
+    @apply m-0 max-w-full overflow-x-auto p-4.5 font-mono text-[0.8125rem] leading-[1.8];
+    white-space: pre;
+    overflow-wrap: normal;
+    tab-size: 2;
+  }
+  .result-equation pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .result-table {
+    @apply my-5 max-w-full overflow-x-auto rounded-lg border border-olive-200 dark:border-olive-700;
+  }
+  .result-table table {
+    @apply w-full border-collapse text-left text-[0.875rem] leading-relaxed;
+  }
+  .result-table th {
+    @apply bg-olive-100 font-semibold dark:bg-olive-800;
+  }
+  .result-table td,
+  .result-table th {
+    @apply min-w-32 border-b border-olive-200 px-4 py-3 align-top dark:border-olive-700;
+  }
+  .result-table tr:last-child td {
+    @apply border-b-0;
+  }
+  .learning-main {
+    max-width: 46rem;
+  }
+  .learning-main > section > h2 {
+    @apply mb-6 text-[1.75rem] leading-snug tracking-tight max-phone:text-[1.5rem];
+  }
+  .learning-page .learning-card > h3 {
+    @apply mb-4 font-semibold;
+  }
+  .learning-page .learning-card > p + p {
+    @apply mt-3;
+  }
+  .learning-page .learning-card > .button {
+    @apply mt-4;
+  }
+  .learning-page .learning-outcome {
+    @apply mb-8 rounded-r-lg border-l-2 border-olive-500 bg-olive-100 px-5 py-4 text-[0.9375rem] leading-relaxed text-olive-800 dark:bg-olive-800 dark:text-olive-200;
+  }
+  .result-label {
+    @apply mb-2 text-[0.6875rem] font-semibold tracking-[0.08em] text-olive-600 uppercase dark:text-olive-400;
+  }
+  .learning-outcome .result-label {
+    @apply block mb-1.5;
+  }
+  .learning-page .lesson-example {
+    @apply my-8 min-w-0 rounded-xl border border-olive-200 bg-white p-6 dark:border-olive-700 dark:bg-mist-900 max-phone:p-4.5;
+  }
+  .learning-page .lesson-definitions {
+    @apply my-8 border-0 border-y border-olive-200 rounded-none bg-transparent px-0 py-6 dark:border-olive-700 dark:bg-transparent;
+  }
+  .result-definitions {
+    @apply m-0;
+  }
+  .result-definitions > div {
+    @apply grid grid-cols-[minmax(7rem,0.7fr)_minmax(0,2fr)] gap-5 border-b border-olive-200 py-3.5 dark:border-olive-700 max-phone:grid-cols-1 max-phone:gap-1.5;
+  }
+  .result-definitions > div:last-child {
+    @apply border-0 pb-0;
+  }
+  .result-definitions dt {
+    @apply font-semibold;
+  }
+  .result-definitions dd {
+    @apply m-0;
+  }
+  .result-definitions dd:only-child {
+    grid-column: 1 / -1;
+  }
+  .result-definitions .teech-prose {
+    @apply text-[0.875rem] leading-[1.75];
+  }
+  .learning-page .learning-hint {
+    @apply my-7 px-5 py-4 text-[0.9375rem] leading-relaxed;
+  }
+  .learning-hint .result-label {
+    @apply block;
+  }
+  .course-plan {
+    @apply my-5 min-w-0 rounded-xl border border-olive-200 bg-white p-7 wrap-anywhere dark:border-olive-700 dark:bg-mist-900 max-phone:p-5;
+  }
+  .course-plan > header {
+    @apply mb-7 border-b border-olive-200 pb-6 dark:border-olive-700;
+  }
+  .course-plan > header h2 {
+    @apply mb-3 text-[1.75rem] tracking-tight;
+  }
+  .course-plan .plan-meta {
+    @apply mt-5 mb-0 flex flex-wrap gap-x-5 gap-y-2 text-[0.75rem] text-olive-600 dark:text-olive-400;
+  }
+  .plan-scope {
+    @apply grid grid-cols-2 gap-6 border-b border-olive-200 pb-6 mb-7 dark:border-olive-700 max-phone:grid-cols-1 max-phone:gap-5;
+  }
+  .plan-section {
+    @apply my-7;
+  }
+  .plan-section h3 {
+    @apply mb-3 text-[1rem] font-semibold;
+  }
+  .plan-section > ul {
+    @apply my-0;
+  }
+  .plan-section li .teech-prose {
+    @apply text-[0.9375rem] leading-[1.7];
+  }
+  .plan-units {
+    @apply list-none p-0 m-0;
+    counter-reset: unit;
+  }
+  .plan-units li {
+    @apply flex items-start gap-3 border-b border-olive-200 py-3.5 dark:border-olive-700;
+    counter-increment: unit;
+  }
+  .plan-units li::before {
+    content: counter(unit, decimal-leading-zero);
+    @apply mt-0.5 text-[0.75rem] font-mono text-olive-500 dark:text-olive-400;
+  }
+  .plan-units li:last-child {
+    @apply border-0;
+  }
+  .course-plan footer {
+    @apply border-t border-olive-200 pt-5 mt-7 dark:border-olive-700;
+  }
+  .course-plan footer .button {
+    @apply mt-4;
+  }
+  .learning-outline ol {
+    list-style: decimal;
+  }
+  .feedback-points {
+    @apply grid gap-5 mt-5;
+  }
+  .feedback-point .result-label {
+    @apply mb-1.5;
+  }
+  .feedback-point .teech-prose {
+    @apply text-[0.9375rem] leading-[1.75];
+  }
+  .learning-feedback h3,
+  .learning-solution h3 {
+    @apply mb-4 font-semibold;
+  }
+  .learning-solution > .teech-prose {
+    @apply mb-4;
+  }
+  .result > .teech-prose {
+    @apply text-[0.9375rem];
+  }
+  .result .suggestion .teech-prose {
+    @apply text-[0.875rem] text-inherit;
+  }
+  .lesson-idea > .teech-prose {
+    @apply text-[1.125rem] leading-[1.7];
+  }
+  .lesson-points > ul {
+    @apply m-0 list-none p-0;
+    counter-reset: point;
+  }
+  .lesson-points > ul > li {
+    @apply my-2.5 flex items-start gap-3 rounded-lg p-3.5;
+    background: light-dark(#ffffff80, #ffffff06);
+    counter-increment: point;
+  }
+  .lesson-points > ul > li::before {
+    content: counter(point, decimal-leading-zero);
+    @apply mt-0.5 font-mono text-[0.6875rem];
+    color: light-dark(#6d28d9, #c4b5fd);
+  }
+  .lesson-panel .teech-prose li::marker {
+    color: light-dark(#676952, #c5c5ad);
+  }
+  .lesson-points > ul > li:last-child {
+    @apply mb-0;
+  }
+  .lesson-essentials li .teech-prose {
+    @apply text-[0.9375rem] leading-[1.75];
+  }
+  .lesson-instruction .lesson-panel,
+  .lesson-simplified > .lesson-blocks > * {
+    @apply my-0 min-w-0 rounded-2xl border p-5.5 max-phone:p-4;
+    border-color: light-dark(#cbded5, #35544c);
+    background: light-dark(#edf5ef, #1d302c);
+  }
+  .lesson-essentials,
+  .lesson-instruction {
+    @apply grid gap-4;
+  }
+  .lesson-panel > h3,
+  .lesson-simplified > h3 {
+    @apply flex items-center gap-2.5 mb-3.5 text-[1rem] font-semibold leading-snug;
+  }
+  .lesson-panel > h3 > svg,
+  .lesson-simplified > h3 > svg,
+  .lesson-watch > .result-label > svg {
+    @apply size-4.5;
+  }
+  .lesson-instruction .lesson-points,
+  .lesson-simplified > .lesson-blocks > ul,
+  .lesson-simplified > .lesson-blocks > ol {
+    border-color: light-dark(#dfd8ee, #48405f);
+    background: light-dark(#f3eff9, #2b2638);
+  }
+  .lesson-instruction .lesson-example {
+    border-color: light-dark(#e7d9bd, #554a35);
+    background: light-dark(#faf3e5, #332e23);
+  }
+  .lesson-instruction .lesson-watch {
+    border-color: light-dark(#edcfbf, #654534);
+    background: light-dark(#fbeee6, #392a23);
+  }
+  .lesson-simplified > .lesson-blocks {
+    @apply grid gap-4;
+  }
+  .lesson-simplified > .lesson-blocks > ul,
+  .lesson-simplified > .lesson-blocks > ol {
+    @apply pl-10;
+  }
+  .lesson-simplified > .lesson-blocks > * + * {
+    @apply mt-0;
+  }
+  .lesson-watch {
+    @apply border;
+  }
+  .lesson-watch > .result-label {
+    @apply flex items-center gap-2 text-orange-900 dark:text-orange-200;
+  }
+  .lesson-watch .teech-prose {
+    @apply text-[0.875rem] leading-[1.75];
+  }
+  .lesson-instruction .lesson-reference {
+    @apply my-0 rounded-xl border border-slate-200 bg-slate-100/60 px-5 dark:border-slate-700 dark:bg-slate-800/40 max-phone:px-4;
+  }
+  .lesson-reference > summary {
+    @apply min-h-12 gap-2.5 py-3 text-[0.8125rem] font-medium text-olive-700 dark:text-olive-300;
+  }
+  .lesson-reference > summary::before {
+    content: "+";
+    @apply text-[1rem] font-normal text-olive-500;
+  }
+  .lesson-reference[open] > summary::before {
+    content: "−";
+  }
+  .lesson-reference > summary > span {
+    @apply rounded bg-olive-100 px-1.5 text-[0.625rem] dark:bg-olive-800;
+  }
+  .lesson-reference > .lesson-blocks,
+  .lesson-reference > .result-definitions {
+    @apply pb-5;
+  }
+  .lesson-simplify {
+    @apply mb-6 rounded-lg border border-olive-200 bg-olive-50 p-4 dark:border-olive-700 dark:bg-olive-800;
+  }
+  .lesson-simplify > p {
+    @apply mb-0 mt-2 text-[0.75rem] leading-relaxed;
+  }
+  .pip-panel {
+    @apply min-w-0 rounded-2xl border p-5.5 wrap-anywhere max-phone:p-4;
+  }
+  .pip-tone-sage {
+    border-color: light-dark(#cbded5, #35544c);
+    background: light-dark(#edf5ef, #1d302c);
+  }
+  .pip-tone-lavender {
+    border-color: light-dark(#dfd8ee, #48405f);
+    background: light-dark(#f3eff9, #2b2638);
+  }
+  .pip-tone-peach {
+    border-color: light-dark(#edcfbf, #654534);
+    background: light-dark(#fbeee6, #392a23);
+  }
+  .pip-tone-sand {
+    border-color: light-dark(#e7d9bd, #554a35);
+    background: light-dark(#faf3e5, #332e23);
+  }
+  .pip-tone-blue {
+    border-color: light-dark(#d3deea, #3a4c62);
+    background: light-dark(#edf2f8, #222d3b);
+  }
+  .pip-room .review-summary {
+    @apply flex items-center gap-5 mb-5 max-mobile:items-start max-mobile:gap-3;
+  }
+  .review-summary > .student {
+    @apply max-mobile:w-15;
+  }
+  .pip-room .review-summary h2 {
+    @apply mb-3 font-serif text-[1.875rem] max-phone:text-[1.5rem];
+  }
+  .pip-room .review-summary p {
+    @apply mb-4 text-[0.8125rem];
+  }
+  .pip-room .review-summary .eyebrow {
+    @apply mb-3 text-[0.625rem];
+  }
+  .review-insights {
+    @apply grid grid-cols-2 gap-4 my-5 max-mobile:grid-cols-1;
+  }
+  .pip-panel > h3 {
+    @apply mb-4 flex items-center gap-2.5 text-[1rem] font-semibold leading-snug;
+  }
+  .pip-panel > h3 > svg,
+  .pip-panel .result-label > svg,
+  .evidence-label > svg {
+    @apply size-4;
+  }
+  .pip-insight-list {
+    @apply m-0 grid list-none gap-3 p-0;
+  }
+  .pip-insight-list li .teech-prose,
+  .pip-room .result > .teech-prose {
+    @apply text-[0.9375rem] leading-[1.8];
+  }
+  .pip-numbered {
+    counter-reset: revisit;
+  }
+  .pip-numbered li {
+    @apply flex items-start gap-3;
+    counter-increment: revisit;
+  }
+  .pip-numbered li::before {
+    content: counter(revisit, decimal-leading-zero);
+    @apply mt-1 font-mono text-[0.6875rem];
+    color: light-dark(#8a4525, #f6c5a9);
+  }
+  .pip-room .concept-results {
+    @apply grid gap-5;
+  }
+  .pip-room .result-heading h3 {
+    @apply flex items-start gap-2.5 text-[1.125rem] leading-snug;
+  }
+  .pip-room .result-heading h3 > svg {
+    @apply mt-1 size-4;
+  }
+  .pip-room .status {
+    @apply shrink-0 rounded-md px-2.5 py-1.5 text-[0.6875rem] font-medium leading-snug;
+    background: light-dark(#e8e0f3, #443857);
+    color: light-dark(#573973, #e1c8fb);
+  }
+  .pip-room .status-explained-clearly {
+    background: light-dark(#daebde, #294b3d);
+    color: light-dark(#255638, #b4e8c5);
+  }
+  .pip-room .status-not-demonstrated {
+    background: light-dark(#e0e8f0, #354153);
+    color: light-dark(#41566e, #d0deed);
+  }
+  .pip-room .status-needs-correction {
+    background: light-dark(#f6dfd3, #573a30);
+    color: light-dark(#82391f, #ffd3bd);
+  }
+  .pip-room .evidence-grid {
+    @apply grid grid-cols-2 gap-3 mt-5 max-mobile:grid-cols-1;
+  }
+  .pip-room .evidence-grid > .pip-panel {
+    @apply rounded-xl p-4;
+  }
+  .evidence-label {
+    @apply flex items-center gap-2 text-[0.625rem] font-semibold tracking-[0.06em];
+  }
+  .pip-room .evidence-grid blockquote {
+    @apply mx-0 mb-0 mt-3 whitespace-pre-wrap font-serif text-[0.9375rem] leading-[1.8] text-olive-800 wrap-anywhere dark:text-olive-200;
+  }
+  .pip-room .evidence-grid blockquote::before {
+    content: "“";
+  }
+  .pip-room .evidence-grid blockquote::after {
+    content: "”";
+  }
+  .pip-room .evidence-grid p {
+    @apply mb-0 mt-3 text-[0.8125rem] leading-[1.75];
+  }
+  .pip-room .suggestion {
+    @apply mt-4 rounded-xl p-4;
+  }
+  .pip-room .suggestion .result-label,
+  .pip-room .question-bubble > .result-label {
+    @apply mb-2 flex items-center gap-2;
+  }
+  .pip-room .suggestion .teech-prose {
+    @apply text-[0.9375rem];
+  }
+  .pip-room .review-bottom {
+    @apply mt-5 flex items-center justify-between gap-5 max-mobile:flex-col max-mobile:items-stretch;
+  }
+  .pip-room .review-bottom h2 {
+    @apply mb-2 font-serif text-[1.75rem];
+  }
+  .pip-room .review-bottom p {
+    @apply m-0 text-[0.8125rem];
+  }
+  .pip-room .question-bubble {
+    @apply mb-4;
+  }
+}

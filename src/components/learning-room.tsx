@@ -7,6 +7,8 @@ import { Teacher } from "./teacher";
 import { LearningFields } from "./learning-setup";
 import { LearningPractice, type LearningAction } from "./learning-practice";
 import { LearningSummary } from "./learning-summary";
+import { LessonBlocks, RichText } from "./result-content";
+import { LessonInstruction } from "./lesson-instruction";
 import {
   actionRecovered,
   clearLearningDrafts,
@@ -16,8 +18,8 @@ import {
 import {
   learningStateSchema,
   provenance,
+  SIMPLIFY_LESSON_QUESTION,
   type LearningSession,
-  type Unit,
 } from "@/lib/learning";
 import { newTeacherSample, sampleTeacherAction } from "@/lib/teacher-sample";
 import { removeLocal, writeLocal } from "@/lib/client";
@@ -26,41 +28,6 @@ import { useDraft } from "@/lib/draft";
 import { learningDraftSchema } from "@/lib/learning";
 import { z } from "zod";
 
-export function LessonBlocks({ blocks }: { blocks: Unit["explanation"] }) {
-  return (
-    <div className="lesson-blocks text-[1rem] leading-[1.8] wrap-anywhere [&_p]:text-olive-800 [&_p]:whitespace-pre-wrap dark:[&_p]:text-olive-200 [&_figure]:mx-0 [&_figure]:my-5.5 [&_figcaption]:text-[0.75rem] [&_figcaption]:text-stone-500 dark:[&_figcaption]:text-olive-400 [&_pre]:whitespace-pre-wrap [&_pre]:wrap-anywhere [&_pre]:rounded-lg [&_pre]:bg-taupe-100 [&_pre]:text-[0.875rem] [&_pre]:leading-[1.7] [&_pre]:font-mono [&_pre]:max-w-full [&_pre]:p-4 dark:[&_pre]:bg-olive-800">
-      {blocks.map((b, i) =>
-        b.kind === "code" ? (
-          <figure key={i}>
-            <figcaption>Illustrative code · not executed</figcaption>
-            <pre>
-              <code>{b.text}</code>
-            </pre>
-          </figure>
-        ) : b.kind === "equation" ? (
-          <pre
-            className="lesson-equation whitespace-pre-wrap wrap-anywhere rounded-lg bg-taupe-100 text-[0.875rem] leading-[1.7] font-mono max-w-full p-4 dark:bg-olive-800"
-            key={i}
-            aria-label={`Equation: ${b.text}`}
-          >
-            {b.text}
-          </pre>
-        ) : b.kind === "list" ? (
-          <ul key={i}>
-            {b.text
-              .split("\n")
-              .filter(Boolean)
-              .map((line, n) => (
-                <li key={n}>{line}</li>
-              ))}
-          </ul>
-        ) : (
-          <p key={i}>{b.text}</p>
-        ),
-      )}
-    </div>
-  );
-}
 function UnitPreparation({
   act,
   busy,
@@ -530,30 +497,18 @@ export function LearningRoom({
                   />
                 ) : (
                   <>
-                    <p className="learning-outcome text-olive-600 bg-olive-100 rounded-lg p-4 dark:text-olive-400 dark:bg-olive-800">
-                      <strong>After this:</strong> {u.content.outcome}
+                    <p className="learning-outcome">
+                      <strong className="result-label">After this:</strong>{" "}
+                      {u.content.outcome}
                     </p>
-                    <LessonBlocks blocks={u.content.explanation} />
-                    {!!u.content.definitions.length && (
-                      <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
-                        <h3>Definitions to keep nearby</h3>
-                        <ul>
-                          {u.content.definitions.map((d) => (
-                            <li key={d}>{d}</li>
-                          ))}
-                        </ul>
-                      </section>
-                    )}
-                    <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
-                      <h3>A worked example</h3>
-                      <LessonBlocks blocks={u.content.workedExample} />
-                    </section>
-                    {u.content.misunderstanding && (
-                      <p className="learning-hint bg-orange-100 rounded-lg text-olive-800 p-4 dark:bg-olive-800 dark:text-olive-200">
-                        <strong>Watch for this:</strong>{" "}
-                        {u.content.misunderstanding}
-                      </p>
-                    )}
+                    <LessonInstruction
+                      key={u.content.id}
+                      unit={u}
+                      busy={busy}
+                      canSimplify={s.helpUsed < 2 && s.providerAttempts < 22}
+                      act={act}
+                      sample={sample}
+                    />
                     {!!u.content.sourceExcerpts.length && (
                       <details>
                         <summary>Supporting passages from your notes</summary>
@@ -566,18 +521,20 @@ export function LearningRoom({
                         </p>
                       </details>
                     )}
-                    {u.clarifications.map((c, i) => (
-                      <section
-                        className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
-                        key={i}
-                      >
-                        <h3>{c.question}</h3>
-                        <LessonBlocks blocks={c.blocks} />
-                        {c.sourceExcerpts.map((q, j) => (
-                          <blockquote key={j}>{q}</blockquote>
-                        ))}
-                      </section>
-                    ))}
+                    {u.clarifications
+                      .filter((c) => c.question !== SIMPLIFY_LESSON_QUESTION)
+                      .map((c, i) => (
+                        <section
+                          className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]"
+                          key={i}
+                        >
+                          <h3>{c.question}</h3>
+                          <LessonBlocks blocks={c.blocks} />
+                          {c.sourceExcerpts.map((q, j) => (
+                            <blockquote key={j}>{q}</blockquote>
+                          ))}
+                        </section>
+                      ))}
                     <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
                       <h3>A little help with this step</h3>
                       <p>
@@ -710,53 +667,77 @@ function PlanSetup({
         </p>
       )}
       {s.plan && (
-        <section className="learning-card min-w-0 bg-white border-solid rounded-xl wrap-anywhere mx-0 my-5 p-6.25 border border-olive-300 dark:bg-neutral-800 dark:border-olive-700 [&_>_label]:block [&_>_label]:mt-4.5 [&_>_label]:mb-1.5 [&_>_label]:font-semibold [&_>_textarea]:w-full [&_>_textarea]:min-w-0 [&_>_textarea]:border-solid [&_>_textarea]:rounded-lg [&_>_textarea]:bg-white [&_>_textarea]:text-olive-800 [&_>_textarea]:px-3.25 [&_>_textarea]:py-2.75 [&_>_textarea]:border [&_>_textarea]:border-olive-300 dark:[&_>_textarea]:bg-neutral-800 dark:[&_>_textarea]:text-olive-200 dark:[&_>_textarea]:border-olive-700 [&_>_select]:w-full [&_>_select]:min-w-0 [&_>_select]:border-solid [&_>_select]:rounded-lg [&_>_select]:bg-white [&_>_select]:text-olive-800 [&_>_select]:whitespace-normal [&_>_select]:mb-3.5 [&_>_select]:px-3.25 [&_>_select]:py-2.75 [&_>_select]:border [&_>_select]:border-olive-300 dark:[&_>_select]:bg-neutral-800 dark:[&_>_select]:text-olive-200 dark:[&_>_select]:border-olive-700 max-lesson:p-4.5 max-mobile:[&_>_textarea]:text-[1rem]">
-          <h2>Your course outline</h2>
-          <p>
-            <strong>Interpretation:</strong> {s.plan.interpretation}
-          </p>
-          <p>
-            <strong>Will cover:</strong> {s.plan.covers}
-          </p>
-          <p>
-            <strong>Will not cover:</strong> {s.plan.excludes}
-          </p>
-          <p>
-            Estimated {s.plan.estimatedMinutes} minutes, depending on your pace.
-          </p>
-          <h3>Starting points</h3>
-          {s.plan.prerequisites.length ? (
+        <section className="learning-card course-plan">
+          <header>
+            <p className="result-label">Your learning path</p>
+            <h2>Your course outline</h2>
+            <RichText text={s.plan.interpretation} />
+            <p className="plan-meta">
+              <span>
+                About {s.plan.estimatedMinutes} minutes · at your pace
+              </span>
+              <span>
+                {s.plan.units.length}{" "}
+                {s.plan.units.length === 1 ? "unit" : "units"}
+              </span>
+            </p>
+          </header>
+          <div className="plan-scope">
+            <div>
+              <p className="result-label">Will cover</p>
+              <RichText text={s.plan.covers} />
+            </div>
+            <div>
+              <p className="result-label">For another time</p>
+              <RichText text={s.plan.excludes} />
+            </div>
+          </div>
+          <section className="plan-section">
+            <h3>Starting points</h3>
+            {s.plan.prerequisites.length ? (
+              <ul>
+                {s.plan.prerequisites.map((p) => (
+                  <li key={p}>
+                    <RichText text={p} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No specific prerequisites.</p>
+            )}
+          </section>
+          <section className="plan-section">
+            <h3>What you’ll work toward</h3>
             <ul>
-              {s.plan.prerequisites.map((p) => (
-                <li key={p}>{p}</li>
+              {s.plan.objectives.map((o) => (
+                <li key={o.id}>
+                  <RichText text={o.text} />
+                </li>
               ))}
             </ul>
-          ) : (
-            <p>No specific prerequisites.</p>
-          )}
-          <h3>What you’ll work toward</h3>
-          <ul>
-            {s.plan.objectives.map((o) => (
-              <li key={o.id}>{o.text}</li>
-            ))}
-          </ul>
-          <ol>
-            {s.plan.units.map((u) => (
-              <li key={u.id}>{u.title}</li>
-            ))}
-          </ol>
+          </section>
+          <section className="plan-section">
+            <h3>The route we’ll take</h3>
+            <ol className="plan-units">
+              {s.plan.units.map((u) => (
+                <li key={u.id}>{u.title}</li>
+              ))}
+            </ol>
+          </section>
           {s.plan.sourceExcerpts.map((q, i) => (
             <blockquote key={i}>{q}</blockquote>
           ))}
-          <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
-            Accepting fixes this outline. A different scope later needs a new
-            course. Your first unit prepares automatically using AI allowance;
-            later units prepare as you reach them. Reopening saved units uses no
-            AI allowance.
-          </p>
-          <Button disabled={busy} onClick={() => void act("accept")}>
-            Accept outline & begin
-          </Button>
+          <footer>
+            <p className="micro text-[0.75rem] leading-[1.7] text-olive-600 dark:text-olive-400">
+              Accepting fixes this outline. A different scope later needs a new
+              course. Your first unit prepares automatically using AI allowance;
+              later units prepare as you reach them. Reopening saved units uses
+              no AI allowance.
+            </p>
+            <Button disabled={busy} onClick={() => void act("accept")}>
+              Accept outline & begin
+            </Button>
+          </footer>
         </section>
       )}
       {!sample && (

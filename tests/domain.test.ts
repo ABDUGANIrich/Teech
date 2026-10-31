@@ -73,8 +73,15 @@ describe("review validation", () => {
       })),
     };
   }
-  it("omits unverifiable source and user excerpts", () => {
+  it("validates review shape and omits unverifiable source and user excerpts", () => {
     const r = raw();
+    expect(evaluationSchema.safeParse(r).success).toBe(true);
+    expect(evaluationSchema.safeParse({ ...r, results: [] }).success).toBe(
+      false,
+    );
+    expect(
+      evaluationSchema.safeParse({ ...r, strengths: "great" }).success,
+    ).toBe(false);
     r.results[0].userExcerpt = "The user never wrote this.";
     r.results[0].sourceExcerpt = "The source never said this.";
     const v = verifyEvaluation(r, s).results[0];
@@ -103,15 +110,6 @@ describe("review validation", () => {
     c.results[0].status = "Needs correction";
     c.results[0].claimType = "unsupported";
     expect(() => verifyEvaluation(c, s)).toThrow(/unsupported/);
-  });
-  it("rejects malformed AI output", () => {
-    expect(
-      evaluationSchema.safeParse({
-        results: [],
-        strengths: "great",
-        revisit: [],
-      }).success,
-    ).toBe(false);
   });
   it("enforces every status and claim-type combination", () => {
     for (const claimType of [

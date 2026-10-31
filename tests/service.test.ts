@@ -143,15 +143,25 @@ describe("server orchestration with deterministic AI and persistence doubles", (
       expect(saved.question_calls).toBe(1);
       return { results: [], strengths: [], revisit: [] };
     });
-    expect(
-      (
-        await action({
-          action: "explain",
-          id: s.id,
-          text: "A durable explanation of evaporation.",
-        })
-      ).error,
-    ).toBeUndefined();
+    const result = await action({
+      action: "explain",
+      id: s.id,
+      text: "A durable explanation of evaporation.",
+    });
+    expect(result.error).toBeUndefined();
+    expect(m.question).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ question_calls: 0 }),
+      expect.anything(),
+    );
+    expect(m.evaluation).toHaveBeenCalledOnce();
+    expect(result.session).toMatchObject({
+      phase: "review",
+      question_calls: 1,
+      messages: [
+        { role: "user", text: "A durable explanation of evaporation." },
+      ],
+    });
+    expect(m.rows.get("sessions")![0].data).toEqual(result.session);
   });
   it("rejects stale Student answers and typed finishes before any extra AI work", async () => {
     const s = seed({

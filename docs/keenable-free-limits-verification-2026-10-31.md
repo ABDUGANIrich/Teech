@@ -1,5 +1,7 @@
 # Keenable free-allowance controls — verification
 
+Historical verification record. For current releases, follow the [GitHub-only deployment workflow](../README.md#deploy-through-github).
+
 Verified and deployed on 31 October 2026 (Asia/Tashkent).
 
 Production: https://teech-nu.vercel.app

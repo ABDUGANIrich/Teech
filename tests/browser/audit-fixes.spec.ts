@@ -1,3 +1,4 @@
+import { expectReadableText } from "./helpers/readability";
 import { expect, test } from "@playwright/test";
 import { sampleTopic } from "../../src/lib/sample";
 import { newTeacherSample } from "../../src/lib/teacher-sample";
@@ -96,62 +97,46 @@ test("accepted setup recovery preserves changed inputs and requires an explicit 
   });
 });
 
-test("sign-in preserves the requested creation page and source query", async ({
-  page,
-}) => {
-  const next = "/learn/new?topic=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
-  await page.goto(next);
-  await expect(page).toHaveURL(/\/signin\?/);
-  expect(new URL(page.url()).pathname).toBe("/signin");
-  expect(new URL(page.url()).searchParams.get("next")).toBe(next);
-  await page.route("**/api/auth", async (route) => {
-    expect(route.request().postDataJSON().next).toBe(next);
-    return route.fulfill({ json: { ok: true } });
-  });
-  await page.goto(`${harness}/?${new URLSearchParams({ view: "auth", next })}`);
-  await page.getByLabel("Email address").fill("person@example.com");
-  await page.getByLabel("Password", { exact: true }).fill("a-valid-password");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
-  await expect(page).toHaveURL(`${harness}${next}`);
-});
+test(
+  "sign-in preserves the requested creation page and source query",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    const next = "/learn/new?topic=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    await page.goto(next);
+    await expect(page).toHaveURL(/\/signin\?/);
+    expect(new URL(page.url()).pathname).toBe("/signin");
+    expect(new URL(page.url()).searchParams.get("next")).toBe(next);
+    await page.route("**/api/auth", async (route) => {
+      expect(route.request().postDataJSON().next).toBe(next);
+      return route.fulfill({ json: { ok: true } });
+    });
+    await page.goto(
+      `${harness}/?${new URLSearchParams({ view: "auth", next })}`,
+    );
+    await page.getByLabel("Email address").fill("person@example.com");
+    await page.getByLabel("Password", { exact: true }).fill("a-valid-password");
+    await page.getByRole("button", { name: "Sign in", exact: true }).click();
+    await expect(page).toHaveURL(`${harness}${next}`);
+  },
+);
 
-test("mode controls and the sample note meet normal-text contrast in light and dark themes", async ({
-  page,
-}) => {
-  for (const theme of ["light", "dark"] as const) {
-    await page.emulateMedia({ colorScheme: theme });
-    await page.goto("/");
-    await expect(page.locator("html")).toHaveClass(new RegExp(theme));
-    const ratios = await page
-      .locator('#sample-note, .mode-selector p, nav[aria-label="Study mode"] a')
-      .evaluateAll((nodes) => {
-        const canvas = document.createElement("canvas");
-        canvas.width = canvas.height = 1;
-        const ctx = canvas.getContext("2d")!;
-        function luminance(color: string) {
-          ctx.clearRect(0, 0, 1, 1);
-          ctx.fillStyle = color;
-          ctx.fillRect(0, 0, 1, 1);
-          const rgb = [...ctx.getImageData(0, 0, 1, 1).data]
-            .slice(0, 3)
-            .map((value) => {
-              const v = value / 255;
-              return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
-            });
-          return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
-        }
-        return nodes.map((node) => {
-          let background = node;
-          while (
-            background.parentElement &&
-            getComputedStyle(background).backgroundColor === "rgba(0, 0, 0, 0)"
-          )
-            background = background.parentElement;
-          const fg = luminance(getComputedStyle(node).color),
-            bg = luminance(getComputedStyle(background).backgroundColor);
-          return (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05);
-        });
-      });
-    for (const ratio of ratios) expect(ratio).toBeGreaterThanOrEqual(4.5);
-  }
-});
+test(
+  "mode controls and the sample note meet normal-text contrast in light and dark themes",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    for (const theme of ["light", "dark"] as const) {
+      await page.emulateMedia({ colorScheme: theme });
+      await page.goto("/");
+      await expect(page.locator("html")).toHaveClass(new RegExp(theme));
+      await expect(page.locator("#sample-note")).toHaveCount(1);
+      await expect(page.locator('nav[aria-label="Study mode"] a')).toHaveCount(
+        2,
+      );
+      await expectReadableText(
+        page.locator(
+          '#sample-note, .mode-selector p, nav[aria-label="Study mode"] a',
+        ),
+      );
+    }
+  },
+);

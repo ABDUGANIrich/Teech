@@ -1,0 +1,20 @@
+[
+  {
+    "id": "valid-paraphrased-trace",
+    "answer": "Using zero-based inclusive endpoints, I start at [0,4]. The centre is index 2, whose value is 7. Four is smaller, so only indices 0 and 1 remain. I check index 0 (value 1), keep index 1, and find 4 there.",
+    "expectedStatuses": ["Correct"],
+    "reason": "A complete valid trace expressed differently from the reference answer."
+  },
+  {
+    "id": "incomplete-trace",
+    "answer": "With zero-based positions and inclusive endpoints 0 and 4, the first middle is position 2, value 7. Since 4 is smaller, the next bounds are low=0, high=1. I have not traced the remaining steps.",
+    "expectedStatuses": ["Partly correct"],
+    "reason": "The first comparison is valid, but the requested trace to the found value is missing."
+  },
+  {
+    "id": "wrong-half",
+    "answer": "The first middle position is 2, value 7. Because 4 is smaller than 7, I discard positions 0 through 2 and set low=3, high=4. Four is at position 4.",
+    "expectedStatuses": ["Partly correct", "Needs another try"],
+    "reason": "Identifies the initial middle but discards the wrong half and reports a false final position."
+  }
+]

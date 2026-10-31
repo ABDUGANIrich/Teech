@@ -376,6 +376,27 @@ describe("automatic bounded Teacher research", () => {
     expect(
       researchContext(s).reduce((n, source) => n + source.text.length, 0),
     ).toBeLessThanOrEqual(18000);
+    const crowded = structuredClone(s);
+    crowded.research!.sources = Array.from({ length: 6 }, (_, i) => ({
+      ...s.research!.sources[0],
+      url: `https://example.com/source-${i}`,
+      text: String(i).repeat(5000),
+    }));
+    expect(
+      crowded.research!.sources.reduce(
+        (n, source) => n + source.text.length,
+        0,
+      ),
+    ).toBeGreaterThan(18000);
+    expect(
+      researchContext(crowded).reduce((n, source) => n + source.text.length, 0),
+    ).toBe(18000);
+    expect(
+      researchContext(crowded, 9000).reduce(
+        (n, source) => n + source.text.length,
+        0,
+      ),
+    ).toBe(9000);
   });
   it.each(["allowance", "rate", "billing"])(
     "denies an external search when the shared guard returns %s",
@@ -437,8 +458,28 @@ describe("automatic bounded Teacher research", () => {
     },
   );
   it("records free usage privately and sends only the three requested source snippets to the model", async () => {
-    const { f, completions } = setup([tool(), ready()]);
-    await teacherPlan(newTeacherSample(), ctx);
+    const s = newTeacherSample();
+    const oversized = Array.from({ length: 5 }, (_, i) => ({
+      ...source,
+      url: `https://example.com/source-${i}`,
+      snippet: `Distinct source snippet ${i}`,
+    }));
+    const { f, completions } = setup([tool(), ready()], async () =>
+      Response.json({ usage: freeUsage, results: oversized }),
+    );
+    await teacherPlan(s, ctx);
+    expect(s.research!.sources.map((source) => source.url)).toEqual(
+      oversized.slice(0, 3).map((source) => source.url),
+    );
+    const messages = completions[1].messages as {
+      role: string;
+      content: string;
+    }[];
+    const supplied = JSON.parse(messages.at(-1)!.content).untrusted_data
+      .sources;
+    expect(supplied.map((source: { text: string }) => source.text)).toEqual(
+      oversized.slice(0, 3).map((source) => source.snippet),
+    );
     expect(m.rpc).toHaveBeenCalledWith(
       "record_keenable_search",
       expect.objectContaining({ p_outcome: "free", p_credits: 1 }),

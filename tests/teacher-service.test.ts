@@ -707,7 +707,7 @@ describe("teacher service with actual embedded PostgreSQL and deterministic mode
     await expect(readLearning(s.id)).rejects.toThrow(/not available/);
     expect((await act(s, "summary")).error).toContain("not available");
   });
-  it("atomically caps teacher calls at 22, including failed/repair slots, sharing global quotas", async () => {
+  it("caps teacher calls at 22, including failed/repair slots, sharing global quotas", async () => {
     const s = await active();
     const key = randomUUID();
     await db.query("select begin_operation($1,$2,$3,'budget')", [

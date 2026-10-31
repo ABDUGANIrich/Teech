@@ -239,9 +239,8 @@ export function LearningSetup({
       </p>
       <h1>Start with a little curiosity.</h1>
       <p>
-        Choose a topic, review your course outline, then learn and practice one
-        step at a time. Each unit prepares automatically as you reach it. About
-        15 minutes is an estimate.
+        Choose a topic and a small goal. Get the main idea, follow a short
+        example, then try it yourself. Extra detail is there when you need it.
       </p>
       <form
         onSubmit={(e) => {

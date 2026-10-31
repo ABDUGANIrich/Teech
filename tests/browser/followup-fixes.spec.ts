@@ -247,7 +247,7 @@ test("trimmed Teacher help recovers without an error, stale draft or duplicate r
   expect(posts).toBe(1);
 });
 
-test("Teacher focus follows each hint and solution within the application item", async ({
+test("Teacher focus follows each hint and solution within the application item", { tag: "@mobile" }, async ({
   page,
 }) => {
   let s = practice();

@@ -5,7 +5,7 @@ import {
   samplePlan,
   sampleUnit,
 } from "../src/lib/teacher-sample";
-import { studied } from "../src/lib/learning";
+import { studied, SIMPLIFY_LESSON_QUESTION } from "../src/lib/learning";
 const m = vi.hoisted(() => ({ rpc: vi.fn() }));
 vi.mock("../src/lib/server/db", () => ({
   admin: () => ({ rpc: m.rpc }),
@@ -17,6 +17,7 @@ import {
   teacherPlan,
   teacherUnit,
   teacherGrade,
+  teacherClarify,
 } from "../src/lib/server/teacher-ai";
 import { extractLessonConcepts } from "../src/lib/server/ai";
 const ctx = {
@@ -67,6 +68,47 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 describe("teacher tasks on shared provider transport", () => {
+  it("requires essentials for new units and repairs an older-format response within the existing budget", async () => {
+    const old = structuredClone(sampleUnit);
+    delete old.unit.essentials;
+    const f = vi
+      .fn()
+      .mockResolvedValueOnce(catalog())
+      .mockResolvedValueOnce(output(old))
+      .mockResolvedValueOnce(output(sampleUnit));
+    vi.stubGlobal("fetch", f);
+    const result = await teacherUnit(newTeacherSample(), "halves", ctx);
+    expect(result.unit.essentials).toEqual(sampleUnit.unit.essentials);
+    expect(m.rpc).toHaveBeenCalledTimes(2);
+  });
+  it("shortens saved instruction using its starting level without sending practice keys", async () => {
+    const s = newTeacherSample();
+    const f = vi
+      .fn()
+      .mockResolvedValueOnce(catalog())
+      .mockResolvedValueOnce(
+        output({
+          blocks: [{ kind: "paragraph", text: "A short explanation." }],
+          sourceExcerpts: [],
+        }),
+      );
+    vi.stubGlobal("fetch", f);
+    await teacherClarify(
+      s,
+      studied(sampleUnit.unit),
+      SIMPLIFY_LESSON_QUESTION,
+      ctx,
+    );
+    const body = JSON.parse(f.mock.calls[1][1].body);
+    expect(body.messages[0].content).toContain(
+      "short, self-contained explanation",
+    );
+    const sent = JSON.parse(body.messages[1].content).untrusted_data;
+    expect(sent.startingLevel).toBe(s.input.level);
+    expect(sent.instruction.essentials).toEqual(sampleUnit.unit.essentials);
+    expect(JSON.stringify(sent)).not.toContain("correctChoiceId");
+    expect(JSON.stringify(sent)).not.toContain("expectedAnswer");
+  });
   it("uses a separate teacher prompt and deliberately bounded unit output budget", async () => {
     const f = vi
       .fn()
@@ -287,7 +329,7 @@ describe("teacher tasks on shared provider transport", () => {
     );
     expect(m.rpc).toHaveBeenCalledTimes(2);
   });
-  it("allows uncertain grading and alternative reasoning, but rejects unknown item IDs", async () => {
+  it("accepts uncertain grading wire responses and rejects unknown item IDs", async () => {
     const grade = {
       itemId: "halves_apply",
       status: "Could not assess reliably",
@@ -308,9 +350,12 @@ describe("teacher tasks on shared provider transport", () => {
       ctx,
     );
     expect(result.status).toBe("Could not assess reliably");
-    expect(JSON.parse(f.mock.calls[1][1].body).messages[0].content).toContain(
-      "alternative valid reasoning",
-    );
+    const submitted = JSON.parse(
+      JSON.parse(f.mock.calls[1][1].body).messages[1].content,
+    ).untrusted_data;
+    expect(submitted.answer).toBe("Alternative trace");
+    expect(submitted.key.rubric).toEqual(sampleUnit.keys[1].rubric);
+    expect(submitted.question.id).toBe("halves_apply");
     f.mockReset()
       .mockResolvedValueOnce(catalog())
       .mockImplementation(async () => output({ ...grade, itemId: "unknown" }));

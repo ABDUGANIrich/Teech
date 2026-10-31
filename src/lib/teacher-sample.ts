@@ -2,6 +2,7 @@
 import { AppError } from "./domain";
 import {
   event,
+  SIMPLIFY_LESSON_QUESTION,
   studied,
   sourceForHandoff,
   type LearningSession,
@@ -34,13 +35,22 @@ export const samplePlan: Plan = {
   ],
   covers: "A short hand trace with inclusive bounds and distinct values.",
   excludes: "Duplicate values, implementation details and complexity proofs.",
-  estimatedMinutes: 15,
+  estimatedMinutes: 8,
   sourceExcerpts: [],
 };
 export const sampleUnit: UnitPackage = {
   unit: {
     id: "halves",
     outcome: "Choose which half to search next and trace a small example.",
+    essentials: {
+      idea: "Find a value in a sorted list by checking the middle and ruling out half of the remaining positions.",
+      points: [
+        "The list must be sorted (in increasing order), so one comparison tells you which side can contain your target.",
+        "Track the first and last possible positions, called low and high. Positions start at 0. Check the middle position: floor((low + high) / 2), meaning round down.",
+        "Target smaller than the middle value? Move high to middle − 1. Larger? Move low to middle + 1. The checked middle position is no longer a candidate.",
+        "Equal means found. If low becomes greater than high, no candidates remain: the target is absent.",
+      ],
+    },
     explanation: [
       {
         kind: "paragraph",
@@ -63,11 +73,11 @@ export const sampleUnit: UnitPackage = {
     workedExample: [
       {
         kind: "paragraph",
-        text: "Find 11 in [2, 5, 8, 11, 14]. Start low = 0, high = 4. Middle = 2 and the value is 8. Since 11 > 8, discard positions 0 through 2 and set low = 3. Now middle = floor((3 + 4) / 2) = 3. The value is 11, so the target is found at position 3.",
+        text: "Find **11** in the sorted list `[2, 5, 8, 11, 14]`.",
       },
       {
-        kind: "code",
-        text: "Illustrative pseudocode (not executed):\nwhile low <= high:\n  middle = floor((low + high) / 2)\n  compare list[middle] with target\n  keep only the unchecked half, or return if equal",
+        kind: "list",
+        text: "1. Start with positions low = 0 and high = 4. The middle position is 2, holding 8.\n2. 11 is larger than 8, so keep the right half: low = 3, high = 4.\n3. The new middle is floor((3 + 4) / 2) = 3. It holds 11. Found at position 3.",
       },
     ],
     misunderstanding:
@@ -205,12 +215,21 @@ export function sampleTeacherAction(
       s.helpUsed++;
       u.clarifications.push({
         question: String(a.question),
-        blocks: [
-          {
-            kind: "paragraph",
-            text: "Fixed sample explanation: imagine looking for a page in a sorted index. A middle entry tells you which half can still contain your target. This fixed response does not assess your question.",
-          },
-        ],
+        blocks:
+          String(a.question) === SIMPLIFY_LESSON_QUESTION
+            ? [
+                { kind: "paragraph", text: sampleUnit.unit.essentials!.idea },
+                {
+                  kind: "list",
+                  text: sampleUnit.unit.essentials!.points.join("\n"),
+                },
+              ]
+            : [
+                {
+                  kind: "paragraph",
+                  text: "Fixed sample explanation: imagine looking for a page in a sorted index. A middle entry tells you which half can still contain your target. This fixed response does not assess your question.",
+                },
+              ],
         sourceExcerpts: [],
       });
       break;

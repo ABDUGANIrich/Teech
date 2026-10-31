@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { FeedbackPoints } from "./result-content";
 import {
   allUnits,
   classification,
@@ -131,11 +132,11 @@ export function LearningSummary({
                 {a.hints.length ? ` · ${a.hints.length} hints` : ""}
               </p>
               {a.feedback && (
-                <>
-                  <p>{a.feedback.well}</p>
-                  <p>{a.feedback.gap}</p>
-                  <p>{a.feedback.next}</p>
-                </>
+                <FeedbackPoints
+                  well={a.feedback.well}
+                  gap={a.feedback.gap}
+                  next={a.feedback.next}
+                />
               )}
               {a.solution && <p>Solution revealed — worked review.</p>}
               {a.dispute !== null && (

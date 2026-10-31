@@ -9,14 +9,22 @@ beforeAll(async () => {
   await db.exec(
     "create role anon; create role authenticated; create role service_role bypassrls;",
   );
+  // A test-only clock seam keeps the one-second admission window deterministic.
+  // Production SQL and its advisory locking remain otherwise unchanged.
+  await db.exec(
+    "create function public.test_now() returns timestamptz language sql stable as $$ select current_setting('teech.test_now')::timestamptz $$",
+  );
   await db.exec(
     readFileSync(
       "supabase/migrations/20261031111719_keenable_free_limits.sql",
       "utf8",
-    ),
+    ).replaceAll("clock_timestamp()", "public.test_now()"),
   );
 });
 beforeEach(async () => {
+  await db.query("select set_config('teech.test_now', $1, false)", [
+    "2026-10-31T12:00:00Z",
+  ]);
   await db.exec(
     "reset role; truncate keenable_usage; update keenable_guard set blocked_until='-infinity',reason='rate'; set role service_role;",
   );
@@ -49,20 +57,20 @@ describe("Keenable free allowance in actual PostgreSQL", () => {
     expect(results.filter((r) => r.allowed)).toHaveLength(9);
     expect(await reserve()).toEqual({ allowed: false, reason: "rate" });
     await db.exec(
-      "update public.keenable_usage set created_at=clock_timestamp()-interval '2 seconds'",
+      "update public.keenable_usage set created_at=public.test_now()-interval '2 seconds'",
     );
     expect((await reserve()).allowed).toBe(true);
   });
   it("caps 100,000 attempts over 31 days across a calendar-month boundary, including failures", async () => {
     await db.exec(`insert into public.keenable_usage(id,created_at,outcome)
       select md5(n::text)::uuid,
-        (date_trunc('month',clock_timestamp() at time zone 'UTC') at time zone 'UTC')-interval '1 second','failed'
+        (date_trunc('month',public.test_now() at time zone 'UTC') at time zone 'UTC')-interval '1 second','failed'
       from generate_series(1,99999) n;`);
     expect((await reserve()).allowed).toBe(true);
     expect(await reserve()).toEqual({ allowed: false, reason: "allowance" });
     // Older than 31 days expires even when retained for diagnostics.
     await db.exec(
-      "update public.keenable_usage set created_at=clock_timestamp()-interval '31 days 1 hour'",
+      "update public.keenable_usage set created_at=public.test_now()-interval '31 days 1 hour'",
     );
     expect((await reserve()).allowed).toBe(true);
   });
@@ -72,7 +80,7 @@ describe("Keenable free allowance in actual PostgreSQL", () => {
     await record(id, "exhausted");
     expect(await reserve()).toEqual({ allowed: false, reason: "exhausted" });
     await db.exec(
-      "update public.keenable_guard set blocked_until=clock_timestamp()-interval '1 second'",
+      "update public.keenable_guard set blocked_until=public.test_now()-interval '1 second'",
     );
     id = randomUUID();
     await reserve(id);
@@ -80,7 +88,7 @@ describe("Keenable free allowance in actual PostgreSQL", () => {
     expect(await reserve()).toEqual({ allowed: false, reason: "rate" });
     const remaining = (
       await db.query<{ remaining: number }>(
-        "select extract(epoch from blocked_until-clock_timestamp())::int as remaining from public.keenable_guard",
+        "select extract(epoch from blocked_until-public.test_now())::int as remaining from public.keenable_guard",
       )
     ).rows[0].remaining;
     expect(remaining).toBeGreaterThan(120);
@@ -104,7 +112,7 @@ describe("Keenable free allowance in actual PostgreSQL", () => {
     await record(first, "failed");
     await reserve();
     await db.exec(
-      "insert into public.keenable_usage(id,created_at) values(gen_random_uuid(),clock_timestamp()-interval '33 days')",
+      "insert into public.keenable_usage(id,created_at) values(gen_random_uuid(),public.test_now()-interval '33 days')",
     );
     await reserve();
     const count = (

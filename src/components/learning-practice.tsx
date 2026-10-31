@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { FeedbackPoints, RichText } from "./result-content";
 import { readLocal, removeLocal, writeLocal } from "@/lib/client";
 import { useLocalSnapshot } from "@/lib/browser-storage";
 import { classification, type StudiedUnit } from "@/lib/learning";
@@ -205,14 +206,15 @@ function PracticeItem({
       )}
       {notice && <p role="status">{notice}</p>}
       {a.hints.map((hint, i) => (
-        <p
+        <div
           className="learning-hint bg-orange-100 rounded-lg text-olive-800 p-4 dark:bg-olive-800 dark:text-olive-200"
           id={`hint-${a.itemId}-${i}`}
           tabIndex={-1}
           key={i}
         >
-          <strong>Hint {i + 1}:</strong> {hint}
-        </p>
+          <strong className="result-label">Hint {i + 1}</strong>
+          <RichText text={hint} />
+        </div>
       ))}
       {a.feedback && (
         <div
@@ -222,11 +224,11 @@ function PracticeItem({
           role="status"
         >
           <h3>{a.feedback.status}</h3>
-          <p>{a.feedback.well}</p>
-          <p>{a.feedback.gap}</p>
-          <p>
-            <strong>Next step:</strong> {a.feedback.next}
-          </p>
+          <FeedbackPoints
+            well={a.feedback.well}
+            gap={a.feedback.gap}
+            next={a.feedback.next}
+          />
         </div>
       )}
       {(a.state === "pending" || a.state === "failed") &&
@@ -258,7 +260,7 @@ function PracticeItem({
           tabIndex={-1}
         >
           <h3>Worked review</h3>
-          <p>{a.solution}</p>
+          <RichText text={a.solution} />
           <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
             A revealed solution cannot count as independently solved.
           </p>

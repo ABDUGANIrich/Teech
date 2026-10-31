@@ -201,65 +201,54 @@ test("stale topic conflict retains edits until an explicit version choice", asyn
   expect(versions).toEqual([1, 2]);
 });
 
-test("Teacher help question draft survives reload", async ({ page }) => {
-  let s = newTeacherSample();
-  for (const action of ["accept", "generate"])
-    s = sampleTeacherAction(s, { action });
-  await page.route("**/api/learn**", (route) =>
-    route.fulfill({ json: { learning: s } }),
-  );
-  await page.goto(`${harness}/?view=learning-room`);
-  await page
-    .getByLabel("Ask about this step (up to 500 characters)")
-    .fill("Why does the middle move?");
-  await page.reload();
-  await expect(
-    page.getByLabel("Ask about this step (up to 500 characters)"),
-  ).toHaveValue("Why does the middle move?");
-});
-
-test("account recovery requests are email-only and password updates validate confirmation", async ({
-  page,
-}) => {
-  const bodies: Record<string, unknown>[] = [];
-  await page.route("**/api/auth", (route) => {
-    bodies.push(route.request().postDataJSON());
-    return route.fulfill({
-      json: { ok: true, message: "If eligible, check your inbox." },
+test(
+  "account recovery requests are email-only and password updates validate confirmation",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    const bodies: Record<string, unknown>[] = [];
+    await page.route("**/api/auth", (route) => {
+      bodies.push(route.request().postDataJSON());
+      return route.fulfill({
+        json: { ok: true, message: "If eligible, check your inbox." },
+      });
     });
-  });
-  await page.goto(`${harness}/?view=auth`);
-  await page.getByRole("button", { name: "Forgot password?" }).click();
-  await expect(page.getByLabel("Password", { exact: true })).toHaveCount(0);
-  await page.getByLabel("Email address").fill("person@example.com");
-  await page.getByRole("button", { name: "Send password-reset link" }).click();
-  await expect(page.getByRole("status")).toContainText("If eligible");
-  expect(bodies[0]).toEqual({
-    mode: "recover",
-    email: "person@example.com",
-    next: "/library",
-  });
-  await page
-    .getByRole("button", { name: "Resend confirmation", exact: true })
-    .click();
-  await page.getByRole("button", { name: "Resend confirmation email" }).click();
-  await expect.poll(() => bodies.length).toBe(2);
-  expect(bodies[1]).toEqual({
-    mode: "resend",
-    email: "person@example.com",
-    next: "/library",
-  });
-  await page.goto(`${harness}/?view=password`);
-  await page
-    .getByLabel("New password", { exact: true })
-    .fill("new-password-123");
-  await page
-    .getByLabel("Confirm password", { exact: true })
-    .fill("different-password");
-  await page.getByRole("button", { name: "Update password" }).click();
-  await expect(page.getByRole("alert")).toContainText("do not match");
-  expect(bodies).toHaveLength(2);
-});
+    await page.goto(`${harness}/?view=auth`);
+    await page.getByRole("button", { name: "Forgot password?" }).click();
+    await expect(page.getByLabel("Password", { exact: true })).toHaveCount(0);
+    await page.getByLabel("Email address").fill("person@example.com");
+    await page
+      .getByRole("button", { name: "Send password-reset link" })
+      .click();
+    await expect(page.getByRole("status")).toContainText("If eligible");
+    expect(bodies[0]).toEqual({
+      mode: "recover",
+      email: "person@example.com",
+      next: "/library",
+    });
+    await page
+      .getByRole("button", { name: "Resend confirmation", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Resend confirmation email" })
+      .click();
+    await expect.poll(() => bodies.length).toBe(2);
+    expect(bodies[1]).toEqual({
+      mode: "resend",
+      email: "person@example.com",
+      next: "/library",
+    });
+    await page.goto(`${harness}/?view=password`);
+    await page
+      .getByLabel("New password", { exact: true })
+      .fill("new-password-123");
+    await page
+      .getByLabel("Confirm password", { exact: true })
+      .fill("different-password");
+    await page.getByRole("button", { name: "Update password" }).click();
+    await expect(page.getByRole("alert")).toContainText("do not match");
+    expect(bodies).toHaveLength(2);
+  },
+);
 
 test("Teacher banner stacks readable text and actions at narrow widths", async ({
   page,

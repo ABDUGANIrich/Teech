@@ -13,8 +13,12 @@ import {
   LoaderCircle,
   RotateCcw,
   ShieldCheck,
+  TriangleAlert,
+  MessageCircle,
+  Quote,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import { RichText } from "./result-content";
 import { Student } from "./student";
 import { acceptAnswer, acceptExplanation, type Session } from "@/lib/domain";
 import { fixtureReview, newPreview, previewQuestions } from "@/lib/sample";
@@ -403,7 +407,7 @@ export function TeachingRoom({
     session.evaluation?.results.filter((r) => r.status === "Explained clearly")
       .length || 0;
   return (
-    <div className="workspace max-w-275 pt-8 pb-3 mx-auto my-0 px-6 max-mobile:pt-6.25 max-mobile:pb-2.5 max-mobile:px-4.5">
+    <div className="workspace pip-room max-w-275 pt-8 pb-3 mx-auto my-0 px-6 max-mobile:pt-6.25 max-mobile:pb-2.5 max-mobile:px-4.5">
       <div className="workspace-top flex items-center justify-between mt-0 mb-6 mx-0 max-mobile:mb-5.25">
         <Link
           href={userId ? "/library" : "/"}
@@ -595,7 +599,7 @@ export function TeachingRoom({
       )}
       {review && session.evaluation ? (
         <>
-          <section className="review-summary flex gap-6.5 items-center bg-olive-100 border-solid rounded-xl mb-7 px-7.5 py-5.5 border border-olive-200 dark:bg-olive-800 dark:border-olive-700 [&_h2]:font-serif [&_h2]:text-[1.8125rem] [&_h2]:mb-2.5 [&_p]:text-[0.75rem] [&_p]:mb-3.5 [&_.eyebrow]:text-[0.5625rem] [&_.eyebrow]:mb-2.5 max-mobile:gap-3 max-mobile:items-start max-mobile:p-5 max-mobile:[&_>_.student]:w-15 max-mobile:[&_h2]:text-[1.5625rem] max-mobile:[&_p]:text-[0.6875rem] max-mobile:[&_.eyebrow]:text-[0.5rem] max-mobile:[&_.eyebrow]:tracking-[0.04375rem]">
+          <section className="review-summary pip-panel pip-tone-sage">
             <Student small state="happy" />
             <div>
               <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
@@ -626,33 +630,49 @@ export function TeachingRoom({
               </div>
             </div>
           </section>
-          <div className="review-insights grid grid-cols-[1fr_1fr] gap-10 mt-8.75 mb-10 mx-0 px-1.25 py-0 [&_p]:text-[0.8125rem] [&_p]:flex [&_p]:items-start [&_p]:gap-3 [&_.eyebrow]:text-[0.5625rem] [&_.eyebrow]:mb-4.25 max-mobile:grid-cols-[1fr] max-mobile:gap-5.5 max-mobile:mx-0 max-mobile:my-6.5 max-mobile:[&_p]:text-[0.75rem] max-mobile:[&_p]:mb-2.25">
-            <div>
-              <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
-                WHAT CAME THROUGH
-              </p>
+          <div className="review-insights">
+            <section
+              className="pip-panel pip-tone-sage pip-strengths"
+              aria-labelledby="pip-strengths-title"
+            >
+              <h3 id="pip-strengths-title">
+                <Check aria-hidden="true" />
+                What came through
+              </h3>
               {session.evaluation.strengths.length ? (
-                session.evaluation.strengths.map((s, i) => <p key={i}>{s}</p>)
+                <ul className="pip-insight-list">
+                  {session.evaluation.strengths.map((strength, i) => (
+                    <li key={i}>
+                      <RichText text={strength} />
+                    </li>
+                  ))}
+                </ul>
               ) : (
                 <p>
                   Your explanation is a starting point. Use the concept feedback
                   below for your next step.
                 </p>
               )}
-            </div>
-            <div>
-              <p className="eyebrow text-[0.625rem] tracking-[0.10625rem] font-semibold text-stone-500 mt-0 mb-4.5 flex items-center gap-2 mx-0 dark:text-olive-400">
-                A LITTLE MORE ATTENTION
-              </p>
-              {session.evaluation.revisit.map((s, i) => (
-                <p key={i}>
-                  <span className="small-number text-[0.625rem] text-olive-600 mt-0.5 dark:text-olive-400">
-                    0{i + 1}
-                  </span>
-                  {s}
-                </p>
-              ))}
-            </div>
+            </section>
+            <section
+              className="pip-panel pip-tone-peach pip-revisit"
+              aria-labelledby="pip-revisit-title"
+            >
+              <h3 id="pip-revisit-title">
+                <TriangleAlert aria-hidden="true" />A little more attention
+              </h3>
+              {session.evaluation.revisit.length ? (
+                <ol className="pip-insight-list pip-numbered">
+                  {session.evaluation.revisit.map((area, i) => (
+                    <li key={i}>
+                      <RichText text={area} />
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>No specific follow-up was recorded.</p>
+              )}
+            </section>
           </div>
           <div className="section-row flex items-center justify-between gap-4 mb-4 [&_h2]:m-0 [&_.eyebrow]:mb-2.25 max-mobile:items-start max-mobile:flex-wrap max-mobile:[&_h2]:text-[1.3125rem]">
             <h2>Concept by concept</h2>
@@ -687,14 +707,16 @@ export function TeachingRoom({
             {session.evaluation.results.map((r) => (
               <article
                 key={r.conceptId}
-                className="result border-t border-solid border-t-olive-300 px-0 py-6.25 dark:border-t-olive-700 [&_>_p]:text-[0.8125rem] max-mobile:[&_>_p]:text-[0.75rem]"
+                className="result pip-panel pip-tone-lavender"
+                data-status={r.status}
               >
                 <div className="result-heading flex justify-between gap-3.75 items-center mb-4 [&_h3]:m-0 max-mobile:items-start max-mobile:flex-col max-mobile:gap-2.5 max-mobile:[&_h3]:text-[1.1875rem]">
                   <h3>
+                    <BookOpen aria-hidden="true" />
                     {session.concepts.find((c) => c.id === r.conceptId)?.title}
                   </h3>
                   <span
-                    className={`status text-[0.625rem] pt-1 pr-2.25 pb-1 pl-2.25 rounded-[0.3125rem] whitespace-nowrap bg-olive-200 dark:bg-olive-800 text-taupe-500 dark:text-orange-300 [&.status-explained-clearly]:bg-olive-200 dark:[&.status-explained-clearly]:bg-olive-800 [&.status-explained-clearly]:text-olive-600 dark:[&.status-explained-clearly]:text-olive-400 [&.status-not-demonstrated]:bg-olive-200 dark:[&.status-not-demonstrated]:bg-olive-800 [&.status-not-demonstrated]:text-stone-500 dark:[&.status-not-demonstrated]:text-olive-400 [&.status-needs-correction]:bg-olive-200 dark:[&.status-needs-correction]:bg-olive-800 [&.status-needs-correction]:text-taupe-500 dark:[&.status-needs-correction]:text-red-300 status-${r.status.toLowerCase().replaceAll(" ", "-")}`}
+                    className={`status status-${r.status.toLowerCase().replaceAll(" ", "-")}`}
                   >
                     {r.status}
                   </span>
@@ -708,16 +730,17 @@ export function TeachingRoom({
                     <ArrowRight className="size-3.25" /> Now: {r.status}
                   </p>
                 )}
-                <p>{r.reason}</p>
+                <RichText text={r.reason} />
                 {r.claimType === "unsupported" && (
                   <p className="micro text-[0.6875rem] leading-[1.7] text-olive-600 dark:text-olive-400">
                     Not supported by these notes; this does not establish that
                     the claim is false.
                   </p>
                 )}
-                <div className="evidence-grid grid grid-cols-[1fr_1fr] gap-6.25 mt-5 [&_>_div]:bg-olive-100 [&_>_div]:rounded-md [&_>_div]:px-4.5 [&_>_div]:py-3.75 dark:[&_>_div]:bg-olive-800 [&_blockquote]:font-serif [&_blockquote]:text-[0.875rem] [&_blockquote]:leading-[1.7] [&_blockquote]:text-stone-500 [&_blockquote]:mt-2.25 [&_blockquote]:mb-0 [&_blockquote]:wrap-anywhere [&_blockquote]:whitespace-pre-wrap [&_blockquote]:mx-0 dark:[&_blockquote]:text-olive-400 [&_blockquote:before]:content-['“'] [&_blockquote:after]:content-['”'] [&_p]:mt-2.25 [&_p]:mb-0 [&_p]:mx-0 max-mobile:grid-cols-[1fr] max-mobile:gap-3 max-mobile:[&_blockquote]:text-[0.8125rem]">
-                  <div>
-                    <span className="evidence-label text-[0.5rem] tracking-[0.075rem] text-olive-600 dark:text-olive-400">
+                <div className="evidence-grid">
+                  <div className="pip-panel pip-tone-blue">
+                    <span className="evidence-label">
+                      <MessageCircle aria-hidden="true" />
                       IN YOUR WORDS
                     </span>
                     {r.userExcerpt ? (
@@ -732,8 +755,9 @@ export function TeachingRoom({
                       </p>
                     )}
                   </div>
-                  <div>
-                    <span className="evidence-label text-[0.5rem] tracking-[0.075rem] text-olive-600 dark:text-olive-400">
+                  <div className="pip-panel pip-tone-sand">
+                    <span className="evidence-label">
+                      <Quote aria-hidden="true" />
                       IN YOUR NOTES
                     </span>
                     {r.sourceExcerpt ? (
@@ -752,14 +776,17 @@ export function TeachingRoom({
                     cautiously.
                   </p>
                 )}
-                <p className="suggestion flex gap-2.25 items-start mt-4.25 mb-0 text-olive-600 mx-0 dark:text-olive-400 [&_svg]:mt-0.75">
-                  <ArrowRight className="size-3.75" />
-                  {r.suggestion}
-                </p>
+                <div className="suggestion pip-panel pip-tone-sage">
+                  <p className="result-label">
+                    <ArrowRight aria-hidden="true" />
+                    Next step
+                  </p>
+                  <RichText text={r.suggestion} />
+                </div>
               </article>
             ))}
           </div>
-          <div className="review-bottom border-solid rounded-[0.625rem] flex items-center justify-between gap-5 bg-olive-100 mt-6 p-6.5 border border-olive-300 dark:bg-olive-800 dark:border-olive-700 [&_h2]:font-serif [&_h2]:text-[1.75rem] [&_h2]:mb-2 [&_p]:text-[0.75rem] [&_p]:m-0 max-mobile:flex-col max-mobile:items-start max-mobile:p-5.75 max-mobile:[&_.button]:w-full">
+          <div className="review-bottom pip-panel pip-tone-sand">
             <div>
               <h2>Give it another go?</h2>
               <p>
@@ -774,8 +801,7 @@ export function TeachingRoom({
           </div>
           <details className="transcript border-t border-solid border-t-olive-300 mt-7 pt-2 dark:border-t-olive-700 [&_>_div]:border-l-2 [&_>_div]:border-solid [&_>_div]:border-l-olive-300 [&_>_div]:mb-3.75 [&_>_div]:px-4.5 [&_>_div]:py-3.75 dark:[&_>_div]:border-l-olive-700 [&_strong]:text-[0.6875rem] [&_p]:text-[0.8125rem] [&_p]:mb-0">
             <summary>
-              Your full conversation{" "}
-              <ChevronDown className="size-3.75" />
+              Your full conversation <ChevronDown className="size-3.75" />
             </summary>
             {session.messages.map((m, i) => (
               <div key={i}>
@@ -802,8 +828,11 @@ export function TeachingRoom({
               </span>
             </div>
             {questions && session.messages.at(-1)?.role === "student" ? (
-              <div className="question-bubble bg-olive-100 border-l-[0.1875rem] border-solid border-l-olive-400 rounded-[0_0.375rem_0.375rem_0] mb-3 px-4.75 py-4.25 dark:bg-olive-800 [&_>_span]:text-[0.5rem] [&_>_span]:tracking-[0.075rem] [&_>_span]:text-olive-600 [&_>_span]:block [&_>_span]:mb-2.25 dark:[&_>_span]:text-olive-400 [&_h2]:text-[1.375rem] max-mobile:p-3.5 max-mobile:[&_h2]:text-[1.3125rem]">
-                <span>PIP ASKS</span>
+              <div className="question-bubble pip-panel pip-tone-lavender">
+                <span className="result-label">
+                  <MessageCircle aria-hidden="true" />
+                  PIP ASKS
+                </span>
                 <h2>{session.messages.at(-1)!.text}</h2>
               </div>
             ) : (

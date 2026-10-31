@@ -120,7 +120,7 @@ PowerShell: `Copy-Item .env.example .env.local`. Open http://127.0.0.1:3000. If 
 
 ### Local and production environment settings
 
-`.env.local` is your local configuration. Both `.gitignore` and `.vercelignore` exclude it, so a normal Git or Vercel CLI deployment does not upload it. Vercel injects the separate values saved under the Teech project's **Production** environment. Updating `.env.local` does not update those cloud values.
+`.env.local` is your local configuration. Both `.gitignore` and `.vercelignore` exclude it; keep it local and do not commit it to GitHub. Vercel injects the separate values saved under the Teech project's **Production** environment. Updating `.env.local` does not update those cloud values.
 
 | Setting                     | Local `.env.local`                  | Vercel Production                   |
 | --------------------------- | ----------------------------------- | ----------------------------------- |
@@ -197,9 +197,19 @@ Anonymous ownership and daily quotas use the same signed HttpOnly visitor cookie
 - The app does not log raw notes, transcripts, keys, or raw provider error bodies. Your hosting and provider logging policies still apply. Do not enable request-body logging in production.
 - Anonymous live attempts are accessible with the original signed cookie. Signing in does not import them into personal topics.
 
-## Deploy
+## Deploy through GitHub
 
-Deploy as a **Node Next.js application**, for example on Vercel or a Node host. Static export is unsuitable. Install with `npm ci`, build with `npm run build`, start with `npm start`. Supply the same environment variables at build/runtime. Set `APP_URL` to the exact final HTTPS origin, update Supabase Site URL/redirects/email configuration, then redeploy. The AI route requests a 120-second execution window; verify your host supports it (review calls have an 80-second cap, other model calls have a 40-second cap, and all AI work in a handler shares a 105-second deadline, including early review and repairs). HTTPS is required for secure anonymous cookies in production.
+Teech releases use **GitHub → Vercel only**. The Vercel project `teech` is connected to [ABDUGANIrich/Teech](https://github.com/ABDUGANIrich/Teech), with `master` as its production branch. Production is [teech-nu.vercel.app](https://teech-nu.vercel.app).
+
+1. Review the intended changes and apply any required database migrations before releasing dependent code.
+2. Run the appropriate local checks: lint, typecheck, tests, production build, and browser checks for affected user flows.
+3. Commit the complete change set, including new components and dependency lockfile changes. Uncommitted files are not included in a Git push.
+4. Push the reviewed commit to GitHub's `master` branch when the release is authorized. Vercel automatically builds and deploys that commit. Other branches create preview deployments.
+5. Verify that the automatic Vercel deployment corresponds to the pushed commit, reaches Ready, and serves the intended behavior at the production URL.
+
+Do not deploy local files directly through the Vercel CLI or API, or manually promote a deployment. This GitHub-only workflow supersedes older deployment guidance in skills and historical verification records.
+
+Vercel runs Teech as a **Node Next.js application**; static export is unsuitable. Configure Production environment variables in the existing Vercel project. Set `APP_URL` to the exact final HTTPS origin and keep Supabase Site URL, redirects, and email configuration aligned with it. Environment changes take effect with the next GitHub-triggered deployment. The AI route requests a 120-second execution window (review calls have an 80-second cap, other model calls have a 40-second cap, and all AI work in a handler shares a 105-second deadline, including early review and repairs). HTTPS is required for secure anonymous cookies in production.
 
 Do not deploy `tests/harness` as a separate public app. It is an isolated local Vite harness with mocked endpoints, not an authentication bypass or production route.
 
@@ -215,14 +225,17 @@ Apply `supabase/migrations/005_student_checkpoints.sql` after 004 before deployi
 npm run lint
 npm run typecheck
 npm test
-npm run build
 npx playwright install chromium
 npm run test:e2e
 ```
 
-Browser tests automatically disable Supabase/OpenRouter configuration and deliberately exercise the missing-configuration path. Playwright builds and starts an isolated production app on port 3000 and a separate test-only Vite component harness on port 4174. Both desktop and mobile Chromium projects cover sample flow, refresh recovery, notes, three questions, unsure answers, review, retry comparison, keyboard focus, reduced motion, wrapping, unconfigured auth, concept editing, deletion confirmation, and interrupted-request recovery. Personal UI checks intercept API calls with deterministic fixtures; they do **not** establish successful Supabase authentication or persistence.
+Playwright performs the production build itself; a separate build immediately before it duplicates that work. Browser tests disable Supabase/OpenRouter configuration and deliberately exercise the missing-configuration path. They start an isolated production app on port 3000 and a test-only Vite component harness on port 4174. The default matrix runs all 76 desktop scenarios and 21 mobile scenarios tagged `@mobile`, covering layouts, readability, keyboard use and key practice/recovery flows. `npm run test:e2e:full` runs all 76 scenarios on both desktop and mobile. GitHub checks use the default matrix on pushes and pull requests, and the complete matrix on the weekly schedule or a manual workflow run. Personal UI checks intercept APIs with deterministic fixtures; they do **not** establish successful hosted authentication or persistence. Screenshots are review aids; text, contrast, state and layout assertions provide automated checks.
 
-Vitest executes the actual migration in PGlite (embedded PostgreSQL) with test Auth roles. It checks RLS isolation, forbidden browser writes/RPCs, ownership checks, transaction rollback, concurrent quotas, duplicate reservations, and operation crash recovery. This verifies SQL behavior locally; it does not verify a deployed Supabase project or remote connection concurrency. AI tests mock catalog/provider responses and check free-only routing, runtime validation, bounded repair, and quota reservation.
+Vitest checks API request guards, service behavior and migrations in PGlite with test Auth roles. The embedded database checks RLS isolation, forbidden browser writes/RPCs, ownership, rollback, quota admission, duplicate reservations and operation recovery on one connection. Its search-window tests use a fixed test-only SQL clock; production migrations retain the real clock.
+
+`npm run test:postgres` separately tests actual contention using independent Postgres connections, checking shared quota, per-actor quota and the 22-attempt course budget. Set `TEST_DATABASE_URL` to a disposable local database such as `postgresql://postgres:local-test-only@127.0.0.1:5432/teech_test`; the local test user must be able to create databases and fixture roles. The suite rejects non-loopback hosts and non-test database names, creates a uniquely named child database, applies the migrations there and removes that child afterward. GitHub checks provide an isolated Postgres service. None of these checks verify a hosted Supabase project.
+
+AI unit tests use provider fixtures to check transport, validation, bounded repairs and reservations. They do not measure teaching or grading quality. `npm run eval:ai` validates and lists synthetic evaluation fixtures without network requests. For an explicit real-model evaluation, provide `OPENROUTER_API_KEY` and run `npm run eval:ai -- --live` (or `node --env-file=.env.local scripts/evaluate-ai.mjs --live`). This uses the production prompts and configured free-model safeguards, with three grading cases and one lesson case, capped at eight completion attempts including repairs. Search and application database access are disabled; provider allowance is consumed separately from saved app quotas. Outputs go to ignored `artifacts/ai-eval/latest.json`. Word limits and expected verdicts are automated checks; factual correctness, clarity and whether the lesson alone makes both questions answerable still require human review. Live evaluation is excluded from normal tests and CI.
 
 After configuring a real deployment, perform a separate small smoke test: sign up/verify/sign in, create a topic, edit its passages, teach with one question then finish, refresh and reopen, retry, compare, and confirm deletion. Test a second user cannot read the first user's topic through the Data API. Check the provider dashboard against local usage events. See docs/verification.md for the current live inference, hosted Auth, and deployed isolation checks. Inbox delivery remains a separate provider-dependent check.
 

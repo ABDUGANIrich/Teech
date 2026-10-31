@@ -66,6 +66,14 @@ export const blockSchema = z
     text: text(1800),
   })
   .strict();
+export const essentialsSchema = z
+  .object({
+    idea: text(260),
+    points: z.array(text(220)).min(2).max(5),
+  })
+  .strict();
+export const SIMPLIFY_LESSON_QUESTION =
+  "Give me the essentials of this unit in plain language: one short main idea, then a few key points. Explain unfamiliar terms inline. Keep the reasoning and important conditions. Do not reveal practice answers.";
 const questionBase = { id, objectiveId: id, prompt: text(1000) };
 export const mcqSchema = z
   .object({
@@ -85,6 +93,8 @@ export const unitSchema = z
   .object({
     id,
     outcome: text(300),
+    // Older saved courses remain valid; newly generated units require this.
+    essentials: essentialsSchema.optional(),
     explanation: z.array(blockSchema).min(1).max(6),
     definitions: z.array(text(300)).max(5),
     workedExample: z.array(blockSchema).min(1).max(5),
@@ -397,6 +407,7 @@ export function sourceForHandoff(s: LearningState) {
     provenance(s),
     ...s.units.flatMap(({ content: u, clarifications }) => [
       u.outcome,
+      ...(u.essentials ? [u.essentials.idea, ...u.essentials.points] : []),
       ...u.explanation.map((b) => b.text),
       ...u.definitions,
       ...u.workedExample.map((b) => b.text),

@@ -143,6 +143,9 @@ describe("account recovery", () => {
         "https://teech.example",
       ),
     ).toEqual({ ok: true });
+    expect(m.update).toHaveBeenCalledExactlyOnceWith({
+      password: "a-new-password",
+    });
   });
   it("verifies recovery tokens with the proper type and permits only a fixed redirect", async () => {
     let response = await GET(

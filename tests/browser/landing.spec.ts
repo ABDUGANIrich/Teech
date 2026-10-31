@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("mode selector changes the whole page and preserves the selection in navigation", async ({
+test("mode selector changes the whole page and preserves the selection in navigation", { tag: "@mobile" }, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -56,7 +56,7 @@ test("mode selector changes the whole page and preserves the selection in naviga
   expect(errors).toEqual([]);
 });
 
-test("mode switching works offline without navigation requests and preserves history", async ({
+test("mode switching works offline without navigation requests and preserves history", { tag: "@mobile" }, async ({
   page,
   context,
 }) => {

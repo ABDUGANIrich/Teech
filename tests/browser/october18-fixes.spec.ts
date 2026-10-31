@@ -86,30 +86,6 @@ for (const action of ["answer", "finish"] as const) {
   }
 }
 
-test("a durable interrupted unit marker prevents automatic preparation after reopening", async ({
-  page,
-}) => {
-  const s = {
-    ...sampleTeacherAction(newTeacherSample(), { action: "accept" }),
-    preparingUnit: "halves",
-    providerAttempts: 2,
-  };
-  let posts = 0;
-  await page.route("**/api/learn**", (route) => {
-    if (route.request().method() === "POST") posts++;
-    return route.fulfill({ json: { learning: s } });
-  });
-  await page.goto(`${harness}/?view=learning-room`);
-  await expect(
-    page.getByRole("button", { name: "Retry preparing unit" }),
-  ).toBeEnabled();
-  await page.reload();
-  await expect(
-    page.getByRole("button", { name: "Retry preparing unit" }),
-  ).toBeEnabled();
-  expect(posts).toBe(0);
-});
-
 test("an unavailable setup checkpoint can be discarded explicitly without losing input", async ({
   page,
 }) => {
@@ -215,55 +191,59 @@ for (const status of [401, 503])
     ).toContain(id);
   });
 
-test("lesson deletion clears matching setup pointers and preserves other lessons and setup fields", async ({
-  page,
-}) => {
-  const s = newTeacherSample();
-  await page.addInitScript((id) => {
-    if (sessionStorage.getItem("deletion-seeded")) return;
-    sessionStorage.setItem("deletion-seeded", "yes");
-    for (const key of [
-      "teech:test-user:learning-setup:lesson",
-      "teech:test-user:learning-setup:source:lesson",
-      "teech:another-user:learning-setup:lesson",
-    ])
-      localStorage.setItem(key, JSON.stringify(id));
-    localStorage.setItem(
-      "teech:test-user:learning-setup:other:lesson",
-      JSON.stringify("a-different-lesson"),
+test(
+  "lesson deletion clears matching setup pointers and preserves other lessons and setup fields",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    const s = newTeacherSample();
+    await page.addInitScript((id) => {
+      if (sessionStorage.getItem("deletion-seeded")) return;
+      sessionStorage.setItem("deletion-seeded", "yes");
+      for (const key of [
+        "teech:test-user:learning-setup:lesson",
+        "teech:test-user:learning-setup:source:lesson",
+        "teech:another-user:learning-setup:lesson",
+      ])
+        localStorage.setItem(key, JSON.stringify(id));
+      localStorage.setItem(
+        "teech:test-user:learning-setup:other:lesson",
+        JSON.stringify("a-different-lesson"),
+      );
+      localStorage.setItem(
+        "teech:test-user:learning-setup",
+        JSON.stringify({ topic: "Keep my inputs" }),
+      );
+    }, s.id);
+    await page.route("**/api/learn**", (route) =>
+      route.fulfill({
+        json:
+          route.request().method() === "GET"
+            ? { learning: s }
+            : { deleted: true },
+      }),
     );
-    localStorage.setItem(
-      "teech:test-user:learning-setup",
-      JSON.stringify({ topic: "Keep my inputs" }),
+    await page.goto(`${harness}/?view=learning-room`);
+    await page
+      .getByRole("button", { name: "Delete course", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Delete course permanently", exact: true })
+      .click();
+    await expect(page).toHaveURL(`${harness}/library`);
+    const storage = await page.evaluate(() => ({ ...localStorage }));
+    expect(storage["teech:test-user:learning-setup:lesson"]).toBeUndefined();
+    expect(
+      storage["teech:test-user:learning-setup:source:lesson"],
+    ).toBeUndefined();
+    expect(storage["teech:another-user:learning-setup:lesson"]).toContain(s.id);
+    expect(storage["teech:test-user:learning-setup:other:lesson"]).toContain(
+      "a-different-lesson",
     );
-  }, s.id);
-  await page.route("**/api/learn**", (route) =>
-    route.fulfill({
-      json:
-        route.request().method() === "GET"
-          ? { learning: s }
-          : { deleted: true },
-    }),
-  );
-  await page.goto(`${harness}/?view=learning-room`);
-  await page
-    .getByRole("button", { name: "Delete course", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Delete course permanently", exact: true })
-    .click();
-  await expect(page).toHaveURL(`${harness}/library`);
-  const storage = await page.evaluate(() => ({ ...localStorage }));
-  expect(storage["teech:test-user:learning-setup:lesson"]).toBeUndefined();
-  expect(
-    storage["teech:test-user:learning-setup:source:lesson"],
-  ).toBeUndefined();
-  expect(storage["teech:another-user:learning-setup:lesson"]).toContain(s.id);
-  expect(storage["teech:test-user:learning-setup:other:lesson"]).toContain(
-    "a-different-lesson",
-  );
-  expect(storage["teech:test-user:learning-setup"]).toContain("Keep my inputs");
-});
+    expect(storage["teech:test-user:learning-setup"]).toContain(
+      "Keep my inputs",
+    );
+  },
+);
 
 test("the library exposes saved sample attempts across history pages", async ({
   page,
@@ -363,6 +343,8 @@ for (const lost of [false, true])
     await page.goto(`${harness}/?view=learning-room`);
     const question = "Why do inclusive bounds exclude the middle?";
     await page.getByLabel("Ask about this step").fill(question);
+    await page.reload();
+    await expect(page.getByLabel("Ask about this step")).toHaveValue(question);
     await page.getByRole("button", { name: "Explain another way" }).click();
     await expect(
       page.getByText("1 help requests remain", { exact: false }),

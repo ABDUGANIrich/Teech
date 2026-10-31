@@ -7,6 +7,7 @@ import {
   studied,
   objectiveSummary,
   classification,
+  unitSchema,
 } from "../src/lib/learning";
 import {
   newTeacherSample,
@@ -15,6 +16,14 @@ import {
 } from "../src/lib/teacher-sample";
 const state = () => learningStateSchema.strip().parse(newTeacherSample());
 describe("learning content and evidence boundaries", () => {
+  it("can reopen a legacy unit while preserving essentials on new units", () => {
+    const old = structuredClone(sampleUnit.unit);
+    delete old.essentials;
+    expect(unitSchema.parse(old).essentials).toBeUndefined();
+    expect(unitSchema.parse(sampleUnit.unit).essentials).toEqual(
+      sampleUnit.unit.essentials,
+    );
+  });
   it("keeps the initial gap separate from successful fresh practice for the same objective", () => {
     const s = state();
     const first = studied(structuredClone(sampleUnit.unit));
@@ -169,6 +178,9 @@ describe("learning content and evidence boundaries", () => {
     s.units[0].attempts[1].solution = "SECRET SOLUTION";
     const source = sourceForHandoff(s);
     expect(source).toContain("Binary search needs a sorted list");
+    expect(source).toContain(sampleUnit.unit.essentials!.idea);
+    for (const point of sampleUnit.unit.essentials!.points)
+      expect(source).toContain(point);
     expect(source).not.toContain("SECRET");
     expect(source).not.toContain(sampleUnit.unit.questions[1].prompt);
     expect(source).not.toContain(sampleUnit.keys[1].expectedAnswer);

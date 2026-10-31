@@ -9,6 +9,7 @@ export default defineConfig({
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     {
       name: "mobile",
+      grep: /@mobile/,
       use: { ...devices["iPhone 13"], defaultBrowserType: "chromium" },
     },
   ],

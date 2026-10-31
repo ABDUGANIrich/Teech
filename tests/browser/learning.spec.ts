@@ -1,3 +1,4 @@
+import { expectReadableText } from "./helpers/readability";
 import { test, expect } from "@playwright/test";
 import {
   newTeacherSample,
@@ -186,174 +187,219 @@ test("automatic preparation respects the lesson AI cap", async ({ page }) => {
   ).toHaveCount(0);
 });
 
-test("fixed Sage sample covers instruction, help, practice, feedback, summary and handoff preview", async ({
-  page,
-}, info) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/teacher-sample");
-  await expect(page.getByText("Sage sample · fixed content")).toBeVisible();
-  await page.getByRole("button", { name: "Accept outline & begin" }).click();
-  await expect(
-    page.getByRole("heading", { name: "A worked example" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Explain another way" }).click();
-  await expect(
-    page.getByText("Fixed sample explanation:", { exact: false }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("1 help requests remain", { exact: false }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Continue to practice" }).click();
-  const items = page.locator(".practice-item");
-  await items.nth(0).getByRole("button", { name: "Show hint" }).click();
-  await items.nth(0).getByLabel("Only positions before the middle").check();
-  await items.nth(0).getByRole("button", { name: "Submit answer" }).click();
-  await expect(
-    items.nth(0).getByText("Correct with hints", { exact: true }),
-  ).toBeVisible();
-  await items
-    .nth(1)
-    .getByLabel("Your reasoning")
-    .fill("My visitor text has not been assessed. " + "LongWord".repeat(45));
-  await page.reload();
-  await expect(items.nth(1).getByLabel("Your reasoning")).toHaveValue(
-    /My visitor text/,
-  );
-  await items.nth(1).getByRole("button", { name: "Submit answer" }).click();
-  await expect(
-    items.nth(1).getByText("Could not assess reliably", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    items
+test(
+  "fixed Sage sample covers instruction, help, practice, feedback, summary and handoff preview",
+  { tag: "@mobile" },
+  async ({ page }, info) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/teacher-sample");
+    await expect(page.getByText("Sage sample · fixed content")).toBeVisible();
+    await page.getByRole("button", { name: "Accept outline & begin" }).click();
+    await expect(
+      page.getByRole("heading", { name: "A worked example" }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Explain another way" }).click();
+    await expect(
+      page.getByText("Fixed sample explanation:", { exact: false }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("1 help requests remain", { exact: false }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Continue to practice" }).click();
+    const items = page.locator(".practice-item");
+    await items.nth(0).getByRole("button", { name: "Show hint" }).click();
+    await items.nth(0).getByLabel("Only positions before the middle").check();
+    await items.nth(0).getByRole("button", { name: "Submit answer" }).click();
+    await expect(
+      items.nth(0).getByText("Correct with hints", { exact: true }),
+    ).toBeVisible();
+    const feedback = items.nth(0).locator(".learning-feedback");
+    for (const label of ["What came through", "What to revisit", "Next step"]) {
+      await expect(feedback.getByText(label, { exact: true })).toBeVisible();
+    }
+    const expectedFeedback = [
+      "Your choice was compared with the fixed sample key.",
+      "This checks agreement with a fixed key.",
+      "Revisit the worked example and compare your reasoning with the solution.",
+    ];
+    for (const [index, text] of expectedFeedback.entries()) {
+      await expect(
+        feedback.locator(".feedback-point .teech-prose").nth(index),
+      ).toHaveText(text);
+    }
+    await expectReadableText(feedback.locator(".feedback-point .teech-prose"));
+    await items
       .nth(1)
-      .getByText("Your text has not been assessed.", { exact: false }),
-  ).toBeVisible();
-  await items.nth(1).getByRole("button", { name: "Reveal solution" }).click();
-  await page.reload();
-  await expect(
-    items.nth(1).getByRole("heading", { name: "Worked review" }),
-  ).toBeVisible();
-  await expect(
-    items.nth(1).getByRole("button", { name: "Submit answer" }),
-  ).toHaveCount(0);
-  await page.getByRole("button", { name: "Continue from this unit" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Your course review." }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("0 independent correct · 2 assisted", { exact: false }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Preview teaching source" }).click();
-  await page.getByRole("button", { name: "Extract checklist" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Review the source checklist" }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Sample handoff preview only.", { exact: false }),
-  ).toBeVisible();
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true);
-  await page.screenshot({
-    path: `artifacts/teacher-summary-${info.project.name}.png`,
-    fullPage: true,
-  });
-});
+      .getByLabel("Your reasoning")
+      .fill("My visitor text has not been assessed. " + "LongWord".repeat(45));
+    await page.reload();
+    await expect(items.nth(1).getByLabel("Your reasoning")).toHaveValue(
+      /My visitor text/,
+    );
+    await items.nth(1).getByRole("button", { name: "Submit answer" }).click();
+    await expect(
+      items.nth(1).getByText("Could not assess reliably", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      items
+        .nth(1)
+        .getByText("Your text has not been assessed.", { exact: false }),
+    ).toBeVisible();
+    await items.nth(1).getByRole("button", { name: "Reveal solution" }).click();
+    await page.reload();
+    await expect(
+      items.nth(1).getByRole("heading", { name: "Worked review" }),
+    ).toBeVisible();
+    await expect(
+      items.nth(1).getByRole("button", { name: "Submit answer" }),
+    ).toHaveCount(0);
+    await page.getByRole("button", { name: "Continue from this unit" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Your course review." }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("0 independent correct · 2 assisted", { exact: false }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Preview teaching source" }).click();
+    await page.getByRole("button", { name: "Extract checklist" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Review the source checklist" }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Sample handoff preview only.", { exact: false }),
+    ).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: `artifacts/teacher-summary-${info.project.name}.png`,
+      fullPage: true,
+    });
+  },
+);
 
-test("saved Teacher room preserves answer through pending feedback, failure, retry and replay", async ({
-  page,
-}) => {
-  let session: LearningSession = {
-    ...newTeacherSample(),
-    accepted: true,
-    phase: "practice",
-    units: [studied(sampleUnit.unit)],
-  };
-  let gradeCalls = 0;
-  let release!: () => void;
-  const waiting = new Promise<void>((r) => {
-    release = r;
-  });
-  await page.route("**/api/learn**", async (route) => {
-    if (route.request().method() === "GET")
+test(
+  "saved Teacher room preserves answer through pending feedback, failure, retry and replay",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    let session: LearningSession = {
+      ...newTeacherSample(),
+      accepted: true,
+      phase: "practice",
+      units: [studied(sampleUnit.unit)],
+    };
+    let gradeCalls = 0;
+    let release!: () => void;
+    const waiting = new Promise<void>((r) => {
+      release = r;
+    });
+    await page.route("**/api/learn**", async (route) => {
+      if (route.request().method() === "GET")
+        return route.fulfill({ json: { learning: session } });
+      const a = route.request().postDataJSON();
+      if (a.action === "submit") {
+        gradeCalls++;
+        session.units[0].attempts[1] = {
+          ...session.units[0].attempts[1],
+          answer: a.answer,
+          state: "pending",
+        };
+        session.version++;
+        await waiting;
+        session.units[0].attempts[1].state = "failed";
+        session.version++;
+        return route.fulfill({
+          json: {
+            learning: session,
+            error: "Provider timed out. The original answer is saved.",
+          },
+        });
+      }
+      if (a.action === "retry_grade") {
+        gradeCalls++;
+        session.units[0].attempts[1].state = "finished";
+        session.units[0].attempts[1].feedback = {
+          itemId: "halves_apply",
+          status: "Partly correct",
+          well: "You chose the first middle correctly.",
+          gap: "The second interval still includes the checked middle.",
+          next: "Set high to middle minus one and trace the remaining interval.",
+        };
+        session.version++;
+        return route.fulfill({ json: { learning: session } });
+      }
+      session = sampleTeacherAction(session, a);
       return route.fulfill({ json: { learning: session } });
-    const a = route.request().postDataJSON();
-    if (a.action === "submit") {
-      gradeCalls++;
-      session.units[0].attempts[1] = {
-        ...session.units[0].attempts[1],
-        answer: a.answer,
-        state: "pending",
-      };
-      session.version++;
-      await waiting;
-      session.units[0].attempts[1].state = "failed";
-      session.version++;
-      return route.fulfill({
-        json: {
-          learning: session,
-          error: "Provider timed out. The original answer is saved.",
-        },
-      });
+    });
+    await page.goto("http://127.0.0.1:4174/?view=learning-room");
+    const app = page.locator(".practice-item").nth(1);
+    await app
+      .getByLabel("Your reasoning")
+      .fill("First middle = 2. Then I search positions 0 through 2.");
+    await app.getByRole("button", { name: "Submit answer" }).click();
+    await expect(
+      page.getByText("Saving your answer and preparing feedback…"),
+    ).toBeVisible();
+    await expect(app.getByLabel("Your reasoning")).toBeDisabled();
+    release();
+    await expect(page.getByRole("alert")).toContainText(
+      "original answer is saved",
+    );
+    await page.reload();
+    await expect(app.locator(".saved-answer")).toContainText(
+      "First middle = 2",
+    );
+    await app
+      .getByRole("button", { name: "Retry assessment of saved answer" })
+      .click();
+    await expect(
+      app.getByRole("heading", { name: "Partly correct" }),
+    ).toBeVisible();
+    await expect(
+      app.getByText("Set high to middle minus one", { exact: false }),
+    ).toBeVisible();
+    await app.getByText("This question seems wrong", { exact: true }).click();
+    await app
+      .getByLabel("Reason (optional)")
+      .fill("The question could be clearer");
+    await app
+      .getByRole("button", { name: "Mark disputed and continue" })
+      .click();
+    await expect(
+      app.getByText("Disputed — excluded", { exact: true }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Continue from this unit" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Your course review." }),
+    ).toBeVisible();
+    await page.reload();
+    await expect(
+      page.getByRole("heading", { name: "Your course review." }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Disputed: The question could be clearer", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    for (const text of [
+      "You chose the first middle correctly.",
+      "The second interval still includes the checked middle.",
+      "Set high to middle minus one and trace the remaining interval.",
+    ]) {
+      await expect(
+        page
+          .locator(".summary-result .feedback-point .teech-prose")
+          .getByText(text, { exact: true }),
+      ).toBeVisible();
     }
-    if (a.action === "retry_grade") {
-      gradeCalls++;
-      session.units[0].attempts[1].state = "finished";
-      session.units[0].attempts[1].feedback = {
-        itemId: "halves_apply",
-        status: "Partly correct",
-        well: "You chose the first middle correctly.",
-        gap: "The second interval still includes the checked middle.",
-        next: "Set high to middle minus one and trace the remaining interval.",
-      };
-      session.version++;
-      return route.fulfill({ json: { learning: session } });
-    }
-    session = sampleTeacherAction(session, a);
-    return route.fulfill({ json: { learning: session } });
-  });
-  await page.goto("http://127.0.0.1:4174/?view=learning-room");
-  const app = page.locator(".practice-item").nth(1);
-  await app
-    .getByLabel("Your reasoning")
-    .fill("First middle = 2. Then I search positions 0 through 2.");
-  await app.getByRole("button", { name: "Submit answer" }).click();
-  await expect(
-    page.getByText("Saving your answer and preparing feedback…"),
-  ).toBeVisible();
-  await expect(app.getByLabel("Your reasoning")).toBeDisabled();
-  release();
-  await expect(page.getByRole("alert")).toContainText(
-    "original answer is saved",
-  );
-  await page.reload();
-  await expect(app.locator(".saved-answer")).toContainText("First middle = 2");
-  await app
-    .getByRole("button", { name: "Retry assessment of saved answer" })
-    .click();
-  await expect(
-    app.getByRole("heading", { name: "Partly correct" }),
-  ).toBeVisible();
-  await expect(
-    app.getByText("Set high to middle minus one", { exact: false }),
-  ).toBeVisible();
-  await app.getByText("This question seems wrong", { exact: true }).click();
-  await app
-    .getByLabel("Reason (optional)")
-    .fill("The question could be clearer");
-  await app.getByRole("button", { name: "Mark disputed and continue" }).click();
-  await expect(
-    app.getByText("Disputed — excluded", { exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Continue from this unit" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Your course review." }),
-  ).toBeVisible();
-  await page.reload();
-  expect(gradeCalls).toBe(2);
-});
+    await expect(
+      page.getByText("1 disputed/uncertain", { exact: false }),
+    ).toBeVisible();
+    expect(gradeCalls).toBe(2);
+  },
+);
 
 test("lost Teacher submission response recovers feedback without resubmission or answer loss", async ({
   page,
@@ -407,8 +453,20 @@ test("Teacher plan shows editable scope and only regenerates on explicit request
     calls++;
     const a = route.request().postDataJSON();
     if (a.action === "plan") {
-      session.input = a.input;
-      session.version++;
+      expect(a.input).toMatchObject({
+        topic: "Java island geography",
+        level: "refreshing",
+      });
+      session = {
+        ...session,
+        input: a.input,
+        version: session.version + 1,
+        plan: {
+          ...session.plan!,
+          interpretation:
+            "Java island geography: a refresher on its location and landforms.",
+        },
+      };
     } else session = sampleTeacherAction(session, a);
     return route.fulfill({ json: { learning: session } });
   });
@@ -423,73 +481,85 @@ test("Teacher plan shows editable scope and only regenerates on explicit request
   await expect(page.getByLabel("Topic", { exact: true })).toHaveValue(
     "Java island geography",
   );
+  await expect(
+    page.getByText(
+      "Java island geography: a refresher on its location and landforms.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Java the programming language:", { exact: false }),
+  ).toHaveCount(0);
+  await expect(page.getByLabel("Starting level")).toHaveValue("refreshing");
   expect(calls).toBe(1);
 });
 
-test("Teacher setup saves and plans in one submission, leaving acceptance explicit", async ({
-  page,
-}) => {
-  let session = emptyLesson();
-  const actions: string[] = [];
-  let release!: () => void;
-  const waiting = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  await page.route("**/api/learn**", async (route) => {
-    if (route.request().method() === "GET")
+test(
+  "Teacher setup saves and plans in one submission, leaving acceptance explicit",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    let session = emptyLesson();
+    const actions: string[] = [];
+    let release!: () => void;
+    const waiting = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route("**/api/learn**", async (route) => {
+      if (route.request().method() === "GET")
+        return route.fulfill({ json: { learning: session } });
+      const body = route.request().postDataJSON();
+      actions.push(body.action);
+      if (body.action === "create") session.input = body.input;
+      if (body.action === "plan") {
+        expect(body.id).toBe(session.id);
+        expect(body.version).toBe(session.version);
+        expect(body.input).toEqual(session.input);
+        await waiting;
+        session = plannedLesson(session);
+      }
+      if (["accept", "generate"].includes(body.action))
+        session = sampleTeacherAction(session, body);
       return route.fulfill({ json: { learning: session } });
-    const body = route.request().postDataJSON();
-    actions.push(body.action);
-    if (body.action === "create") session.input = body.input;
-    if (body.action === "plan") {
-      expect(body.id).toBe(session.id);
-      expect(body.version).toBe(session.version);
-      expect(body.input).toEqual(session.input);
-      await waiting;
-      session = plannedLesson(session);
-    }
-    if (["accept", "generate"].includes(body.action))
-      session = sampleTeacherAction(session, body);
-    return route.fulfill({ json: { learning: session } });
-  });
-  await page.goto("http://127.0.0.1:4174/?view=learning-setup");
-  await page.getByLabel("Topic", { exact: true }).fill("Binary search");
-  await page.getByLabel("Starting level").selectOption("basics");
-  await page
-    .getByLabel("Learning goal (optional)")
-    .fill("Trace an interval by hand");
-  await page.getByRole("button", { name: "Create course" }).click();
-  await expect(page.getByRole("status")).toContainText("Your setup is saved");
-  await expect(
-    page.getByRole("button", { name: "Creating course…" }),
-  ).toBeDisabled();
-  await expect(page.getByLabel("Topic", { exact: true })).toBeDisabled();
-  await page.locator("form").dispatchEvent("submit");
-  expect(actions).toEqual(["create", "plan"]);
-  release();
-  await expect(page).toHaveURL(/\/learn\//);
-  await expect(
-    page.getByRole("button", { name: "Accept outline & begin" }),
-  ).toBeVisible();
-  expect(session.input).toEqual({
-    topic: "Binary search",
-    notes: "",
-    level: "basics",
-    goal: "Trace an interval by hand",
-  });
-  expect(session.accepted).toBe(false);
-  expect(actions).toEqual(["create", "plan"]);
-  await page.getByRole("button", { name: "Accept outline & begin" }).click();
-  await expect(
-    page.getByRole("heading", { name: "A worked example" }),
-  ).toBeVisible();
-  expect(actions).toEqual(["create", "plan", "accept", "generate"]);
-  const response = await page.request.get("http://127.0.0.1:3000/api/learn");
-  expect(response.status()).toBe(401);
-  expect(response.headers()["cache-control"]).toContain("no-store");
-  await page.goto("http://127.0.0.1:3000/learn/new");
-  await expect(page).toHaveURL(/\/signin/);
-});
+    });
+    await page.goto("http://127.0.0.1:4174/?view=learning-setup");
+    await page.getByLabel("Topic", { exact: true }).fill("Binary search");
+    await page.getByLabel("Starting level").selectOption("basics");
+    await page
+      .getByLabel("Learning goal (optional)")
+      .fill("Trace an interval by hand");
+    await page.getByRole("button", { name: "Create course" }).click();
+    await expect(page.getByRole("status")).toContainText("Your setup is saved");
+    await expect(
+      page.getByRole("button", { name: "Creating course…" }),
+    ).toBeDisabled();
+    await expect(page.getByLabel("Topic", { exact: true })).toBeDisabled();
+    await page.locator("form").dispatchEvent("submit");
+    expect(actions).toEqual(["create", "plan"]);
+    release();
+    await expect(page).toHaveURL(/\/learn\//);
+    await expect(
+      page.getByRole("button", { name: "Accept outline & begin" }),
+    ).toBeVisible();
+    expect(session.input).toEqual({
+      topic: "Binary search",
+      notes: "",
+      level: "basics",
+      goal: "Trace an interval by hand",
+    });
+    expect(session.accepted).toBe(false);
+    expect(actions).toEqual(["create", "plan"]);
+    await page.getByRole("button", { name: "Accept outline & begin" }).click();
+    await expect(
+      page.getByRole("heading", { name: "A worked example" }),
+    ).toBeVisible();
+    expect(actions).toEqual(["create", "plan", "accept", "generate"]);
+    const response = await page.request.get("http://127.0.0.1:3000/api/learn");
+    expect(response.status()).toBe(401);
+    expect(response.headers()["cache-control"]).toContain("no-store");
+    await page.goto("http://127.0.0.1:3000/learn/new");
+    await expect(page).toHaveURL(/\/signin/);
+  },
+);
 
 test("failed initial planning retains every input and retries the same saved lesson after reload", async ({
   page,

@@ -1,3 +1,4 @@
+import { expectReadableText } from "./helpers/readability";
 import { test, expect } from "@playwright/test";
 import {
   sampleConcepts,
@@ -78,68 +79,70 @@ for (const action of ["explain", "answer"] as const) {
   });
 }
 
-test("extraction locks inputs, preserves checklist on failed regeneration, and replaces on success", async ({
-  page,
-}) => {
-  let calls = 0;
-  let release!: () => void;
-  const waiting = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  await page.route("**/api/teech**", async (route) => {
-    calls++;
-    if (calls === 1) await waiting;
-    if (calls === 2)
-      return route.fulfill({ json: { error: "Provider unavailable" } });
-    return route.fulfill({
-      json: {
-        concepts: sampleConcepts.map((c, i) => ({
-          ...c,
-          title: i === 0 && calls === 3 ? "Regenerated concept" : c.title,
-        })),
-      },
+test(
+  "extraction locks inputs, preserves checklist on failed regeneration, and replaces on success",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    let calls = 0;
+    let release!: () => void;
+    const waiting = new Promise<void>((resolve) => {
+      release = resolve;
     });
-  });
-  await page.goto("http://127.0.0.1:4174/");
-  await page.getByLabel("Give your topic a name").fill("Water cycle");
-  await page.getByLabel("Your study material").fill(sampleNotes);
-  await page.getByRole("button", { name: "Find key concepts" }).click();
-  await expect(page.getByLabel("Give your topic a name")).toBeDisabled();
-  await expect(page.getByLabel("Your study material")).toBeDisabled();
-  release();
-  await expect(page.getByRole("group")).toHaveCount(6);
-  await page
-    .getByLabel("Concept title", { exact: true })
-    .first()
-    .fill("My manual concept");
-  await page
-    .getByLabel("Your study material")
-    .fill(sampleNotes + " Additional source notes.");
-  await page.getByRole("button", { name: "Regenerate checklist" }).click();
-  await page
-    .getByRole("button", { name: "Keep checklist", exact: true })
-    .click();
-  expect(calls).toBe(1);
-  await page.getByRole("button", { name: "Regenerate checklist" }).click();
-  await page
-    .getByRole("button", { name: "Replace checklist", exact: true })
-    .click();
-  await expect(page.getByRole("alert")).toContainText("Provider unavailable");
-  await expect(
-    page.getByLabel("Concept title", { exact: true }).first(),
-  ).toHaveValue("My manual concept");
-  await page.reload();
-  await expect(page.getByLabel("Your study material")).toHaveValue(
-    sampleNotes + " Additional source notes.",
-  );
-  await page.getByRole("button", { name: "Regenerate checklist" }).click();
-  await page
-    .getByRole("button", { name: "Replace checklist", exact: true })
-    .click();
-  await expect(
-    page.getByLabel("Concept title", { exact: true }).first(),
-  ).toHaveValue("Regenerated concept");
-});
+    await page.route("**/api/teech**", async (route) => {
+      calls++;
+      if (calls === 1) await waiting;
+      if (calls === 2)
+        return route.fulfill({ json: { error: "Provider unavailable" } });
+      return route.fulfill({
+        json: {
+          concepts: sampleConcepts.map((c, i) => ({
+            ...c,
+            title: i === 0 && calls === 3 ? "Regenerated concept" : c.title,
+          })),
+        },
+      });
+    });
+    await page.goto("http://127.0.0.1:4174/");
+    await page.getByLabel("Give your topic a name").fill("Water cycle");
+    await page.getByLabel("Your study material").fill(sampleNotes);
+    await page.getByRole("button", { name: "Find key concepts" }).click();
+    await expect(page.getByLabel("Give your topic a name")).toBeDisabled();
+    await expect(page.getByLabel("Your study material")).toBeDisabled();
+    release();
+    await expect(page.getByRole("group")).toHaveCount(6);
+    await page
+      .getByLabel("Concept title", { exact: true })
+      .first()
+      .fill("My manual concept");
+    await page
+      .getByLabel("Your study material")
+      .fill(sampleNotes + " Additional source notes.");
+    await page.getByRole("button", { name: "Regenerate checklist" }).click();
+    await page
+      .getByRole("button", { name: "Keep checklist", exact: true })
+      .click();
+    expect(calls).toBe(1);
+    await page.getByRole("button", { name: "Regenerate checklist" }).click();
+    await page
+      .getByRole("button", { name: "Replace checklist", exact: true })
+      .click();
+    await expect(page.getByRole("alert")).toContainText("Provider unavailable");
+    await expect(
+      page.getByLabel("Concept title", { exact: true }).first(),
+    ).toHaveValue("My manual concept");
+    await page.reload();
+    await expect(page.getByLabel("Your study material")).toHaveValue(
+      sampleNotes + " Additional source notes.",
+    );
+    await page.getByRole("button", { name: "Regenerate checklist" }).click();
+    await page
+      .getByRole("button", { name: "Replace checklist", exact: true })
+      .click();
+    await expect(
+      page.getByLabel("Concept title", { exact: true }).first(),
+    ).toHaveValue("Regenerated concept");
+  },
+);
 
 test("changing editor topic restores the correct draft and save target", async ({
   page,
@@ -399,169 +402,213 @@ for (const outcome of [
     ).toBeVisible();
   });
 }
-test("sample: recover draft, reveal notes, three questions, review and compare retry", async ({
-  page,
-}) => {
-  const errors: string[] = [];
-  page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/sample");
-  await expect(
-    page.getByText("Pip sample · fixed preview", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Your source material" }),
-  ).toHaveCount(0);
-  await page.screenshot({
-    path: `artifacts/teaching-room-${test.info().project.name}.png`,
-    fullPage: true,
-  });
-  const draft =
-    "The Sun warms water in the ocean. It evaporates and moves into the air, then cools into clouds and falls as rain.";
-  await page.getByLabel("Your explanation", { exact: true }).fill(draft);
-  await page.reload();
-  await expect(
-    page.getByLabel("Your explanation", { exact: true }),
-  ).toHaveValue(draft);
-  await page.getByRole("button", { name: "View notes" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Your source material" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Hide notes" }).click();
-  await page.getByRole("button", { name: "Let’s talk about it" }).click();
-  await expect(page.getByText("QUESTION 1 OF UP TO 3")).toBeVisible();
-  await page.getByRole("button", { name: "I’m not sure" }).click();
-  await expect(page.getByText("QUESTION 2 OF UP TO 3")).toBeVisible();
-  await page
-    .getByLabel("Your answer")
-    .fill("Water vapor cools down and condenses into little drops.");
-  await page.getByRole("button", { name: "Share my answer" }).click();
-  await expect(page.getByText("QUESTION 3 OF UP TO 3")).toBeVisible();
-  await page
-    .getByLabel("Your answer")
-    .fill("Some soaks into the ground and some flows down rivers.");
-  await page.getByRole("button", { name: "Share my answer" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Look at what came through." }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Practiced with notes", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("These example statuses don’t evaluate what you wrote."),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Try again", exact: true }).click();
-  await page
-    .getByLabel("Your explanation", { exact: true })
-    .fill(draft + " Plants also release water vapor from their leaves.");
-  await page.getByRole("button", { name: "Review my explanation" }).click();
-  await expect(
-    page.getByText("Explanation-only attempt", { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByText(/Previously:/)).toHaveCount(6);
-  expect(errors).toEqual([]);
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= window.innerWidth,
-    ),
-  ).toBe(true);
-});
-test("keyboard, mobile overflow, reduced motion and unconfigured auth", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  await page.keyboard.press("Tab");
-  await expect(
-    page.getByRole("link", { name: "Skip to content" }),
-  ).toBeFocused();
-  await page.keyboard.press("Enter");
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= window.innerWidth,
-    ),
-  ).toBe(true);
-  await page.goto("/sample");
-  await expect(page.getByRole("img", { name: /Pip/ })).toBeVisible();
-  expect(
+test(
+  "sample: recover draft, reveal notes, three questions, review and compare retry",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto("/sample");
+    await expect(
+      page.getByText("Pip sample · fixed preview", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Your source material" }),
+    ).toHaveCount(0);
+    await page.screenshot({
+      path: `artifacts/teaching-room-${test.info().project.name}.png`,
+      fullPage: true,
+    });
+    const draft =
+      "The Sun warms water in the ocean. It evaporates and moves into the air, then cools into clouds and falls as rain.";
+    await page.getByLabel("Your explanation", { exact: true }).fill(draft);
+    await page.reload();
+    await expect(
+      page.getByLabel("Your explanation", { exact: true }),
+    ).toHaveValue(draft);
+    await page.getByRole("button", { name: "View notes" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Your source material" }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Hide notes" }).click();
+    await page.getByRole("button", { name: "Let’s talk about it" }).click();
+    await expect(page.getByText("QUESTION 1 OF UP TO 3")).toBeVisible();
+    const questionCard = page.locator(".question-bubble");
+    await expect(questionCard.getByRole("heading")).toBeVisible();
+    await expectReadableText(questionCard.getByRole("heading"));
+    expect(
+      await questionCard.evaluate(
+        (element) => getComputedStyle(element).backgroundColor,
+      ),
+    ).not.toBe("rgba(0, 0, 0, 0)");
     await page
-      .locator(".student-eyes")
-      .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe("none");
-  await page
-    .getByLabel("Your explanation", { exact: true })
-    .fill("x".repeat(2000));
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= window.innerWidth,
-    ),
-  ).toBe(true);
-  await page.goto("/signin");
-  await expect(page.getByText("Accounts aren’t configured yet.")).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Sign in", exact: true }),
-  ).toBeDisabled();
-});
-test("mocked editor: extraction failure preserves input; edit, add, remove and validate passages", async ({
-  page,
-}) => {
-  let calls = 0;
-  let saved: Record<string, unknown> | undefined;
-  await page.route("**/api/teech**", async (route) => {
-    const data = route.request().postDataJSON();
-    if (data.action === "extract") {
-      calls++;
-      await route.fulfill({
-        json:
-          calls === 1
-            ? { error: "The AI provider is at capacity. Your writing is safe." }
-            : { concepts: sampleConcepts },
-      });
-    } else if (data.action === "save") {
-      saved = data;
-      await route.fulfill({
-        json: { error: "Mock save complete — held here for inspection." },
-      });
-    }
-  });
-  await page.goto("http://127.0.0.1:4174/");
-  await page.getByLabel("Give your topic a name").fill("Water cycle practice");
-  await page.getByLabel("Your study material").fill(sampleNotes);
-  await page.getByRole("button", { name: "Find key concepts" }).click();
-  await expect(page.getByRole("alert")).toContainText("capacity");
-  await expect(page.getByLabel("Your study material")).toHaveValue(sampleNotes);
-  await page.reload();
-  await expect(page.getByLabel("Your study material")).toHaveValue(sampleNotes);
-  await page.getByRole("button", { name: "Find key concepts" }).click();
-  await expect(page.getByRole("group")).toHaveCount(6);
-  await page
-    .getByLabel("Concept title", { exact: true })
-    .first()
-    .fill("Liquid becomes vapor");
-  await page.getByRole("button", { name: "Add concept" }).click();
-  await expect(page.getByRole("group")).toHaveCount(7);
-  await page.getByRole("button", { name: "Remove concept 7" }).click();
-  await page
-    .getByLabel("Exact supporting passage from your notes")
-    .first()
-    .fill("Invented quotation");
-  await page.getByRole("button", { name: "Save topic" }).click();
-  await expect(page.getByRole("alert")).toContainText("copied exactly");
-  await page
-    .getByLabel("Exact supporting passage from your notes")
-    .first()
-    .fill(sampleConcepts[0].excerpt);
-  await page.getByRole("button", { name: "Save topic" }).click();
-  await expect(page.getByRole("alert")).toContainText("Mock save complete");
-  expect(saved?.title).toBe("Water cycle practice");
-  expect((saved?.concepts as { title: string }[])[0].title).toBe(
-    "Liquid becomes vapor",
-  );
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= window.innerWidth,
-    ),
-  ).toBe(true);
-});
+      .getByLabel("Your answer", { exact: true })
+      .fill("A draft answer before continuing.");
+    await page.reload();
+    await expect(page.getByLabel("Your answer", { exact: true })).toHaveValue(
+      "A draft answer before continuing.",
+    );
+    await page.getByRole("button", { name: "I’m not sure" }).click();
+    await expect(page.getByText("QUESTION 2 OF UP TO 3")).toBeVisible();
+    await page
+      .getByLabel("Your answer")
+      .fill("Water vapor cools down and condenses into little drops.");
+    await page.getByRole("button", { name: "Share my answer" }).click();
+    await expect(page.getByText("QUESTION 3 OF UP TO 3")).toBeVisible();
+    await page
+      .getByLabel("Your answer")
+      .fill("Some soaks into the ground and some flows down rivers.");
+    await page.getByRole("button", { name: "Share my answer" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Look at what came through." }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Practiced with notes", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("These example statuses don’t evaluate what you wrote."),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Try again", exact: true }).click();
+    await page
+      .getByLabel("Your explanation", { exact: true })
+      .fill(draft + " Plants also release water vapor from their leaves.");
+    await page.getByRole("button", { name: "Review my explanation" }).click();
+    await expect(
+      page.getByText("Explanation-only attempt", { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByText(/Previously:/)).toHaveCount(6);
+    expect(errors).toEqual([]);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+  },
+);
+test(
+  "keyboard, mobile overflow, reduced motion and unconfigured auth",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.keyboard.press("Tab");
+    await expect(
+      page.getByRole("link", { name: "Skip to content" }),
+    ).toBeFocused();
+    await page.keyboard.press("Enter");
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+    await page.goto("/sample");
+    await expect(page.getByRole("img", { name: /Pip/ })).toBeVisible();
+    expect(
+      await page
+        .locator(".student-eyes")
+        .evaluate((el) => getComputedStyle(el).animationName),
+    ).toBe("none");
+    const notes = page.getByRole("button", { name: "View notes" });
+    const mobile = (page.viewportSize()?.width ?? 0) < 700;
+    const fontSize = await notes.evaluate((element) =>
+      parseFloat(getComputedStyle(element).fontSize),
+    );
+    if (mobile) {
+      expect(fontSize).toBe(0);
+      expect((await notes.boundingBox())!.width).toBeLessThan(50);
+    } else expect(fontSize).toBeGreaterThan(0);
+    await notes.click();
+    await expect(page.locator("#source-notes")).toBeVisible();
+    await page.getByRole("button", { name: "Hide notes" }).click();
+    await page
+      .getByLabel("Your explanation", { exact: true })
+      .fill("x".repeat(2000));
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+    await page.goto("/signin");
+    await expect(
+      page.getByText("Accounts aren’t configured yet."),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Sign in", exact: true }),
+    ).toBeDisabled();
+  },
+);
+test(
+  "mocked editor: extraction failure preserves input; edit, add, remove and validate passages",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    let calls = 0;
+    let saved: Record<string, unknown> | undefined;
+    await page.route("**/api/teech**", async (route) => {
+      const data = route.request().postDataJSON();
+      if (data.action === "extract") {
+        calls++;
+        await route.fulfill({
+          json:
+            calls === 1
+              ? {
+                  error:
+                    "The AI provider is at capacity. Your writing is safe.",
+                }
+              : { concepts: sampleConcepts },
+        });
+      } else if (data.action === "save") {
+        saved = data;
+        await route.fulfill({
+          json: { error: "Mock save complete — held here for inspection." },
+        });
+      }
+    });
+    await page.goto("http://127.0.0.1:4174/");
+    await page
+      .getByLabel("Give your topic a name")
+      .fill("Water cycle practice");
+    await page.getByLabel("Your study material").fill(sampleNotes);
+    await page.getByRole("button", { name: "Find key concepts" }).click();
+    await expect(page.getByRole("alert")).toContainText("capacity");
+    await expect(page.getByLabel("Your study material")).toHaveValue(
+      sampleNotes,
+    );
+    await page.reload();
+    await expect(page.getByLabel("Your study material")).toHaveValue(
+      sampleNotes,
+    );
+    await page.getByRole("button", { name: "Find key concepts" }).click();
+    await expect(page.getByRole("group")).toHaveCount(6);
+    await page
+      .getByLabel("Concept title", { exact: true })
+      .first()
+      .fill("Liquid becomes vapor");
+    await page.getByRole("button", { name: "Add concept" }).click();
+    await expect(page.getByRole("group")).toHaveCount(7);
+    await page.getByRole("button", { name: "Remove concept 7" }).click();
+    await page
+      .getByLabel("Exact supporting passage from your notes")
+      .first()
+      .fill("Invented quotation");
+    await page.getByRole("button", { name: "Save topic" }).click();
+    await expect(page.getByRole("alert")).toContainText("copied exactly");
+    await page
+      .getByLabel("Exact supporting passage from your notes")
+      .first()
+      .fill(sampleConcepts[0].excerpt);
+    await page.getByRole("button", { name: "Save topic" }).click();
+    await expect(page.getByRole("alert")).toContainText("Mock save complete");
+    expect(saved?.title).toBe("Water cycle practice");
+    expect((saved?.concepts as { title: string }[])[0].title).toBe(
+      "Liquid becomes vapor",
+    );
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+  },
+);
 test("mocked live room: interrupted submission retains writing and idempotency key", async ({
   page,
 }) => {
@@ -604,27 +651,31 @@ test("mocked live room: interrupted submission retains writing and idempotency k
     page.getByLabel("Your explanation", { exact: true }),
   ).toHaveValue(text);
 });
-test("mocked library: confirm deletion and retain topic when cancelled", async ({
-  page,
-}) => {
-  let deleted = false;
-  await page.route("**/api/teech**", async (r) => {
-    if (r.request().method() === "GET")
-      return r.fulfill({ json: { topics: [sampleTopic], sessions: [] } });
-    deleted = true;
-    return r.fulfill({ json: { deleted: true } });
-  });
-  await page.goto("http://127.0.0.1:4174/?view=library");
-  await page.getByRole("button", { name: "Delete The water cycle" }).click();
-  await expect(page.getByRole("alert")).toContainText("permanently");
-  await page.getByRole("button", { name: "Keep it" }).click();
-  expect(deleted).toBe(false);
-  await page.getByRole("button", { name: "Delete The water cycle" }).click();
-  await page.getByRole("button", { name: "Delete topic", exact: true }).click();
-  await expect(
-    page.getByRole("heading", {
-      name: "A little room for your next big idea.",
-    }),
-  ).toBeVisible();
-  expect(deleted).toBe(true);
-});
+test(
+  "mocked library: confirm deletion and retain topic when cancelled",
+  { tag: "@mobile" },
+  async ({ page }) => {
+    let deleted = false;
+    await page.route("**/api/teech**", async (r) => {
+      if (r.request().method() === "GET")
+        return r.fulfill({ json: { topics: [sampleTopic], sessions: [] } });
+      deleted = true;
+      return r.fulfill({ json: { deleted: true } });
+    });
+    await page.goto("http://127.0.0.1:4174/?view=library");
+    await page.getByRole("button", { name: "Delete The water cycle" }).click();
+    await expect(page.getByRole("alert")).toContainText("permanently");
+    await page.getByRole("button", { name: "Keep it" }).click();
+    expect(deleted).toBe(false);
+    await page.getByRole("button", { name: "Delete The water cycle" }).click();
+    await page
+      .getByRole("button", { name: "Delete topic", exact: true })
+      .click();
+    await expect(
+      page.getByRole("heading", {
+        name: "A little room for your next big idea.",
+      }),
+    ).toBeVisible();
+    expect(deleted).toBe(true);
+  },
+);

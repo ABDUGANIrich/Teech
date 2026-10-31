@@ -53,7 +53,7 @@ describe("real SQL quotas and deduplication (embedded PostgreSQL)", () => {
     );
     await reserve("anon:cleared-cookies", "next-day", 10, 900, 1000);
   });
-  it("atomically admits only the app cap under concurrent reservations", async () => {
+  it("enforces the app cap across serialized SQL reservations", async () => {
     const results = await Promise.allSettled(
       Array.from({ length: 12 }, (_, i) =>
         reserve(`user:${i}`, `call:${i}`, 10, 5, 10),
@@ -76,7 +76,7 @@ describe("real SQL quotas and deduplication (embedded PostgreSQL)", () => {
     await expect(reserve("a", "call:4", 10, 10, 3)).rejects.toThrow(/QUOTA/);
     await reserve("b", "call:5", 10, 10, 3);
   });
-  it("isolates concurrent personal minute quotas and expires the rolling window", async () => {
+  it("isolates personal minute quotas and expires the rolling window", async () => {
     for (const actor of ["user:one", "user:two", "anon:one"]) {
       const results = await Promise.allSettled(
         Array.from({ length: 12 }, (_, i) =>
