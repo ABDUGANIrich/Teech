@@ -2,18 +2,27 @@ export function Student({
   state = "listening",
   small = false,
   roleName = "student",
+  svgSize = 220,
 }: {
   state?: "listening" | "thinking" | "curious" | "happy";
   small?: boolean;
   roleName?: "student" | "teacher";
+  svgSize?: number;
 }) {
   return (
     <div
       className={`student w-50 max-w-full shrink-0 [&_svg]:w-full [&_svg]:h-auto [&_svg]:block [&.student-small]:w-26.25 [&.student-thinking]:animate-[sway_2.5s_ease-in-out_infinite] student-${state} ${small ? "student-small" : ""}`}
+      style={{ display: "flex" }}
       role="img"
       aria-label={`Pip, your AI ${roleName}, is ${state}`}
     >
-      <svg viewBox="0 0 220 220" fill="none" aria-hidden="true">
+      <svg
+        width={svgSize}
+        height={svgSize}
+        viewBox="0 0 220 220"
+        fill="none"
+        aria-hidden="true"
+      >
         <ellipse cx="112" cy="199" rx="61" ry="8" fill="#d7d7cb" opacity=".5" />
         <path
           d="M62 147C50 156 45 171 49 180M157 146C175 150 183 162 182 172"

@@ -56,7 +56,9 @@ try {
       report.browserErrors.push({ label, message: e.message }),
     );
     await page.goto(origin + "/");
-    assert((await page.title()).includes("Learn it. Practice it. Teach it."));
+    assert(
+      (await page.title()).includes("Learn with Sage. Teach Pip if you like."),
+    );
     const canonical = await page
       .locator('link[rel="canonical"]')
       .getAttribute("href");

@@ -41,7 +41,7 @@ export function Shell({
       </header>
       <main id="main">{children}</main>
       <footer className="footer max-w-286 mt-12.5 mb-0 pt-6.5 pb-7.5 border-t border-solid border-t-olive-300 text-[0.6875rem] text-neutral-500 flex justify-between gap-4 mx-auto px-0 dark:border-t-olive-700 dark:text-olive-400 [&_span:last-child]:flex [&_span:last-child]:items-center [&_span:last-child]:gap-2 max-layout:mx-8 max-mobile:mt-8.75 max-mobile:mb-0 max-mobile:text-[0.5625rem] max-mobile:flex-col max-mobile:gap-1.75 max-mobile:mx-6 max-mobile:px-0 max-mobile:py-5.5">
-        <span>A little explaining. A little understanding.</span>
+        <span>A little learning. A little practice. Your next step.</span>
         <span>
           Made for curious minds <Sprout className="size-3.5" />
         </span>

@@ -1,5 +1,9 @@
 # Teech
 
+Learn with Sage from a topic or pasted notes, review your course outline, and work through short units with explanations, examples and practice. Saved courses and feedback help you choose what to revisit. After a course, optionally teach what you learned to Pip; if you already have study notes, you can start with Pip directly. Both modes share your library and AI allowance.
+
+Try the public Sage sample at `/teacher-sample` for a fixed demonstration; open answers are not assessed. The Pip water-cycle sample at `/sample` uses live AI when available or a labeled fixed preview. Personal courses and topics require sign-in. AI content and feedback can be wrong, and practice results do not establish mastery.
+
 ## Keenable free allowance — 31 October 2026
 
 Supporting-material searches keep `mode: "pro"` and the server-only API key. Pro is the deeper search mode and can use Keenable's recurring **100,000 free requests per organization per month**; authenticated requests are limited to **10/second per organization**, without an hourly cap. No purchase is required. Sources: [credits](https://docs.keenable.ai/credits), [rate limits](https://docs.keenable.ai/rate-limits), [pricing/reset rules](https://keenable.ai/pricing).
@@ -51,7 +55,7 @@ Quota admission and caps are unchanged. After a denied AI reservation, the serve
 
 For an explicitly authorized live smoke, run a production build, then load the existing environment privately and run `node --env-file=.env.local scripts/verify-review-fixes-live.mjs --local http://127.0.0.1:3107`. A deployed URL can be passed without `--local`. The script creates two temporary confirmed users, consumes a small bounded number of real AI calls, exercises ownership, grading, handoff, stale edits, recovery and deletion, then removes its own accounts and operation caches. Usage stays counted. It generates a recovery token without sending an email, so it does not test delivery.
 
-## Teacher mode — Learn it. Practice it. Teach it.
+## Learn with Sage — with an optional Pip handoff
 
 With server-only `KEENABLE_API_KEY` configured, topic-only Teacher planning and clarification can request the internal `search_web` tool. The model chooses whether it needs current public evidence; there is no learner toggle, provider branding or extra submission step. Notes-based lessons keep their supplied-source boundary. Instruction and grading reuse saved evidence on their existing structured-output path, without browsing. Retrieved text is untrusted data and is never treated as instructions or independent verification.
 
@@ -102,7 +106,7 @@ Playwright runs the actual public fixed sample and personal components in the ex
 
 After hosted migration/deployment, use two temporary confirmed accounts for a small live smoke: topic-only planning/acceptance, unit generation, one application assessment, refresh/reopen and version conflict; confirm the second account cannot read/mutate the lesson and **both** authenticated database clients are denied `learning_assessments` SELECT. Check persisted provider reservations against the session counter, exercise notes provenance and handoff, then delete the test lesson/accounts and their operation caches (usage reservations remain counted). This is a smoke test, not an accuracy benchmark. Do not use fixture content as a live fallback.
 
-**Think you understand it? Teach it.** A working study MVP built with Next.js App Router, TypeScript, Tailwind CSS, a shadcn-style Radix Button, Supabase Auth/Postgres, Zod, and server-only OpenRouter calls. Pip is an original SVG student; the water-cycle sample is original bundled material.
+Teech is built with Next.js App Router, TypeScript, Tailwind CSS, a shadcn-style Radix Button, Supabase Auth/Postgres, Zod, and server-only OpenRouter calls. Sage and Pip are original SVG characters; the sample courses use bundled material.
 
 ## Run locally
 
@@ -229,7 +233,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Playwright performs the production build itself; a separate build immediately before it duplicates that work. Browser tests disable Supabase/OpenRouter configuration and deliberately exercise the missing-configuration path. They start an isolated production app on port 3000 and a test-only Vite component harness on port 4174. The default matrix runs all 76 desktop scenarios and 21 mobile scenarios tagged `@mobile`, covering layouts, readability, keyboard use and key practice/recovery flows. `npm run test:e2e:full` runs all 76 scenarios on both desktop and mobile. GitHub checks use the default matrix on pushes and pull requests, and the complete matrix on the weekly schedule or a manual workflow run. Personal UI checks intercept APIs with deterministic fixtures; they do **not** establish successful hosted authentication or persistence. Screenshots are review aids; text, contrast, state and layout assertions provide automated checks.
+Playwright performs the production build itself; a separate build immediately before it duplicates that work. Browser tests disable Supabase/OpenRouter configuration and deliberately exercise the missing-configuration path. They start an isolated production app on port 3000 and a test-only Vite component harness on port 4174. The default matrix runs all desktop scenarios and mobile scenarios tagged `@mobile`, covering layouts, readability, keyboard use, public metadata/share images and key practice/recovery flows. `npm run test:e2e:full` runs every scenario on both desktop and mobile. GitHub checks use the default matrix on pushes and pull requests, and the complete matrix on the weekly schedule or a manual workflow run. Personal UI checks intercept APIs with deterministic fixtures; they do **not** establish successful hosted authentication or persistence. Screenshots are review aids; text, contrast, state and layout assertions provide automated checks.
 
 Vitest checks API request guards, service behavior and migrations in PGlite with test Auth roles. The embedded database checks RLS isolation, forbidden browser writes/RPCs, ownership, rollback, quota admission, duplicate reservations and operation recovery on one connection. Its search-window tests use a fixed test-only SQL clock; production migrations retain the real clock.
 

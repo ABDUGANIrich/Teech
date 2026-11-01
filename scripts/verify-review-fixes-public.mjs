@@ -57,7 +57,9 @@ try {
       await page.locator('link[rel="canonical"]').getAttribute("href"),
       origin,
     );
-    assert((await page.title()).includes("Learn it. Practice it. Teach it."));
+    assert(
+      (await page.title()).includes("Learn with Sage. Teach Pip if you like."),
+    );
     const og = await page
       .locator('meta[property="og:image"]')
       .getAttribute("content");

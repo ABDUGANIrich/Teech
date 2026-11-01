@@ -1,11 +1,24 @@
-export function Teacher({ small = false }: { small?: boolean }) {
+export function Teacher({
+  small = false,
+  svgSize = 220,
+}: {
+  small?: boolean;
+  svgSize?: number;
+}) {
   return (
     <div
       className={`teacher max-w-full shrink-0 [&_svg]:w-full [&_svg]:h-auto [&_svg]:block ${small ? "w-26.25" : "w-50"}`}
+      style={{ display: "flex" }}
       role="img"
       aria-label="Sage, your AI teacher, a friendly owl with glasses"
     >
-      <svg viewBox="0 0 220 220" fill="none" aria-hidden="true">
+      <svg
+        width={svgSize}
+        height={svgSize}
+        viewBox="0 0 220 220"
+        fill="none"
+        aria-hidden="true"
+      >
         <ellipse cx="110" cy="201" rx="64" ry="8" fill="#b8aa91" opacity=".3" />
         <path
           d="M85 182L79 198M134 182L141 198"
